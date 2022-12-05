@@ -17,6 +17,13 @@ function addRoutes(map) {
   var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
   var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
 
+  var jeepRoutes = {
+    "Ikot" : ikotRoute,
+    "Ikot(Night)" : ikotEveningRoute,
+    "Toki" : tokiRoute,
+  }
+  var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
+
 }
 
 function displayMap() {
