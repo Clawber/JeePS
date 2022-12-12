@@ -1,3 +1,5 @@
+//Contains the coordinates of the polyline of the jeep routes. 
+
 var ikotRoutePoints = [
   [14.65764329,	121.062349],  //solaire
   [14.65754914,	121.0685395],
