@@ -1,24 +1,16 @@
-# test
+# JeePS
+Make sure to run commands in the ROOT directory of the project
+
+## Dependencies
+Make sure to install Node.js and npm before running the project.
 
 ## Project setup
+Run this command to install other dependencies
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+Run the following command to startup an auto-reload development server for frontend in http://localhost:8080
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
