@@ -6,11 +6,11 @@ class Jeep {
     this.route = route
     this.index = index
     this.marker = new L.Marker(this.route[0])
-    console.log(`${index}`);
+    // console.log(`${index}`);
   }
 
   usad() {
-    console.log(`usad, index = ${this.index}`);
+    // console.log(`usad, index = ${this.index}`);
     this.marker.remove(this.map)
     this.index += 1
     this.marker = new L.Marker(this.route[ (this.index ) %(this.route.length)]);
@@ -47,7 +47,7 @@ function addMarker(map, coordinates, i) {
 //update lang sa marker, assuming na may bago nang coordinates
 function updateMarker(map, coordinates, i){
   markers[i].remove(map);
-  console.log(coordinates);
+  // console.log(coordinates);
 
   markers[i] = new L.Marker(coordinates);
   markers[i].addTo(map);
@@ -74,17 +74,17 @@ function displayMap() {
 
   //Make Jeeps that move around
   let Jeep1 = new Jeep(map, tokiRoutePoints, 0);  
-  setInterval(function () {Jeep1.usad()}, 1000);    // ? ? bakit kaylangan anonymous function???
+  setInterval(function () {Jeep1.usad()}, 10);    // ? ? bakit kaylangan anonymous function???
   let Jeep2 = new Jeep(map, ikotEveningRoutePoints, 5);  
-  setInterval(function () {Jeep2.usad()}, 1000);    
+  setInterval(function () {Jeep2.usad()}, 10);    
   let Jeep3 = new Jeep(map, ikotRoutePoints, 2);  
-  setInterval(function () {Jeep3.usad()}, 1000);    
+  setInterval(function () {Jeep3.usad()}, 10);    
 
   addRoutes(map);
 
   map.on('click', function(ev){
     var latlng = map.mouseEventToLatLng(ev.originalEvent);
-    console.log(latlng.lat + ', ' + latlng.lng);
+    // console.log(latlng.lat + ', ' + latlng.lng);
   });
 
 }
