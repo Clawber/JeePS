@@ -73,12 +73,12 @@ function displayMap() {
   map.addLayer(layer);
 
   //Make Jeeps that move around
-  let Jeep1 = new Jeep(map, tokiRoutePoints, 0);  
-  setInterval(function () {Jeep1.usad()}, 10);    // ? ? bakit kaylangan anonymous function???
-  let Jeep2 = new Jeep(map, ikotEveningRoutePoints, 5);  
-  setInterval(function () {Jeep2.usad()}, 10);    
-  let Jeep3 = new Jeep(map, ikotRoutePoints, 2);  
-  setInterval(function () {Jeep3.usad()}, 10);    
+  let Jeep1 = new Jeep(map, tokiRoutePoints, 500);  
+  setInterval(function () {Jeep1.usad()}, 60);   
+  let Jeep2 = new Jeep(map, ikotEveningRoutePoints, 100);  
+  setInterval(function () {Jeep2.usad()}, 50);    
+  let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);  
+  setInterval(function () {Jeep3.usad()}, 55);    
 
   addRoutes(map);
 
