@@ -9,11 +9,10 @@ $dbname      = "dbname=jeeps";
 $credentials = "user=postgres password=jeeps101";
 
 // Connect to database 
-if ($db = pg_connect("$host $port $dbname $credentials")) {
-    echo "Connected successfully to $dbname";
-} else {
-    die("Error: Connection failed.");
-}
+$db = pg_connect("$host $port $dbname $credentials");
+
+// Check connection (PSQL)
+test_db($db);
 
 // $_SERVER: superglobal, holds info about headers, paths, and script locations.
 // "REQUEST METHOD": Returns request method used to access the page (such as POST)
@@ -25,9 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $Y = $_POST["Y"];
         $coords = "($X,$Y)";    // use this if schema uses (X,Y)
 
-        // Check connection (PSQL)
-        test_db($db);
-        
         // Sample: http://localhost/sensordata/post-esp-data.php?api_key=tPmAT5Ab3j7F9&ID=0&X=12.3&Y=18.4
         $sql = "UPDATE tracker SET coords = '$coords' WHERE id = 1";
 
@@ -46,8 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
            echo "$row[$i]<br>";
         }
         echo "Operation done successfully<br>";
-    
-        $conn->close();
+
     }
     else {
         echo "Wrong API Key provided.";
@@ -65,12 +60,20 @@ function test_input($data) {
 }
 
 function test_db($db) {
-    echo "host = " . pg_host($db);
-    echo "port = " . pg_port($db);
-    echo "dbname = " . pg_dbname($db);
-    echo "options = " . pg_options($db);
-    if (pg_ping($db)) {echo "ACK received!";}
-    else {echo "Error: No ACK received.";}
+    if ($db) {
+        echo "Connected successfully! Options used:<br>";
+        echo "host = " . pg_host($db) . "<br>";
+        echo "port = " . pg_port($db) . "<br>";
+        echo "dbname = " . pg_dbname($db) . "<br>";
+    } else {
+        die("Error: Connection failed.");
+    }
+
+    if (pg_ping($db)) {
+        echo "ACK received!" . "<br>";
+    } else {
+        die("Error: No ACK received.");
+    }
 }
 
 pg_close($db);
