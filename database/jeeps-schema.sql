@@ -1,6 +1,6 @@
 -- Backticks are not supported by psql
 CREATE TABLE jeepney (
-	ID			VARCHAR(6) NOT NULL PRIMARY KEY,
+	ID			SERIAL (6) NOT NULL PRIMARY KEY,
 	tracker		SMALLINT NOT NULL REFERENCES tracker(ID),
 	route		VARCHAR(3) NOT NULL REFERENCES route(name),
 	plateNumber	VARCHAR(6) NOT NULL,
@@ -12,8 +12,7 @@ CREATE TABLE jeepney (
 
 CREATE TABLE tracker (
 	ID			SMALLINT NOT NULL PRIMARY KEY,
-	coords		POINT,
-	battStatus	NUMERIC(5, 2) NOT NULL
+	coords		POINT
 );
 
 -- Color is stored as INT, can be converted using HEX()
