@@ -34,15 +34,16 @@
             if ($db = pg_connect("$host $port $dbname $credentials")) {
                 echo "Connected successfully to $dbname";
             } else {
-                echo "Error: Connection failure";
+                die("Connection failed.");
             }
 
-            // Print extra data about
+            // Check connection (PSQL)
+            test_db($db);
 
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            } 
+            // Check connection (MSQL)
+            // if ($conn->connect_error) {
+            //     die("Connection failed: " . $conn->connect_error);
+            // } 
             
             /*$sql = "INSERT INTO jeepinfo SET Coordinates = '$Coordinates' WHERE JeepID = 'jeepID'";*/
             /*$sql = "INSERT INTO jeepinfo (JeepID, X, Y, Date, Time, PlateNumber)
@@ -110,6 +111,15 @@
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
+    }
+
+    function test_db($db) {
+        echo "host = " . pg_host($db);
+        echo "port = " . pg_port($db);
+        echo "dbname = " . pg_dbname($db);
+        echo "options = " . pg_options($db);
+        if (pg_ping($db)) {echo "ACK received!";}
+        else {echo "Error: No ACK received.";}
     }
 
     // Notes (cleanup before finalization:)
