@@ -1,11 +1,22 @@
 import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, } from './jeepRoutes.js'
 
+var IKOTicon = L.icon({
+  iconUrl: 'jeep marker try.png',
+
+  iconSize:     [60, 60], // size of the icon
+  //shadowSize:   [50, 64], // size of the shadow
+  iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
+  //shadowAnchor: [4, 62],  // the same for the shadow
+  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
 class Jeep {
   constructor(map, route, index) {
     this.map = map
     this.route = route
     this.index = index
-    this.marker = new L.Marker(this.route[0])
+    //this.marker = new L.Marker(this.route[0])
+    this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
     // console.log(`${index}`);
   }
 
@@ -13,15 +24,10 @@ class Jeep {
     // console.log(`usad, index = ${this.index}`);
     this.marker.remove(this.map)
     this.index += 1
-    this.marker = new L.Marker(this.route[ (this.index ) %(this.route.length)]);
+    this.marker = new L.Marker(this.route[ (this.index ) %(this.route.length)], {icon: IKOTicon});
     this.marker.addTo(this.map);
   }
 
-  // vroom() {
-  //   // setInterval(function () {usad()}, 1000);    
-  //   setInterval(function() {console.log("Hello");}, 1000 )
-  //   setInterval(this.usad(), 1000);    
-  // }
 }
 
 let mapOptions = {
@@ -39,19 +45,7 @@ for (let i=0; i<driverNum; i++){
 
 let map = new L.map('map' , mapOptions);
 
-function addMarker(map, coordinates, i) {
-  markers[i] = new L.Marker(coordinates);
-  markers[i].addTo(map);
-}
 
-//update lang sa marker, assuming na may bago nang coordinates
-function updateMarker(map, coordinates, i){
-  markers[i].remove(map);
-  // console.log(coordinates);
-
-  markers[i] = new L.Marker(coordinates);
-  markers[i].addTo(map);
-}
 
 
 function addRoutes(map) {
@@ -64,7 +58,7 @@ function addRoutes(map) {
     "Ikot(Night)" : ikotEveningRoute,
     "Toki" : tokiRoute,
   }
-  var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
+  L.control.layers(null, jeepRoutes).addTo(map);
 
 }
 
@@ -81,14 +75,9 @@ function displayMap() {
   setInterval(function () {Jeep3.usad()}, 55);    
 
   addRoutes(map);
-
-  map.on('click', function(ev){
-    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-    // console.log(latlng.lat + ', ' + latlng.lng);
-  });
-
 }
 
 
 
 displayMap()
+
