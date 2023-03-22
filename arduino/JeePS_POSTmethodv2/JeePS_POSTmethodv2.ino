@@ -28,72 +28,71 @@ int JeepID = 1;
 
 void setup() {
   Serial.begin(9600);
-  SerialGPS.begin(9600);
+  SerialGPS.begin(4800);
 
   WiFi.begin(ssid, password);
   Serial.println("\nConnecting");
-  while(WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.println("");
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
-  Serial.print("macAddress: "); Serial.println(WiFi.macAddress());
-  Serial.print("subnetMask: "); Serial.println(WiFi.subnetMask());
-  Serial.print("gatewayIP: ");  Serial.println(WiFi.gatewayIP());
-  Serial.print("dnsIP: ");      Serial.println(WiFi.dnsIP());
-  Serial.print("broadcastIP: ");Serial.println(WiFi.broadcastIP());
- 
+  Serial.print("macAddress: ");
+  Serial.println(WiFi.macAddress());
+  Serial.print("subnetMask: ");
+  Serial.println(WiFi.subnetMask());
+  Serial.print("gatewayIP: ");
+  Serial.println(WiFi.gatewayIP());
+  Serial.print("dnsIP: ");
+  Serial.println(WiFi.dnsIP());
+  Serial.print("broadcastIP: ");
+  Serial.println(WiFi.broadcastIP());
+
   Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
 }
 
 void loop() {
   //Send an HTTP POST request every 10 minutes
+
+
   if ((millis() - lastTime) > timerDelay) {
-    //update GPS information
-    if (SerialGPS.available()>0){
-      if (gps.encode(SerialGPS.read())){
-      Serial.println("[GPS] Checking...");
-      updateData();
-      }
-    }
-    
-    
+    updateData();
     //Check WiFi connection status
-    if(WiFi.status()== WL_CONNECTED){
+    if (WiFi.status() == WL_CONNECTED) {
       WiFiClient client;
       HTTPClient http;
-    
+
       // Your Domain name with URL path or IP address with path
       http.begin(client, serverName);
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
       // Data to send with HTTP POST
       //String httpRequestData = "api_key=tPmAT5Ab3j7F9&ID=1&X=23&Y=50";
-      String httpRequestData = "api_key=" + String(apiKeyValue) +"&ID=" + String(JeepID) + "&X=" + String(LatitudeString) + "&Y=" + String(LongitudeString) + "";           
+      String httpRequestData = "api_key=" + String(apiKeyValue) + "&ID=" + String(JeepID) + "&X=" + String(LatitudeString) + "&Y=" + String(LongitudeString) + "";
       // Send HTTP POST request
 
       Serial.print("Attempting to Post to ");
       Serial.println(serverName);
       int httpResponseCode = http.POST(httpRequestData);
-      if (httpResponseCode>0){
+      if (httpResponseCode > 0) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
         String payload = http.getString();
         Serial.print("Payload: ");
-        Serial.println(payload);        
-      }else{
+        Serial.println(payload);
+      } else {
         Serial.print("HTTP Error: ");
         Serial.println(httpResponseCode);
       }
-        
+
       // Free resources
       http.end();
-    }
-    else {
+    } else {
       Serial.println("WiFi Disconnected");
     }
     lastTime = millis();
+    delay(1000);
   }
 }
 
@@ -104,14 +103,14 @@ void updateData() {
   if (gps.location.isValid()) {
     Latitude = gps.location.lat();
     LatitudeString = String(Latitude, 6);
-    
+
     Serial.printf("[LATT] %s\n", LatitudeString);
     Longitude = gps.location.lng();
     LongitudeString = String(Longitude, 6);
     Serial.printf("[LONG] %s\n", LongitudeString);
-  }else{
+  } else {
     Serial.println("GPS failed");
-      LatitudeString = "0";
-      LongitudeString = "0";
+    LatitudeString = "0";
+    LongitudeString = "0";
   }
 }
