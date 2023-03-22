@@ -1,4 +1,7 @@
 <?php
+// TODO: Clean-up arduino directory, transfer working files and Sketch there.
+// TODO: Get GPS working.
+// TODO: Add Arduino request and PHP response to no GPS signal." 
 // Arduino Model: ESP8266 NodeMCU
 $api_key_value = "tPmAT5Ab3j7F9";
 
