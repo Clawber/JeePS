@@ -6,19 +6,19 @@
 #define SERVER_IP "192.168.1.42"
 
 #ifndef STASSID
-#define STASSID "SSID"
-#define STAPSK "PASSWORD"
+#define STASSID "Kuya Yenzy"
+#define STAPSK "123654789"
 #endif
 
 TinyGPSPlus gps;
 SoftwareSerial SerialGPS(4, 5);
 
-String serverName = "http://192.168.100.84:8080/sensordata/post-esp-data.php";
+String serverAddress = "http://192.168.27.124:8888/database/post-esp-data.php";
 String apiKeyValue = "tPmAT5Ab3j7F9";
 
 float Latitude, Longitude;
 int year, month, date, hour, minute, second;
-int JeepID = 1;
+int trackerID = 4;
 String DateString, TimeString, LatitudeString, LongitudeString;
 String QueryString;
 
@@ -55,22 +55,19 @@ void loop() {
 
       Serial.print("[HTTP] begin...\n");
 
-      
-      
       // configure traged server and url
-      http.begin(client, "http://192.168.100.84:8080/sensordata/post-esp-data.php");  // HTTP
+      http.begin(client, serverAddress);  // HTTP
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
       //Build Request String
-	  //SAMPLE String httpRequestData = "api_key=tPmAT5Ab3j7F9&ID=4&X=12.1&Y=18.1";
-      String httpRequestData = "api_key=" + apiKeyValue +"&ID=" + String(JeepID) + "&coords=(" + LatitudeString + "," + LongitudeString + ")";
-      
+      //String httpRequestData = "api_key=tPmAT5Ab3j7F9&ID=4&X=12.1&Y=18.1";
+      String httpRequestData = "api_key=" + apiKeyValue +"&ID=" + String(trackerID) + "&X=" + LatitudeString + "&Y=" + LongitudeString;
+      //SAMPLE String httpRequestData = "api_key=" + apiKeyValue +"&ID=" + String(JeepID) + "&X=" + LatitudeString + "&Y=" + LongitudeString + "";
       Serial.print("[DATA] ");
       Serial.println(httpRequestData);
 
       Serial.print("[HTTP] POST...\n");
       // start connection and send HTTP header and body
-      int httpCode = http.POST(httpRequestData);
+      int httpCode = http.POST("api_key=tPmAT5Ab3j7F9&ID=4&X=12.1&Y=18.1");
       if (httpCode <= 0) {
         Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
       } else {
@@ -85,54 +82,13 @@ void loop() {
 }
 
 void updateData() {
-  QueryString = "?ID=1";
+  Serial.print("[GPSD] Receiving...\n");
   if (gps.location.isValid()) {
     Latitude = gps.location.lat();
     LatitudeString = String(Latitude, 6);
+    Serial.printf("[LATT] %s\n", LatitudeString);
     Longitude = gps.location.lng();
     LongitudeString = String(Longitude, 6);
-  }
-
-  if (gps.date.isValid()) {
-    DateString = "";
-    date = gps.date.day();
-    month = gps.date.month();
-    year = gps.date.year();
-
-    if (date < 10)
-      DateString = '0';
-    DateString += String(date);
-
-    DateString += " / ";
-
-    if (month < 10)
-      DateString += '0';
-    DateString += String(month);
-    DateString += " / ";
-
-    if (year < 10)
-      DateString += '0';
-    DateString += String(year);
-  }
-
-  if (gps.time.isValid()) {
-    TimeString = "";
-    hour = gps.time.hour() + 8;  //adjust UTC
-    minute = gps.time.minute();
-    second = gps.time.second();
-
-    if (hour < 10)
-      TimeString = '0';
-    TimeString += String(hour);
-    TimeString += " : ";
-
-    if (minute < 10)
-      TimeString += '0';
-    TimeString += String(minute);
-    TimeString += " : ";
-
-    if (second < 10)
-      TimeString += '0';
-    TimeString += String(second);
+    Serial.printf("[LONG] %s\n", LatitudeString);
   }
 }

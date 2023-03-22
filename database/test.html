@@ -8,7 +8,7 @@
 </style>
 <script src=""></script>
 <body>
-  <form action="http://localhost:4000/post-esp-data.php" method="POST">
+  <form action="http://10.13.4.206:8888/database/post-esp-data.php" method="POST">
     <span class="indent">
       <label for="api_key">api_key:</label>
     </span>
@@ -16,15 +16,15 @@
     <span class="indent">
       <label for="ID">id:</label>
     </span>
-    <input type="number" id="ID" name="ID"><br><br>
+    <input type="text" id="ID" name="ID"><br><br>
     <span class="indent">
       <label for="X">xcoords:</label>
     </span>
-    <input type="number" id="X" name="X"><br><br>
+    <input type="text" id="X" name="X"><br><br>
     <span class="indent">
       <label for="Y">ycoords:</label>
     </span>
-    <input type="number" id="Y" name="Y"><br><br>
+    <input type="text" id="Y" name="Y"><br><br>
     <button>Send POST Request</button>
   </form>
 </body>

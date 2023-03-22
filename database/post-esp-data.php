@@ -3,6 +3,7 @@
 $api_key_value = "tPmAT5Ab3j7F9";
 
 // Database options
+// TODO: LAN enabled na PSQL
 $host        = "host=localhost"; # Check ipv6 thru ipconfig
 $port        = "port=5432";
 $dbname      = "dbname=jeeps";
@@ -25,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $coords = "($X,$Y)";    // use this if schema uses (X,Y)
 
         // Sample: http://localhost/sensordata/post-esp-data.php?api_key=tPmAT5Ab3j7F9&ID=0&X=12.3&Y=18.4
-        $sql = "UPDATE tracker SET coords = '$coords' WHERE id = 1";
+        $sql = "UPDATE tracker SET coords = '$coords' WHERE id = $trackerID";
 
         $ret = pg_query($db, $sql);
         if(!$ret) {
@@ -35,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
            echo "Record updated successfully<br>";
         }
         
-        $sql = "SELECT * FROM tracker WHERE id = 1";
+        $sql = "SELECT * FROM tracker WHERE id = $trackerID";
         $ret = pg_query($db, $sql);
         $row = pg_fetch_row($ret);
         for($i = 0; $i < count($row); $i++) {
