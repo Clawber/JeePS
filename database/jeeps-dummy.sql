@@ -1,8 +1,8 @@
-INSERT INTO driver (driverFName, driverLName) VALUES ('Carl', 'Ragunton');
-INSERT INTO driver (driverFName, driverLName) VALUES ('Erick', 'Sarenas');
-INSERT INTO driver (driverFName, driverLName) VALUES ('Prinz', 'Gan');
-INSERT INTO driver (driverFName, driverLName) VALUES ('Yaya', 'Dub');
-INSERT INTO driver (driverFName, driverLName) VALUES ('Peppa', 'Pig');
+INSERT INTO driver (firstName, lastLName) VALUES ('Carl', 'Ragunton');
+INSERT INTO driver (firstName, lastLName) VALUES ('Erick', 'Sarenas');
+INSERT INTO driver (firstName, lastLName) VALUES ('Prinz', 'Gan');
+INSERT INTO driver (firstName, lastLName) VALUES ('Yaya', 'Dub');
+INSERT INTO driver (firstName, lastLName) VALUES ('Peppa', 'Pig');
 INSERT INTO route (name, color, path) VALUES ('Ikot', 10, '( ( 10 , 20 ) , ( 30 , 40 ) )');
 INSERT INTO route (name, color, path) VALUES ('Toki', 20, '( ( 10 , 20 ) , ( 30 , 40 ) )');
 INSERT INTO route (name, color, path) VALUES ('Philcoa', 30, '( ( 10 , 20 ) , ( 30 , 40 ) )');

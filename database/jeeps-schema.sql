@@ -1,14 +1,3 @@
--- Backticks are not supported by psql.
--- Added driverID that references ID at driver table.
-CREATE TABLE jeepney (
-	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	trackerID	INT REFERENCES tracker(ID) ON DELETE CASCADE,
-	routeID		INT REFERENCES route(ID) ON DELETE CASCADE,
-	driverID	INT REFERENCES driver(ID) ON DELETE CASCADE,
-	plateNumber	VARCHAR(6) NOT NULL UNIQUE,
-	capacity	SMALLINT NOT NULL
-);
-
 -- Removed battery from tracker.
 -- POINT data type requires '' when being encoded.
 CREATE TABLE tracker (
@@ -30,4 +19,16 @@ CREATE TABLE driver (
 	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	firstName	VARCHAR(20) NOT NULL,
 	lastLName	VARCHAR(20) NOT NULL
-)
+);
+
+-- Backticks are not supported by psql.
+-- Added driverID that references ID at driver table.
+-- CREATE this last so references already exist.
+CREATE TABLE jeepney (
+	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	trackerID	INT REFERENCES tracker(ID) ON DELETE CASCADE,
+	routeID		INT REFERENCES route(ID) ON DELETE CASCADE,
+	driverID	INT REFERENCES driver(ID) ON DELETE CASCADE,
+	plateNumber	VARCHAR(6) NOT NULL UNIQUE,
+	capacity	SMALLINT NOT NULL
+);
