@@ -23,11 +23,11 @@ CREATE TABLE route (
 	name		VARCHAR(20) NOT NULL,
 	color		INT NOT NULL,			-- Color is encoded as integer.
 	path		PATH NOT NULL,
-	UNIQUE(name)
+	UNIQUE(name, color)
 );
 
 CREATE TABLE driver (
 	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	driverFName	VARCHAR(20) NOT NULL,
-	driverLName	VARCHAR(20) NOT NULL
+	firstName	VARCHAR(20) NOT NULL,
+	lastLName	VARCHAR(20) NOT NULL
 )
