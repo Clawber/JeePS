@@ -18,7 +18,7 @@ app.post("/driver", async (req, res) => {
   try {
     const { firstname, lastname } = req.body;
     const newDriver = await client.query (
-      "INSERT INTO driver (firstname, lastname) VALUES ($1, $2)",
+      "INSERT INTO driver (firstname, lastname) VALUES ($1, $2) RETURNING *",
       [firstname, lastname]
     );
     
@@ -126,5 +126,4 @@ function displayMap() {
   addRoutes(map);
 }
 
-displayMap()
-
+displayMap();

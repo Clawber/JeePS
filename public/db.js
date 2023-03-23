@@ -19,6 +19,4 @@ const res = client.query('SELECT * FROM tracker WHERE ID = 1', (err, res) => {
     client.end()
 });
 
-console.log(res);
-
 module.exports = client;
