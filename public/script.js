@@ -1,3 +1,51 @@
+// REQUIREMENTS AND INSTANTIATIONS
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const client = require("./db.js")
+
+// Start server on client's IP address.
+// ...
+
+// MIDDLEWARE
+app.use(cors());
+app.use(express.json());  // req.body
+
+// TODO: CRUD ROUTS (ignore for testing)
+// Create a Driver Entry
+// Note: Postman can be used for testing HTTP requests
+app.post("/driver", async (req, res) => {
+  try {
+    const { firstname, lastname } = req.body;
+    const newDriver = await client.query (
+      "INSERT INTO driver (firstname, lastname) VALUES ($1, $2)",
+      [firstname, lastname]
+    );
+    
+    res.json();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// Create a Tracker Entry
+
+// Create a Path Entry
+
+// Create a Jeepney Entry (FKs Driver, Tracker, and Path)
+
+const serverIP = "localhost";
+const port = "5000";
+
+// NOTE: Hardcode serverIP to always use the same one on build so no
+// need to change every time WiFi connection is changed. Might require
+// IP getter API.
+// NOTE: Stop using PHP local dev server, use this server manager
+// or npm run serve instead
+app.listen(port, serverIP, () => {
+    console.log(`Server has started on address ${serverIP}, port ${port}.`);
+});
+
 import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, } from './jeepRoutes.js'
 
 var IKOTicon = L.icon({
@@ -28,6 +76,10 @@ class Jeep {
     this.marker.addTo(this.map);
   }
 
+  // For fetching coords from database
+  getCoords() {
+    
+  }
 }
 
 let mapOptions = {
@@ -44,9 +96,6 @@ for (let i=0; i<driverNum; i++){
 }
 
 let map = new L.map('map' , mapOptions);
-
-
-
 
 function addRoutes(map) {
   var ikotRoute = L.polyline(ikotRoutePoints, {color: 'yellow'}).addTo(map);
@@ -76,8 +125,6 @@ function displayMap() {
 
   addRoutes(map);
 }
-
-
 
 displayMap()
 

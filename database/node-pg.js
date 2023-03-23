@@ -6,7 +6,8 @@ const cors = require("cors");
 // ...
 
 // middleware
-app.use(cors())
+app.use(cors());
+app.use(express.json());
 
 const serverIP = "localhost";
 const port = "5000";
@@ -24,7 +25,7 @@ const { Client } = require('pg');
 const client = new Client({
     host: "localhost",
     user: "postgres",
-    port: "5432",
+    port: 5432,
     password: "jeeps101",
     database: "jeeps"
 });
