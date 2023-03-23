@@ -1,16 +1,22 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 // Start server on client's IP address.
+// ...
 
-const serverIP = "";
+// middleware
+app.use(cors())
+
+const serverIP = "localhost";
 const port = "5000";
 
 // NOTE: Hardcode serverIP to always use the same one on build so no
-// need to change every time WiFi connection is changed.
+// need to change every time WiFi connection is changed. Might require
+// IP getter API.
 // NOTE: Stop using PHP local dev server, use this server manager
 // or npm run serve instead
-app.listen(port, () => {
+app.listen(port, serverIP, () => {
     console.log(`Server has started on address ${serverIP}, port ${port}.`);
 });
 
