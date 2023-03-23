@@ -10,6 +10,8 @@
   "dependencies": {
     "@mdi/font": "5.9.55",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "pg": "^8.10.0",
     "roboto-fontface": "*",
     "vue": "^3.2.13",

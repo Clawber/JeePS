@@ -1,3 +1,19 @@
+const express = require("express");
+const app = express();
+
+// Start server on client's IP address.
+
+const serverIP = "";
+const port = "5000";
+
+// NOTE: Hardcode serverIP to always use the same one on build so no
+// need to change every time WiFi connection is changed.
+// NOTE: Stop using PHP local dev server, use this server manager
+// or npm run serve instead
+app.listen(port, () => {
+    console.log(`Server has started on address ${serverIP}, port ${port}.`);
+});
+
 const { Client } = require('pg');
 const client = new Client({
     host: "localhost",
@@ -9,7 +25,8 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT * FROM tracker', (err, res) => {
+// Results are returned as JSON
+const res = client.query('SELECT * FROM tracker WHERE ID = 1', (err, res) => {
     if (!err) {
         console.log(res.rows);
     } else {
@@ -17,3 +34,5 @@ client.query('SELECT * FROM tracker', (err, res) => {
     }
     client.end()
 });
+
+console.log(res);
