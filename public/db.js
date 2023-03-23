@@ -1,4 +1,6 @@
-const { Client } = require('pg');
+import pg from 'pg';
+const Client = pg.Client;
+
 const client = new Client({
     host: "localhost",
     user: "postgres",
@@ -9,14 +11,18 @@ const client = new Client({
 
 client.connect();
 
+const queryString = 'SELECT coords FROM tracker WHERE id = 1';
+
 // Results are returned as JSON
-const res = client.query('SELECT * FROM tracker WHERE ID = 1', (err, res) => {
+client.query(queryString, (err, res) => {
     if (!err) {
         console.log(res.rows);
+        console.log("xcoord = " + res.rows[0].coords.x);
+        console.log("ycoord = " + res.rows[0].coords.y);
     } else {
         console.log(err.message);
     }
     client.end()
 });
 
-module.exports = client;
+export default client; 
