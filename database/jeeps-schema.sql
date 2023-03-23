@@ -18,7 +18,7 @@ CREATE TABLE route (
 CREATE TABLE driver (
 	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	firstName	VARCHAR(20) NOT NULL,
-	lastLName	VARCHAR(20) NOT NULL
+	lastName	VARCHAR(20) NOT NULL
 );
 
 -- Backticks are not supported by psql.

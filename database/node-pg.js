@@ -7,14 +7,13 @@ const client = new Client({
     database: "jeeps"
 });
 
-await client.connect();
+client.connect();
 
-const res = await client.query('SELECT * FROM tracker, (err, res) => {
+client.query('SELECT * FROM tracker', (err, res) => {
     if (!err) {
-        console.log(res,rows);
+        console.log(res.rows);
     } else {
-        console.log(err,message);
+        console.log(err.message);
     }
-    await client.end()
+    client.end()
 });
-console.log(res.rows[0].message) // Hello world!
