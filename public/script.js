@@ -1,5 +1,6 @@
 import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, } from './jeepRoutes.js'
 
+
 var IKOTicon = L.icon({
   iconUrl: 'jeep marker try.png',
 
@@ -9,6 +10,13 @@ var IKOTicon = L.icon({
   //shadowAnchor: [4, 62],  // the same for the shadow
   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
+
+// GET request using fetch()
+const URL = 'https://jeeps-api.onrender.com/api/jeeps'
+// const url = 'http://localhost:3000/api/jeeps'
+
+
+
 
 class Jeep {
   constructor(map, route, index) {
@@ -28,6 +36,35 @@ class Jeep {
     this.marker.addTo(this.map);
   }
 
+
+  // vroom() {
+  //   // setInterval(function () {usad()}, 1000);    
+  //   setInterval(function() {console.log("Hello");}, 1000 )
+  //   setInterval(this.usad(), 1000);    
+  // }
+
+  // call every 2 seconds
+  move_online_jeep(id) {
+    let result = ""
+    
+    fetch(URL + "/" + id)
+      // .then(commits => console.log(commits));
+      .then((response) => response.json())
+      .then((data) => {
+        // result = output of url/id
+        result=data;
+        let new_coord = [result.coords[0], result.coords[1]]
+        // console.log(new_coord);
+
+        this.marker.remove(this.map)
+        this.index += 1
+        this.marker = new L.Marker(new_coord);
+        this.marker.addTo(this.map);
+    })
+  }
+
+
+
 }
 
 let mapOptions = {
@@ -44,6 +81,18 @@ for (let i=0; i<driverNum; i++){
 }
 
 let map = new L.map('map' , mapOptions);
+
+
+
+function addMarker(map, coordinates, i) {
+  markers[i] = new L.Marker(coordinates);
+  markers[i].addTo(map);
+}
+
+//update lang sa marker, assuming na may bago nang coordinates
+function updateMarker(map, coordinates, i){
+  markers[i].remove(map);
+  // console.log(coordinates);
 
 
 
@@ -74,8 +123,16 @@ function displayMap() {
   let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);  
   setInterval(function () {Jeep3.usad()}, 55);    
 
+  let Jeep4 = new Jeep(map, ikotRoutePoints, 1000);
+  setInterval(function () {Jeep4.move_online_jeep(1)}, 1000)
+
   addRoutes(map);
 }
+
+
+
+
+
 
 
 
