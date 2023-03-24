@@ -31,7 +31,7 @@
           <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown-content" id="myDropdown">
-          <a href="./login.html">Log in</a>
+        <a href="./login.html">Log in</a>
         </div>
       </div>
       <!--Hyperlink for HELP-->
@@ -41,11 +41,18 @@
       <!--Hyperlink for JeePS-->
       <a id="b2" class="active" href="http://127.0.0.1:5501/public/index.html"><span class="white--text">JeePS</span></a>
     </div>
+
+    <div class="square">
+        <p id="logintoyour">Log in to you superuser account</p>
+        <form action="/action_page.php">
+            <input type="text" id="username" placeholder="Username"><br>
+            <input type="text" id="password" placeholder="Password"><br><br>
+            <input type="submit" id="submit" value="LOG IN">
+        </form>
+    </div>
   </head>
   <body>
     
-    <div id="map"></div>
-    <script id="site" type="module" src="script.js"></script>
     
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
@@ -75,13 +82,73 @@
     box-shadow: 2px 2px 10px 1px #00000088;
     
   }
+  body {
+    background-image: url('./imgs/bgimg_light.jpg');
+}
+
+.square {
+    margin-top: 88px;
+    margin-left: auto;
+  margin-right: auto;
+    width: 76%;
+
+    height: 320px;
+    background-color: #ffffff;
+    box-shadow: inset;
+    box-shadow: 1px 1px 10px 1px #00000033;
+}
+.square #logintoyour{
+    font-size: 35px;
+    padding-top: 65px;
+  padding-left: 45px;
+  line-height: 0px;
+  
+}
+
+#username {
+    font-size: 16px;
+    margin-left: 45px;
+    padding-top: 10px;
+    width: 90%;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: rgba(27, 27, 27, 0.316);
+  line-height: 0px;
+  font-weight: bold;
+}
+
+#password {
+    font-size: 16px;
+    margin-left: 45px;
+    padding-top: 40px;
+    width: 90%;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: rgba(27, 27, 27, 0.316);
+  line-height: 0px;
+  font-weight: bold;
+}
+
+#submit{
+    font-size: 14px;
+    margin-left: 60px;
+    width: 90%;
+    height: 40px;
+    background-color: #D32F2F;
+    color: #ffffff;
+    outline: 0;
+    border-width: 0 0 0px;
+    font-weight: bold;
+    box-shadow: inset;
+    box-shadow: 1px 1px 10px 1px #00000033;
+}
+#submit:hover{
+    cursor: pointer;
+    background-color: #c94646;
+}
 
 
 
-
-
-
- 
   
 
   
