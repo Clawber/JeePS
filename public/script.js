@@ -40,7 +40,7 @@ class Jeep {
         // result = output of url/id
         result=data;
         let new_coord = [result.coords[0], result.coords[1]]
-        console.log(new_coord);
+        // console.log(new_coord);
 
         this.marker.remove(this.map)
         this.index += 1
