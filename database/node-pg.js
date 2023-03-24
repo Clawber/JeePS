@@ -1,20 +1,45 @@
+const express = require("express");
+const app = express();
+const cors = require("cors");
+
+// Start server on client's IP address.
+// ...
+
+// middleware
+app.use(cors());
+app.use(express.json());
+
+const serverIP = "localhost";
+const port = "5000";
+
+// NOTE: Hardcode serverIP to always use the same one on build so no
+// need to change every time WiFi connection is changed. Might require
+// IP getter API.
+// NOTE: Stop using PHP local dev server, use this server manager
+// or npm run serve instead
+app.listen(port, serverIP, () => {
+    console.log(`Server has started on address ${serverIP}, port ${port}.`);
+});
+
 const { Client } = require('pg');
 const client = new Client({
     host: "localhost",
     user: "postgres",
-    port: "5432",
+    port: 5432,
     password: "jeeps101",
     database: "jeeps"
 });
 
-await client.connect();
+client.connect();
 
-const res = await client.query('SELECT * FROM tracker, (err, res) => {
+// Results are returned as JSON
+const res = client.query('SELECT * FROM tracker WHERE ID = 1', (err, res) => {
     if (!err) {
-        console.log(res,rows);
+        console.log(res.rows);
     } else {
-        console.log(err,message);
+        console.log(err.message);
     }
-    await client.end()
+    client.end()
 });
-console.log(res.rows[0].message) // Hello world!
+
+console.log(res);

@@ -115,4 +115,4 @@ var tokiRoutePoints = [
 
 ];
 
-export {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints}
+export var routePoints = {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints}

@@ -1,16 +1,20 @@
+INSERT INTO driver (firstName, lastLName) VALUES ('Carl', 'Ragunton');
+INSERT INTO driver (firstName, lastLName) VALUES ('Erick', 'Sarenas');
+INSERT INTO driver (firstName, lastLName) VALUES ('Prinz', 'Gan');
+INSERT INTO driver (firstName, lastLName) VALUES ('Yaya', 'Dub');
+INSERT INTO driver (firstName, lastLName) VALUES ('Peppa', 'Pig');
 INSERT INTO route (name, color, path) VALUES ('Ikot', 10, '( ( 10 , 20 ) , ( 30 , 40 ) )');
-
-SELECT * FROM route;
-
-INSERT INTO tracker (id, coords, battstatus) VALUES (1, '(10, 20)', 95.50);
-
-INSERT INTO jeepney (id, tracker, route, platenumber, driverfname, driverlname, capacity)
-VALUES ('IKT001', 1, 'Ikot', 'PLT001', 'Jose', 'Manalo', 18);
-
-ALTER TABLE jeepney
-ALTER COLUMN route TYPE VARCHAR(20);
-
-SELECT * FROM jeepney;
-SELECT * FROM route;
-
-SELECT * FROM tracker;
+INSERT INTO route (name, color, path) VALUES ('Toki', 20, '( ( 10 , 20 ) , ( 30 , 40 ) )');
+INSERT INTO route (name, color, path) VALUES ('Philcoa', 30, '( ( 10 , 20 ) , ( 30 , 40 ) )');
+INSERT INTO route (name, color, path) VALUES ('Pantranco', 40, '( ( 10 , 20 ) , ( 30 , 40 ) )');
+INSERT INTO route (name, color, path) VALUES ('Katipunan', 50, '( ( 10 , 20 ) , ( 30 , 40 ) )');
+INSERT INTO tracker (coords) VALUES ('(0, 0)');
+INSERT INTO tracker (coords) VALUES ('(0, 0)');
+INSERT INTO tracker (coords) VALUES ('(0, 0)');
+INSERT INTO tracker (coords) VALUES ('(0, 0)');
+INSERT INTO tracker (coords) VALUES ('(0, 0)');
+INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (1, 1, 1, 'PLT001', 18);
+INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (2, 2, 2, 'PLT002', 20);
+INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (3, 3, 3, 'PLT003', 18);
+INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (4, 4, 4, 'PLT004', 20);
+INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (5, 5, 5, 'PLT005', 18);

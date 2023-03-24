@@ -1,31 +1,34 @@
--- Backticks are not supported by psql
--- Added driverID that references ID at driver table
-CREATE TABLE jeepney (
-	ID			SERIAL (6) NOT NULL PRIMARY KEY,
-	tracker		SMALLINT NOT NULL REFERENCES tracker(ID),
-	route		VARCHAR(3) NOT NULL REFERENCES route(name),
-	plateNumber	VARCHAR(6) NOT NULL,
-	capacity	SMALLINT NOT NULL,
-	UNIQUE(tracker, route, plateNumber)
-);
-
 -- Removed battery from tracker.
 -- POINT data type requires '' when being encoded.
 CREATE TABLE tracker (
-	ID			SMALLINT NOT NULL PRIMARY KEY,
+	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	coords		POINT
 );
 
 -- Color is stored as INT, can be converted using HEX()
 -- Path can be open () or closed []
 CREATE TABLE route (
-	name		VARCHAR(20) NOT NULL PRIMARY KEY,
-	color		INT NOT NULL,
-	path		PATH NOT NULL
+	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name		VARCHAR(20) NOT NULL,
+	color		INT NOT NULL,			-- Color is encoded as integer.
+	path		PATH NOT NULL,
+	UNIQUE(name, color)
 );
 
 CREATE TABLE driver (
-	ID			SERIAL (6)  NOT NULL PRIMARY KEY
-	driverFName	VARCHAR(20) NOT NULL,
-	driverLName	VARCHAR(20) NOT NULL	
-)
+	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	firstName	VARCHAR(20) NOT NULL,
+	lastName	VARCHAR(20) NOT NULL
+);
+
+-- Backticks are not supported by psql.
+-- Added driverID that references ID at driver table.
+-- CREATE this last so references already exist.
+CREATE TABLE jeepney (
+	ID			INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	trackerID	INT REFERENCES tracker(ID) ON DELETE CASCADE,
+	routeID		INT REFERENCES route(ID) ON DELETE CASCADE,
+	driverID	INT REFERENCES driver(ID) ON DELETE CASCADE,
+	plateNumber	VARCHAR(6) NOT NULL UNIQUE,
+	capacity	SMALLINT NOT NULL
+);
