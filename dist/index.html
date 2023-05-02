@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>JeePS</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/><script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script><link rel="stylesheet" href="styles.css"><div class="navbar"><link rel="stylesheet" href="navbar.css"/><a id="afirst" href="http://localhost:8080"><span class="white--text">DISKOVER++</span></a><a id="a2" href="#news"><span class="white--text">CONFIGURE GPS</span></a><div class="dropdown"><button class="dropbtn" onclick="myFunction()">ANONYMOUS USER <i class="fa fa-caret-down"></i></button><div class="dropdown-content" id="myDropdown"><a href="./login.html">Log in</a></div></div><a id="b2" href="http://localhost:8080/faq"><span class="white--text">HELP</span></a><a id="b2" href="http://localhost:8080/map"><span class="white--text">MAP</span></a><a id="b2" class="active" href="http://127.0.0.1:5501/public/index.html"><span class="white--text">JeePS</span></a></div><script defer="defer" src="/js/chunk-vendors.d5f780ba.js"></script><script defer="defer" src="/js/app.4862015c.js"></script><link href="/css/chunk-vendors.8c44a7ee.css" rel="stylesheet"></head><body><div id="map"></div><script id="site" type="module" src="script.js"></script><noscript><strong>We're sorry but test doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html><style>/* Add a black background color to the top navigation */
+    * {
+    font-family: roboto, sans-serif;
+    font-size: 14px;
+    line-height: 200%;
+    font-weight: 500;
+    }
+  .navbar {
+    background-color: #D32F2F;
+    /*overflow: hidden;*/
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    left: 0; /* Full width */
+    right: 0;
+    height: 64px;
+    z-index: 2;
+    box-shadow: 2px 2px 10px 1px #00000088;
+    
+  }</style><script>/* When the user clicks on the button, 
+  toggle between hiding and showing the dropdown content */
+  function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+  
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(e) {
+    if (!e.target.matches('.dropbtn')) {
+    var myDropdown = document.getElementById("myDropdown");
+      if (myDropdown.classList.contains('show')) {
+        myDropdown.classList.remove('show');
+      }
+    }
+  }</script>
