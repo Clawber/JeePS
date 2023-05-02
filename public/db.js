@@ -1,4 +1,4 @@
-import pg from 'pg';
+const pg = require('pg');
 const Client = pg.Client;
 
 const client = new Client({
@@ -11,7 +11,7 @@ const client = new Client({
 
 client.connect();
 
-const queryString = 'SELECT coords FROM tracker WHERE id = 1';
+const queryString = 'SELECT coords FROM tracker WHERE id = 3';
 
 // Results are returned as JSON
 client.query(queryString, (err, res) => {
@@ -25,4 +25,4 @@ client.query(queryString, (err, res) => {
     client.end()
 });
 
-export default client; 
+// export default client; 

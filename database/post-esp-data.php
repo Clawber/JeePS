@@ -6,11 +6,11 @@
 $api_key_value = "tPmAT5Ab3j7F9";
 
 // Database options
-// TODO: LAN enabled na PSQL
-$host        = "host=localhost"; # Check ipv6 thru ipconfig
+// TODO: LAN enabled na PSQL (OK), ONLINE PSQL (OK)
+$host        = "host=dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com"; # Check ipv6 thru ipconfig
 $port        = "port=5432";
 $dbname      = "dbname=jeeps";
-$credentials = "user=postgres password=jeeps101";
+$credentials = "user=admin password=FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6";
 
 // Connect to database 
 $db = pg_connect("$host $port $dbname $credentials");
@@ -54,6 +54,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 } else {
     echo "No data posted with HTTP POST.";
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    // At the moment, don't add fields to URL
+        $trackerID = $_POST["ID"]; // JeepID to trackerID
+        $X = $_POST["X"];
+        $Y = $_POST["Y"];
+        $coords = "($X,$Y)";    // use this if schema uses (X,Y)
+
+        // Sample: http://localhost/sensordata/post-esp-data.php?api_key=tPmAT5Ab3j7F9&ID=0&X=12.3&Y=18.4
+        $sql = "UPDATE tracker SET coords = '$coords' WHERE id = $trackerID";
+
+        $ret = pg_query($db, $sql);
+        if(!$ret) {
+           echo pg_last_error($db);
+           exit;
+        } else {
+           echo "Record updated successfully<br>";
+        }
+        
+        $sql = "SELECT * FROM tracker WHERE id = $trackerID";
+        $ret = pg_query($db, $sql);
+        $row = pg_fetch_row($ret);
+        for($i = 0; $i < count($row); $i++) {
+           echo "$row[$i]<br>";
+        }
+        echo "Operation done successfully<br>";
+} else {
+    echo "No query requested with HTTP GET.";
 }
 
 function test_input($data) {

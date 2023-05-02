@@ -23,7 +23,8 @@ const int ledWiFi = 2;
 const int ledALL = 14;
 
 /************* Select Target PHP Server *************/
-const char* serverName = "http://192.168.60.197:8080/database/post-esp-data.php";// "https://jeeps-api.onrender.com/api/jeeps/1"; //"http://10.0.1.101:8080/database/post-esp-data.php";  // "https://httpbin.org/";
+// TODO: Create an online PHP server.
+const char* serverName = "http://192.168.56.1:8080/database/post-esp-data.php"; // "https://jeeps-api.onrender.com/api/jeeps/1"; //"http://10.0.1.101:8080/database/post-esp-data.php";  // "https://httpbin.org/";
 
 const char* apiKeyValue = "tPmAT5Ab3j7F9";  // for verification
 char httpRequestData[64];                   // initialize http data buffer
