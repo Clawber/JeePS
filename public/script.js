@@ -67,9 +67,6 @@ var IKOTicon = L.icon({
 const URL = 'https://jeeps-api.onrender.com/api/jeeps'
 // const url = 'http://localhost:3000/api/jeeps'
 
-
-
-
 class Jeep {
   constructor(map, route, index) {
     this.map = map
@@ -128,10 +125,6 @@ getCoords() {
         this.marker.addTo(this.map);
     })
   }
-
-
-
-
 }
 
 
@@ -153,7 +146,7 @@ let map = new L.map('map' , mapOptions);
 
 
 
-/*
+
 
 
 function addRoutes(map) {
@@ -169,7 +162,7 @@ function addRoutes(map) {
     
   //}
   //L.control.layers(null, jeepRoutes).addTo(map);
- */
+}
 
 
 
@@ -186,20 +179,18 @@ function updateMarker(map, coordinates, i){
 
 
 
-function addRoutes(map) {
-  var ikotRoute = L.polyline(ikotRoutePoints, {color: 'yellow'}).addTo(map);
-  var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
-  var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
+// function addRoutes(map) {
+//   // var ikotRoute = L.polyline(ikotRoutePoints, {color: 'yellow'}).addTo(map);
+//   // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
+//   // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
 
-  var jeepRoutes = {
-    "Ikot" : ikotRoute,
-    "Ikot(Night)" : ikotEveningRoute,
-    "Toki" : tokiRoute,
-  }
-  L.control.layers(null, jeepRoutes).addTo(map);
-
-
-}
+//   var jeepRoutes = {
+//     "Ikot" : ikotRoute,
+//     "Ikot(Night)" : ikotEveningRoute,
+//     "Toki" : tokiRoute,
+//   }
+//   L.control.layers(null, jeepRoutes).addTo(map);
+// }
 
 function displayMap() {
   let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
@@ -213,7 +204,7 @@ function displayMap() {
   //let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);  
   //setInterval(function () {Jeep3.usad()}, 55);    
 
-  let Jeep4 = new Jeep(map, ikotRoutePoints, 1000);
+  let Jeep4 = new Jeep(map, currentikotRoutePoints, 1000);    // changed to currentikotRoutePoints
   setInterval(function () {Jeep4.move_online_jeep(1)}, 1000)
 
   addRoutes(map);
