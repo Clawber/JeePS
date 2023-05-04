@@ -20,19 +20,75 @@ client.connect();
 
 // TODO: For CRUD, vary query string and .query() listener function (this is only Read)
 let jeepneyID = 1;
-let queryString = `SELECT coords FROM tracker WHERE id = ${jeepneyID} ORDER by id`;
-let coords;
 
 // Results are returned as JSON
 // HERE: We will query database for coords of jeepneyID
-client.query(queryString, (err, res) => {
-    if (!err) {
-        console.log(res.rows);
-        coords = res.rows[0].coords;
-        console.log("x = " + coords.x);
-        console.log("y = " + coords.y);
-    } else {
-        console.log(err.message);
+function getCoords(jeepneyID, client) {
+    let queryString = `SELECT coords FROM tracker WHERE id = ${jeepneyID} ORDER BY id`;
+    let coords;
+    client.query(queryString, (err, res) => {
+        if (!err) {
+            console.log(res.rows);
+            coords = res.rows[0].coords;
+            console.log("x = " + coords.x);
+            console.log("y = " + coords.y);
+        } else {
+            console.log(err.message);
+        }
+        // client.end(); // TODO: Decide when to fully close client.
+    })
+}
+
+// jeepney FKs are driver, route, and tracker.
+// Hence, these must be `ideally` filled before jeepney is created.
+// We say ideally because they are nullable.
+function createJeep(driver, route, tracker, jeepney,  client) {
+    let queryString;
+    let [driverID, routeID, trackerID] = [null, null, null];
+    if (driver != null) {
+        queryString = `INSERT INTO driver (firstName, lastName) 
+                        VALUES ('${driver.firstName}', '${driver.lastName}')`;
+        client.query(queryString, (err, res) => {
+            if (!err) {
+                console.log(res.rows);
+                driverID = res.rows[0].id;
+            } else {
+                console.log(err.message);
+            }
+        })
     }
-    client.end();
-})
+    if (route != null) {
+        queryString = `INSERT INTO route (name, color, path) 
+                        VALUES ('${route.name}', ${route.color}, ${route.path})`;
+        client.query(queryString, (err, res) => {
+            if (!err) {
+                console.log(res.rows);
+                routeID = res.rows[0].id;
+            } else {
+                console.log(err.message);
+            }
+        })
+    }
+    if (tracker != null) {
+        queryString = `INSERT INTO tracker (coords) VALUES ('(0, 0)')`;
+        client.query(queryString, (err, res) => {
+            if (!err) {
+                console.log(res.rows);
+                trackerID = res.rows[0].id;
+            } else {
+                console.log(err.message);
+            }
+        })
+    }
+    queryString = `INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) 
+                    VALUES (${driverID}, ${routeID}, ${trackerID}, '${jeepney.plateNumber}', ${jeepney.capacity})`;
+    client.query(queryString, (err, res) => {
+        if (!err) {
+            console.log(res.rows);
+        } else {
+            console.log(err.message);
+        }
+    })
+}
+
+client.end();
