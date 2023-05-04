@@ -97,7 +97,7 @@ void loop() {
       
       /************* Prepare HTTP POST Data *************/
       // Ex. httpRequestData = "api_key=tPmAT5Ab3j7F9&ID=1&X=23&Y=50";
-      // Note: String() class converts values to string.
+      // Note: String()  class converts values to string.
       
       // Comment out the encoding you don't want to use
 
