@@ -1,0 +1,9 @@
+#map{
+  top:55px;
+  left: -10px;
+  right: -10px;
+  width: 105%;
+  height: 100vh;
+  z-index: 1;
+  
+}

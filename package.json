@@ -1,53 +1,20 @@
 {
-  "name": "test",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "main": "script.js",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "core-js": "^3.8.3",
-
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "pg": "^8.10.0",
-    "roboto-fontface": "*",
-    "vue": "^3.2.13",
-    "vuetify": "^3.0.0-beta.0",
-    "webfontloader": "^1.0.0"
-
-  },
-  "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+	"name": "jeeps",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.5.0",
+		"autoprefixer": "^10.4.14",
+		"postcss": "^8.4.21",
+		"svelte": "^3.54.0",
+		"tailwindcss": "^3.3.1",
+		"vite": "^4.2.0"
+	},
+	"type": "module"
 }
