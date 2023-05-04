@@ -1,7 +1,10 @@
 <?php
 // TODO: Clean-up arduino directory, transfer working files and Sketch there.
 // TODO: Get GPS working.
-// TODO: Add Arduino request and PHP response to no GPS signal." 
+// TODO: Add Arduino request and PHP response to no GPS signal."
+// TODO: LATEST, clean-up Vue files form src.
+
+// DESCRIPTION: post-esp-data.php is tracker to psql.
 // Arduino Model: ESP8266 NodeMCU
 $api_key_value = "tPmAT5Ab3j7F9";
 

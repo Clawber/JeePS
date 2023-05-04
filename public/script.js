@@ -1,5 +1,5 @@
 // Note, added these fields to package.json "type": "module", "main": "script.js",
-
+// DESCRIPTION: SIRA
 // import * as db from '/public/db.js';
 var currentikotRoutePoints = [
   [14.654787833877382, 121.06231633947266],
@@ -182,7 +182,7 @@ function addMarker(map, coordinates, i) {
 function updateMarker(map, coordinates, i){
   markers[i].remove(map);
   // console.log(coordinates);
-
+}
 
 
 
@@ -222,6 +222,4 @@ function displayMap() {
 
 
 
-displayMap()
-
-
+displayMap();

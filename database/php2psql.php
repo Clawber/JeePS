@@ -5,6 +5,7 @@
 <?php
    # http://localhost:4000/www/php2psql.php?coords=(11.16,20.32)
    # echo "$_SERVER['SERVER_ADDR']";
+   # DESCRIPTION: USELESS
 
    $coords = $_GET["coords"]; # get point value from HTTP GET
 
