@@ -20,8 +20,7 @@ const getCoords = (trackerID) => {
 }
 
 // USAGE
-getCoords(1);
-getCoords(2);
+getAllCoords.then((rows) => {console.log(rows)})
 
 // TODO: For CRUD, vary query string and .query() listener function (this is only Read)
 
