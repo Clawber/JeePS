@@ -3,36 +3,25 @@ import PG from 'pg';
 
 const Pool = PG.Pool;
 
-const connection = "postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com/jeeps?ssl=true"
+const connectionString = "postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com/jeeps?ssl=true"
 
-// Also use connectionString key to circumvent SSL errors with ?ssl=true suffix
+// Use connectionString key to circumvent SSL errors with ?ssl=true suffix
 const pool = new Pool({
-    host: "dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com",
-    user: "admin",
-    port: 5432,
-    password: "FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6",
-    database: "jeeps",
-    connectionString: connection
+    connectionString: connectionString
 });
 
-function getCoords(jeepneyID, pool) {
-    let coords;
-    pool.connect( (err, client, done) => {
-        if (err) {
-            return console.error('Connection error', err);
-            }
-            client.query(`SELECT coords FROM tracker WHERE id = ${jeepneyID} ORDER BY id`, (err, res) => {
-                // call `done()` to release the client back to the pool
-                done();
-                if (err) {
-                    return console.error('Error running query', err);
-                }
-                console.log(res.rows);
-                coords = res.rows[0].coords;
-                coords = [coords.x, coords.y]
-            });
+const getAllCoords = pool.query('SELECT * FROM tracker ORDER BY id')
+    .then(response => {return response.rows})
+
+const getCoords = (trackerID) => {
+    getAllCoords.then((rows) => {
+        console.log(rows.find(elem => elem.id == trackerID))
     })
 }
+
+// USAGE
+getCoords(1);
+getCoords(2);
 
 // TODO: For CRUD, vary query string and .query() listener function (this is only Read)
 
