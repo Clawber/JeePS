@@ -4,7 +4,6 @@
     import LeafletMap from '$lib/LeafletMap.svelte';
 </script>
 
-<main class="pt-14">
+<div class="pt-14">
     <LeafletMap />
-</main>
-
+</div>

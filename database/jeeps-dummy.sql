@@ -13,6 +13,9 @@ INSERT INTO tracker (coords) VALUES ('(0, 0)');
 INSERT INTO tracker (coords) VALUES ('(0, 0)');
 INSERT INTO tracker (coords) VALUES ('(0, 0)');
 INSERT INTO tracker (coords) VALUES ('(0, 0)');
+
+TRUNCATE jeepney;
+ALTER TABLE jeepney ALTER COLUMN id RESTART WITH 1;
 INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (1, 1, 1, 'PLT001', 18);
 INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (2, 2, 2, 'PLT002', 20);
 INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) VALUES (3, 3, 3, 'PLT003', 18);

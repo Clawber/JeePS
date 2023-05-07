@@ -1,13 +1,12 @@
 // npm install pg (not in node_modules in our case, in TypeScript local due to CS 150)
 import PG from 'pg';
 
-const Client = PG.Client;
-const Pool = PG.Pool;       // Leaving this here (although Unused) as Pool have dynamic/concurrency advantages over Client (I just don't know how to close it)
+const Pool = PG.Pool;
 
 const connection = "postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com/jeeps?ssl=true"
 
 // Also use connectionString key to circumvent SSL errors with ?ssl=true suffix
-const client = new Client({
+const pool = new Pool({
     host: "dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com",
     user: "admin",
     port: 5432,
@@ -16,38 +15,43 @@ const client = new Client({
     connectionString: connection
 });
 
-client.connect();
-
-// TODO: For CRUD, vary query string and .query() listener function (this is only Read)
-let jeepneyID = 1;
-
-// Results are returned as JSON
-// HERE: We will query database for coords of jeepneyID
-function getCoords(jeepneyID, client) {
-    let queryString = `SELECT coords FROM tracker WHERE id = ${jeepneyID} ORDER BY id`;
+function getCoords(jeepneyID, pool) {
     let coords;
-    client.query(queryString, (err, res) => {
-        if (!err) {
-            console.log(res.rows);
-            coords = res.rows[0].coords;
-            console.log("x = " + coords.x);
-            console.log("y = " + coords.y);
-        } else {
-            console.log(err.message);
-        }
-        // client.end(); // TODO: Decide when to fully close client.
+    pool.connect( (err, client, done) => {
+        if (err) {
+            return console.error('Connection error', err);
+            }
+            client.query(`SELECT coords FROM tracker WHERE id = ${jeepneyID} ORDER BY id`, (err, res) => {
+                // call `done()` to release the client back to the pool
+                done();
+                if (err) {
+                    return console.error('Error running query', err);
+                }
+                console.log(res.rows);
+                coords = res.rows[0].coords;
+                coords = [coords.x, coords.y]
+            });
     })
 }
+
+// TODO: For CRUD, vary query string and .query() listener function (this is only Read)
 
 // jeepney FKs are driver, route, and tracker.
 // Hence, these must be `ideally` filled before jeepney is created.
 // We say ideally because they are nullable.
-function createJeep(driver, route, tracker, jeepney,  client) {
+// Ex.  driver = {firstName: string, lastName: string}
+//      route = {name: string, color: string}
+//      tracker = true
+//      
+function createJeep(driver, route, tracker, jeepney,  pool) {
     let queryString;
     let [driverID, routeID, trackerID] = [null, null, null];
+    let jeepneyID;  // will store return val
+
     if (driver != null) {
         queryString = `INSERT INTO driver (firstName, lastName) 
-                        VALUES ('${driver.firstName}', '${driver.lastName}')`;
+                        VALUES ('${driver.firstName}', '${driver.lastName}')
+                        SELECT max(id) FROM driver`;
         client.query(queryString, (err, res) => {
             if (!err) {
                 console.log(res.rows);
@@ -57,9 +61,11 @@ function createJeep(driver, route, tracker, jeepney,  client) {
             }
         })
     }
+
     if (route != null) {
         queryString = `INSERT INTO route (name, color, path) 
-                        VALUES ('${route.name}', ${route.color}, ${route.path})`;
+                        VALUES ('${route.name}', ${route.color}, ${route.path});
+                        SELECT max(id) FROM route`;
         client.query(queryString, (err, res) => {
             if (!err) {
                 console.log(res.rows);
@@ -69,8 +75,10 @@ function createJeep(driver, route, tracker, jeepney,  client) {
             }
         })
     }
+
     if (tracker != null) {
-        queryString = `INSERT INTO tracker (coords) VALUES ('(0, 0)')`;
+        queryString = `INSERT INTO tracker (coords) VALUES ('(0, 0)');
+                SELECT max(id) FROM tracker`;
         client.query(queryString, (err, res) => {
             if (!err) {
                 console.log(res.rows);
@@ -80,15 +88,20 @@ function createJeep(driver, route, tracker, jeepney,  client) {
             }
         })
     }
+
     queryString = `INSERT INTO jeepney (trackerID, routeID, driverID, plateNumber, capacity) 
                     VALUES (${driverID}, ${routeID}, ${trackerID}, '${jeepney.plateNumber}', ${jeepney.capacity})`;
-    client.query(queryString, (err, res) => {
-        if (!err) {
-            console.log(res.rows);
-        } else {
-            console.log(err.message);
-        }
-    })
+    client.query(queryString)
+        .then(() => client.query(`SELECT max(id) FROM jeepney`, (err, res) => {
+            if (!err) {
+                console.log(res.rows);
+                jeepneyID = res.rows[0].max;
+            } else {
+                console.log(err.message);
+            }
+        }))
 }
 
-client.end();
+let jeepney = {plateNumber: 'SDJISS', capacity: 12}
+
+// createJeep(null, null, null, jeepney, client);
