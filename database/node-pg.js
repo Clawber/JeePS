@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 const serverIP = "localhost";
-const port = "5000";
+const port = "5432";
 
 // NOTE: Hardcode serverIP to always use the same one on build so no
 // need to change every time WiFi connection is changed. Might require

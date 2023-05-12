@@ -1,5 +1,5 @@
 // Note, added these fields to package.json "type": "module", "main": "script.js",
-
+// DESCRIPTION: SIRA
 // import * as db from '/public/db.js';
 var currentikotRoutePoints = [
   [14.654787833877382, 121.06231633947266],
@@ -52,23 +52,9 @@ var IKOTicon = L.icon({
   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-
-var IKOTicon = L.icon({
-  iconUrl: 'jeep marker try.png',
-
-  iconSize:     [60, 60], // size of the icon
-  //shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
-  //shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
-
 // GET request using fetch()
 const URL = 'https://jeeps-api.onrender.com/api/jeeps'
 // const url = 'http://localhost:3000/api/jeeps'
-
-
-
 
 class Jeep {
   constructor(map, route, index) {
@@ -128,10 +114,6 @@ getCoords() {
         this.marker.addTo(this.map);
     })
   }
-
-
-
-
 }
 
 
@@ -153,7 +135,7 @@ let map = new L.map('map' , mapOptions);
 
 
 
-/*
+
 
 
 function addRoutes(map) {
@@ -169,7 +151,7 @@ function addRoutes(map) {
     
   //}
   //L.control.layers(null, jeepRoutes).addTo(map);
- */
+}
 
 
 
@@ -182,24 +164,22 @@ function addMarker(map, coordinates, i) {
 function updateMarker(map, coordinates, i){
   markers[i].remove(map);
   // console.log(coordinates);
-
-
-
-
-function addRoutes(map) {
-  var ikotRoute = L.polyline(ikotRoutePoints, {color: 'yellow'}).addTo(map);
-  var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
-  var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
-
-  var jeepRoutes = {
-    "Ikot" : ikotRoute,
-    "Ikot(Night)" : ikotEveningRoute,
-    "Toki" : tokiRoute,
-  }
-  L.control.layers(null, jeepRoutes).addTo(map);
-
-
 }
+
+
+
+// function addRoutes(map) {
+//   // var ikotRoute = L.polyline(ikotRoutePoints, {color: 'yellow'}).addTo(map);
+//   // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
+//   // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
+
+//   var jeepRoutes = {
+//     "Ikot" : ikotRoute,
+//     "Ikot(Night)" : ikotEveningRoute,
+//     "Toki" : tokiRoute,
+//   }
+//   L.control.layers(null, jeepRoutes).addTo(map);
+// }
 
 function displayMap() {
   let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
@@ -213,7 +193,7 @@ function displayMap() {
   //let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);  
   //setInterval(function () {Jeep3.usad()}, 55);    
 
-  let Jeep4 = new Jeep(map, ikotRoutePoints, 1000);
+  let Jeep4 = new Jeep(map, currentikotRoutePoints, 1000);    // changed to currentikotRoutePoints
   setInterval(function () {Jeep4.move_online_jeep(1)}, 1000)
 
   addRoutes(map);
@@ -222,6 +202,4 @@ function displayMap() {
 
 
 
-displayMap()
-
-
+displayMap();

@@ -32,3 +32,6 @@ CREATE TABLE jeepney (
 	plateNumber	VARCHAR(6) NOT NULL UNIQUE,
 	capacity	SMALLINT NOT NULL
 );
+
+-- Restarting the Identity column:
+ALTER TABLE table ALTER COLUMN id RESTART WITH 1;
