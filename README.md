@@ -12,7 +12,7 @@ npm install
 
 ### Developing
 ---
-To continue development: 
+Start a local development server:
 ```bash
 npm run dev
 

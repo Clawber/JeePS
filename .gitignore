@@ -1,12 +1,6 @@
-
-/package
-
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .svelte-kit
-
-.DS_Store
-node_modules
 
 # local env files
 .env.local
@@ -34,7 +28,13 @@ diff.log
 # Svelte
 /build
 /.svelte-kit
+/package
 
 # Clean-up
 *~
 tempCodeRunner.js
+
+.DS_Store
+node_modules
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*

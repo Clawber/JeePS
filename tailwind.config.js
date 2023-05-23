@@ -2,6 +2,7 @@
 export default {
   content: ['./src/**/*.{svelte,html,js,ts}'],
   theme: {
+    
     extend: {
       colors:{
         'navbar-main-color': '#0c1219',
