@@ -1,5 +1,3 @@
-<!-- Tutorial: https://dev.to/khromov/using-leaflet-with-sveltekit-3jn1-->
-
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';

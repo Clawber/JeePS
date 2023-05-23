@@ -34,3 +34,7 @@ diff.log
 # Svelte
 /build
 /.svelte-kit
+
+# Clean-up
+*~
+tempCodeRunner.js

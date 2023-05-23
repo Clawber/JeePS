@@ -1,5 +1,0 @@
-The contents of this folder must be transferred to the
-appropriate src\ or public\ directory, and this
-folder must be deleted.
-
-Docu: https://node-postgres.com/
