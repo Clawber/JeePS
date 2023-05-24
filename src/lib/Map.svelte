@@ -1,55 +1,72 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js'
-  import jeep_marker from '$lib/images/jeep_marker.png'
-
+  import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
+  import jeep_marker from '$lib/images/jeep_marker.png';
 
   let mapElement;
   let map;
 
   onMount(async () => {
-    if(browser) {
+    if (browser) {
+      const leaflet = await import('leaflet');
 
+      // Leaflet Map initialization
+      // Set up map options
+      const southWest = L.latLng(14.6405,121.0542),
+          northEast = L.latLng(14.6618,121.0819),
+          bounds = L.latLngBounds(southWest, northEast);
 
+      let mapOptions = {
+        maxBounds: bounds,
+        maxZoom: 19,
+        minZoom: 10,
+        center: [14.6551,121.0684],
+        zoom: 15
+      }
+      
+      // Instantiate map
+      map = leaflet.map(mapElement, mapOptions)
 
-// import leaflet
-const leaflet = await import('leaflet');
+      leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
 
-// map initialization
-let mapOptions = {
-  center:[14.65504,121.06871],
-  zoom:15
-}
+      var IKOTicon = L.icon({
+        iconUrl: jeep_marker,
+        iconSize:     [60, 60], // size of the icon
+        iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      });
 
-map = leaflet.map(mapElement, mapOptions)
+      // setup (1 lang muna ginawa ko sa driverNum)
+      let driverNum = 1;
+      let coordinates = [];
+      let markers = [];//(nakamap dito yung kada isang markers para pwedeng maremove at update)
+      for (let i=0; i<driverNum; i++){
+        coordinates[i] = [];
+      }
 
-leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+      function addRoutes(map) {
+        var ikotRoute = L.polyline(currentikotRoutePoints, {color: 'yellow'}).addTo(map);
+        // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
+        // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
+        // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
+        
 
+        var jeepRoutes = {
+          "Ikot" : ikotRoute,
+          "Ikot(Old)" : ikotRouteOld,
+          "Ikot(Night)" : ikotEveningRoute,
+          "Toki" : tokiRoute,
+        }
+        // var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
 
+      }
+      
+        // Backend server (also hosts the frontend);
+  const URL = 'https://jeeps-api.onrender.com/api/jeeps';
 
-
-
-var IKOTicon = L.icon({
-  iconUrl: jeep_marker,
-  iconSize:     [60, 60], // size of the icon
-  //shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
-  //shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
-
-
-// GET request using fetch()
-const URL = 'https://jeeps-api.onrender.com/api/jeeps'
-
-
-
-
-// Jeeps logic start
-//----------------------------------------------------------------
 class Jeep {
   constructor(map, route, index) {
     this.map = map
@@ -63,7 +80,7 @@ class Jeep {
     // console.log(`usad, index = ${this.index}`);
     this.marker.remove(this.map)
     this.index += 1
-    this.marker = new L.Marker(this.route[ (this.index ) %(this.route.length)], {icon: IKOTicon});
+    this.marker = new L.Marker(this.route[ (this.index) %(this.route.length)], {icon: IKOTicon});
     this.marker.addTo(this.map);
   }
 
@@ -79,105 +96,35 @@ class Jeep {
         console.log(result);
         let new_coord = [result.coords[0], result.coords[1]]
 
-        // console.log(new_coord);
-        // this.marker.remove(this.map)
-        // this.index += 1
-        // this.marker = new L.Marker(this.route[ (this.index ) %(this.route.length)], {icon: IKOTicon});
-        // this.marker.addTo(this.map);
-
-        // console.log(this.route[ (this.index ) %(this.route.length)]);
-
-
         this.marker.remove(this.map)
-        this.marker = new L.Marker(new_coord, {icon: IKOTicon});
+        this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
         this.marker.addTo(this.map);
-    })
+        })
   }
-
 }
 
+      function displayMap() {
+        let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        map.addLayer(layer);
 
-// setup (1 lang muna ginawa ko sa driverNum)
-let driverNum = 1;
-let coordinates = [];
-let markers = [];//(nakamap dito yung kada isang markers para pwedeng maremove at update)
-for (let i=0; i<driverNum; i++){
-  coordinates[i] = [];
-}
+        let Jeep1 = new Jeep(map, ikotRoutePoints, 1000);
+        setInterval(() => Jeep1.move_online_jeep(1), 1000)
 
-function addRoutes(map) {
-  var ikotRoute = L.polyline(currentikotRoutePoints, {color: 'yellow'}).addTo(map);
-  // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
-  // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
-  // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
-  
+        let Jeep2 = new Jeep(map, ikotRoutePoints, 1000);
+        setInterval(() => Jeep2.move_online_jeep(2), 1000)
 
-  var jeepRoutes = {
-    "Ikot" : ikotRoute,
-    "Ikot(Old)" : ikotRouteOld,
-    "Ikot(Night)" : ikotEveningRoute,
-    "Toki" : tokiRoute,
-  }
-  // var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
+        let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);
+        setInterval(() => Jeep3.move_online_jeep(3), 1000)
 
-}
+        addRoutes(map);
 
+        map.on('click', function(ev){
+          var latlng = map.mouseEventToLatLng(ev.originalEvent);
+        });
 
-function displayMap() {
-  let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-  map.addLayer(layer);
-
-  //Make Jeeps that move around
-  // let Jeep1 = new Jeep(map, tokiRoutePoints, 500);  
-  // setInterval(function () {Jeep1.usad()}, 60);   
-  // let Jeep2 = new Jeep(map, ikotEveningRoutePoints, 100);  
-  // setInterval(function () {Jeep2.usad()}, 50);    
-  // let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);  
-  // setInterval(function () {Jeep3.usad()}, 55);    
-
-  let Jeep1 = new Jeep(map, ikotRoutePoints, 1000);
-  setInterval(function () {Jeep1.move_online_jeep(1)}, 1000)
-
-  let Jeep2 = new Jeep(map, ikotRoutePoints, 1000);
-  setInterval(function () {Jeep2.move_online_jeep(2)}, 1000)
-
-  let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);
-  setInterval(function () {Jeep3.move_online_jeep(3)}, 1000)
-
-  addRoutes(map);
-
-  map.on('click', function(ev){
-    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-    // console.log(latlng.lat + ', ' + latlng.lng);
-  });
-
-}
-
-
-
-displayMap()
-
-
-
-
-
-// --------------------------------------------------------------------------------
-// Jeeps logic end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      }
+      
+      displayMap()
     }
   });
 
@@ -187,17 +134,16 @@ displayMap()
       map.remove();
     }
   });
-</script>
 
+</script>
 
 <main>
   <div bind:this={mapElement}></div>
 </main>
 
 <style>
-  /* leaflet css */
   @import 'leaflet/dist/leaflet.css';
   main div {
-      height: 800px;
+    height: 800px;
   }
 </style>
