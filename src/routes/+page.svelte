@@ -1,9 +1,12 @@
-<!-- <h1 class="p-72">Home Page</h1> -->
-
 <script>
-    import LeafletMap from '$lib/LeafletMap.svelte';
+	import LeafletMap from '$lib/Map.svelte';
+	// import LeafletMap from '../lib/Map.svelte';
 </script>
 
-<div class="pt-14">
-    <LeafletMap />
+<div class = "pt-14">
+	
+	<LeafletMap />
 </div>
+
+
+
