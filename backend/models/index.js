@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const { Pool } = require('pg');
 
 // DB Connection
 // (change this to internal conn once deployed on Render)
@@ -23,8 +24,10 @@ db.sequelize = sequelize;
 db.users = require('./userModel') (sequelize, DataTypes)
 db.sequelize.sync();
 
-//exporting the module
-module.exports = db
+// NOTE: Reuse DB connection with other stuff
+const pool = new Pool({connectionString: connection})
 
+// Exporting modules
+module.exports = { db, pool }
 
 // Note: To improve security, use Render's api token for sending requests
