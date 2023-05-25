@@ -17,7 +17,7 @@
         if (pw === cpw) {
             pw_not_same = false;
             let data = JSON.stringify({ username, email, password: pw })
-            fetch("http://localhost:8080/api/users/signup", {
+            fetch("https://jeeps-alt.onrender.com/api/users/signup", {
                 method: "POST",
                 body: data,
                 headers: {
@@ -36,7 +36,7 @@
             return
         }
         let data = JSON.stringify({ username, password: pw })
-        fetch("http://localhost:8080/api/users/login", {
+        fetch("https://jeeps-alt.onrender.com/api/users/login", {
             method: "POST",
             body: data,
             headers: {
