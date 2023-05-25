@@ -18,6 +18,8 @@
 		"jsonwebtoken": "^9.0.0",
 		"pg": "^8.11.0",
 		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.31.1"
+		"sequelize": "^6.31.1",
+		"cors": "^2.8.5",
+		"joi": "^13.1.0"
 	}
 }

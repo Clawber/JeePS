@@ -1,8 +1,8 @@
 //importing modules
 const express = require("express");
-const db = require("../models");
+const { db, pool } = require("../models");
 //Assigning db.users to User variable
- const User = db.users;
+const User = db.users;
 
 //Function to check if username or email already exist in the database
 //this is to avoid having two users with the same username and email
@@ -16,7 +16,7 @@ const db = require("../models");
    });
    //if username exist in the database respond with a status of 409
    if (username) {
-     return res.json(409).send("username already taken");
+     return res.status(409).send("Username already taken");
    }
 
    //checking if email already exist
@@ -28,7 +28,7 @@ const db = require("../models");
 
    //if email exist in the database respond with a status of 409
    if (emailcheck) {
-     return res.json(409).send("Authentication failed");
+     return res.status(409).send("Email already taken");
    }
 
    next();
