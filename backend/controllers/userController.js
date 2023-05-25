@@ -31,7 +31,7 @@ const signup = async (req, res) => {
      console.log("user", JSON.stringify(user, null, 2));
      console.log(token);
      //send users details
-     return res.status(201).send(user);
+     return res.status(201).send("Signup successful");
    } else {
      return res.status(409).send("Details are incorrect");
    }
@@ -73,7 +73,7 @@ const login = async (req, res) => {
         console.log("user", JSON.stringify(user, null, 2));
         console.log(token);
         //send user data
-        return res.status(201).send(user);
+        return res.status(201).send("Login successful");
       } else {
         return res.status(401).send("Authentication failed");
       }
