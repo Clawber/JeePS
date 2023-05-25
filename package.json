@@ -2,7 +2,9 @@
 	"name": "root",
 	"version": "1.0.0",
 	"type": "module",
+	"main": "./models/index.js",
 	"scripts": {
+		"backend": "nodemon backend/server.js",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -26,6 +28,15 @@
 	},
 	"dependencies": {
 		"leaflet": "^1.9.3",
-		"pg": "^8.11.0"
+		"pg": "^8.11.0",
+		"bcrypt": "^5.1.0",
+		"cookie-parser": "^1.4.6",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"jsonwebtoken": "^9.0.0",
+		"pg-hstore": "^2.3.4",
+		"sequelize": "^6.31.1",
+		"cors": "^2.8.5",
+		"joi": "^13.1.0"
 	}
 }
