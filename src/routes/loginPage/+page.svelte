@@ -15,6 +15,12 @@
         console.log(pw);
 
     }
+
+    function SIGNUP(){
+        console.log(name);
+        console.log(pw);
+
+    }
 	
 </script>
 
@@ -52,7 +58,7 @@
                 <input label='Password' type='password'  class="absolute top-[170px] left-10" bind:value={pw}>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[200px]">Confirm Password</h1>
                 <input label='Password' type='password'  class="absolute top-[250px] left-10" bind:value={cpw}>
-                <button on:click={LOGIN} class="absolute top-[290px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
+                <button on:click={SIGNUP} class="absolute top-[290px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
             </div>
         </ul>
     
