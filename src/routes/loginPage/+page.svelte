@@ -23,7 +23,7 @@
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
                 }
-            }).then((res) => res.text()).then(data => console.log(data))
+            }).then((res) => res.text()).then(data => {alert(`${data}`)})
         } else {
             pw_not_same = true;
             alert("Password and confirm password do not match.")
@@ -42,7 +42,7 @@
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
-        }).then((res) => res.text()).then(data => console.log(data))
+        }).then((res) => res.text()).then(data => alert(`${data}`))
     }
 
     function reset_col() {
