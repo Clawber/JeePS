@@ -24,8 +24,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-db.sequelize.sync({ force: true }).then(() => {
-    console.log('DB has been re-synced.')
+db.sequelize.sync().then(() => {
+    console.log('DB has been synced.')
 })
 
 // Assign handler modules to URIs
