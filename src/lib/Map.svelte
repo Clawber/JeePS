@@ -52,7 +52,6 @@
         // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
         // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
         // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
-        
 
         var jeepRoutes = {
           "Ikot" : ikotRoute,
@@ -74,14 +73,6 @@ class Jeep {
     this.index = index
     this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
     // console.log(`${index}`);
-  }
-
-  usad() {
-    // console.log(`usad, index = ${this.index}`);
-    this.marker.remove(this.map)
-    this.index += 1
-    this.marker = new L.Marker(this.route[ (this.index) %(this.route.length)], {icon: IKOTicon});
-    this.marker.addTo(this.map);
   }
 
   move_online_jeep(id) {
