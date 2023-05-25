@@ -1,6 +1,6 @@
 //importing modules
 const bcrypt = require("bcrypt");
-const db = require("../models");
+const { db } = require("../models");
 const jwt = require("jsonwebtoken");
 
 // Assigning users to the variable User
@@ -33,7 +33,7 @@ const signup = async (req, res) => {
      //send users details
      return res.status(201).send(user);
    } else {
-     return res.status(409).send("Details are not correct");
+     return res.status(409).send("Details are incorrect");
    }
  } catch (error) {
    console.log(error);

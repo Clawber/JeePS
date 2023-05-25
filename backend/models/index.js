@@ -26,6 +26,6 @@ db.users = require('./userModel') (sequelize, DataTypes)
 const pool = new Pool({connectionString: connection})
 
 // Exporting modules
-module.exports = { db, pool }
+module.exports = { db: db, pool: pool }
 
 // Note: To improve security, use Render's api token for sending requests

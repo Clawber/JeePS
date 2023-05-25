@@ -2,7 +2,7 @@ const Joi = require('joi');
 const express = require("express");
 const router = express.Router()
 
-const pool = require('../models').pool
+const { db, pool } = require('../models')
 
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()

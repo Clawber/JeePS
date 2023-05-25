@@ -2,7 +2,7 @@ const express = require('express')
 const sequelize = require('sequelize')
 const dotenv = require('dotenv').config()
 const cookieParser = require('cookie-parser')
-const db = require('./models').db
+const { db, pool } = require('./models')
 
 const userRoutes = require('./routes/userRoutes')
 const jeepsRoutes = require('./routes/jeepsRoutes')
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8080
 // Assigning the variable app to express
 // IDEA: Only use one entry point, app, for our purposes
 const app = express()
-app.use(cors())
+// app.use(cors())
 
 // Middleware
 app.use(express.json())
