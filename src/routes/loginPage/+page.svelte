@@ -5,13 +5,27 @@
     $: innerHeight = 0;
     $: login = true;
     
-    let username = '';
-    let password = '';
-    let cpw ='';
-    let Name = "Username";
-
-    function SUBMIT(username, password) {
-        let data = JSON.stringify({ username, password })
+    let username, email, password, confirmPassword;
+    
+    // TODO: ADD CLIENT-SIDE VALIDATION
+    // TODO: ADD EMAIL FIELD
+    // TODO: Security considerations: API key, and removing console.logs
+    function SIGNUP(username, password, email, confirmPassword) {
+        if (password === confirmPassword) {
+            let data = JSON.stringify(username, email, password)
+            fetch("https://jeeps-alt.onrender.com/api/users/signup", {
+            method: "POST",
+            body: data,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+            }).then((res) => res.json())
+            .then((json) => console.log(json))
+        }
+    }
+    
+    function LOGIN(username, password) {
+        let data = JSON.stringify({ username, email, password })
         fetch("https://jeeps-alt.onrender.com/api/users/login", {
             method: "POST",
             body: data,
@@ -42,9 +56,9 @@
                 <button on:click={() => login=true} class={`absolute text-lg font-bold text-gray-200 left-10 top-[20px] ${login === true ? 'underline' : ''}`}>LOGIN</button>
                 <button on:click={() => login=false} class={`absolute text-lg font-bold text-gray-200 left-32 top-[20px] ${login === false ? 'underline' : ''}`}>SIGN UP</button>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[40px]">Username</h1>
-                <input label={Name} class="absolute top-[90px] left-10" bind:value={username}>
+                <input label="username" class="absolute top-[90px] left-10" bind:value={username}>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[120px]">Password</h1>
-                <input label='Password' type='password'  class="absolute top-[170px] left-10" bind:value={password}>
+                <input label='password' type='password'  class="absolute top-[170px] left-10" bind:value={password}>
                 <button on:click={LOGIN(username, password)} class="absolute top-[210px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
             </div>
 
@@ -53,12 +67,14 @@
                 <button on:click={() => login=true} class={`absolute text-lg font-bold text-gray-200 left-10 top-[20px] ${login === true ? 'underline' : ''}`}>LOGIN</button>
                 <button on:click={() => login=false} class={`absolute text-lg font-bold text-gray-200 left-32 top-[20px] ${login === false ? 'underline' : ''}`}>SIGN UP</button>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[40px]">Username</h1>
-                <input label={Name} class="absolute top-[90px] left-10" bind:value={name}>
+                <input label="username" class="absolute top-[90px] left-10" bind:value={username}>
+                <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[40px]">Email Address</h1>
+                <input label="email" class="absolute top-[90px] left-10" bind:value={email}>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[120px]">Password</h1>
-                <input label='Password' type='password'  class="absolute top-[170px] left-10" bind:value={pw}>
+                <input label='password' type='password'  class="absolute top-[170px] left-10" bind:value={password}>
                 <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[200px]">Confirm Password</h1>
-                <input label='Password' type='password'  class="absolute top-[250px] left-10" bind:value={cpw}>
-                <button on:click={SIGNUP} class="absolute top-[290px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
+                <input label='confirmPassword' type='password'  class="absolute top-[250px] left-10" bind:value={confirmPassword}>
+                <button on:click={SIGNUP(username, email, password, confirmPassword)} class="absolute top-[290px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
             </div>
         </ul>
     
