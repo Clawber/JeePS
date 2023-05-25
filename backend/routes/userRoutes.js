@@ -6,11 +6,11 @@ const userAuth = require('../middlewares/userAuth.js')
 
 const router = express.Router()
 
-//signup endpoint
-//passing the middleware function to the signup
+// Signup endpoint
+// Passing the middleware function to the signup
 router.post('/signup', userAuth.saveUser, signup)
 
-//login route
-router.post('/login', login )
+// Login route
+router.post('/login', login)
 
 module.exports = router
