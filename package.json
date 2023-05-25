@@ -15,6 +15,7 @@
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^1.0.0",
+		"@sveltejs/adapter-netlify": "^1.0.0-next.88",
 		"@sveltejs/kit": "^1.0.0",
 		"@types/cookie": "^0.5.1",
 		"autoprefixer": "^10.4.14",
@@ -27,16 +28,16 @@
 		"vite": "^4.0.0"
 	},
 	"dependencies": {
-		"leaflet": "^1.9.3",
-		"pg": "^8.11.0",
 		"bcrypt": "^5.1.0",
 		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
+		"joi": "^13.1.0",
 		"jsonwebtoken": "^9.0.0",
+		"leaflet": "^1.9.3",
+		"pg": "^8.11.0",
 		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.31.1",
-		"cors": "^2.8.5",
-		"joi": "^13.1.0"
+		"sequelize": "^6.31.1"
 	}
 }
