@@ -33,6 +33,7 @@ diff.log
 # Clean-up
 *~
 tempCodeRunner.js
+/.netlify
 
 .DS_Store
 node_modules

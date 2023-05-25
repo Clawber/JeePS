@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8080
 // Assigning the variable app to express
 // IDEA: Only use one entry point, app, for our purposes
 const app = express()
-// app.use(cors())
+app.use(cors())
 
 // Middleware
 
