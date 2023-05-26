@@ -1,9 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const { Pool } = require('pg');
+const { Pool } = require('pg'); 
+const dotenv = require('dotenv').config()
 
 // DB Connection
 // (change this to internal conn once deployed on Render) (OK)
-const connection = 'postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a/jeeps';
+const connection = process.env.connectionString;
 const sequelize = new Sequelize(connection, {
     dialect: "postgres"
 });
