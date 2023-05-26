@@ -67,33 +67,34 @@
   const URL = 'https://jeeps-api.onrender.com/api/jeeps';
 
 class Jeep {
-  constructor(map, route, index) {
+  constructor(map, route, index, mode, id) {
     this.map = map
     this.route = route
     this.index = index
     this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
     // console.log(`${index}`);
-    // if (this.mode === "online") {
 
-    // }
-  }
-
-  fetch_coords_from_api(id) {
-    let coords
-
-    fetch(URL + "/" + id)
+    if (mode === "online") {
+      console.log("online sya");
+      let result = ""
+      fetch(URL + "/" + id)
       .then((response) => response.json())
       .then((data) => {
-        data
-        coords = [data.coords[0], data.coords[1]]
-      })
+        console.log(data);
+        let new_coord = [data.coords[0], data.coords[1]]
 
-    return coords
+        this.marker.remove(this.map)
+        this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
+        this.marker.addTo(this.map);
+
+        })
+    }
   }
+
+
 
   move_online_jeep(id) {
     let result = ""
-    
     fetch(URL + "/" + id)
       // .then(commits => console.log(commits));
       .then((response) => response.json())
@@ -103,14 +104,16 @@ class Jeep {
         console.log(result);
         let new_coord = [result.coords[0], result.coords[1]]
 
-        // // old code
-        this.marker.remove(this.map)
-        this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
-        this.marker.addTo(this.map);
+        // this.marker.remove(this.map)
+        // this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
+        // this.marker.addTo(this.map);
 
-        // new code
-        // this.marker.setLatLng(new_coord)
+        this.marker.setLatLng(new_coord)
+
         })
+
+      
+        
   }
 }
 
@@ -118,13 +121,13 @@ class Jeep {
         let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         map.addLayer(layer);
 
-        let Jeep1 = new Jeep(map, ikotRoutePoints, 1000);
+        let Jeep1 = new Jeep(map, ikotRoutePoints, 1000, "online", 1);
         setInterval(() => Jeep1.move_online_jeep(1), 1000)
 
-        let Jeep2 = new Jeep(map, ikotRoutePoints, 1000);
+        let Jeep2 = new Jeep(map, ikotRoutePoints, 1000, "online", 2);
         setInterval(() => Jeep2.move_online_jeep(2), 1000)
 
-        let Jeep3 = new Jeep(map, ikotRoutePoints, 1000);
+        let Jeep3 = new Jeep(map, ikotRoutePoints, 1000, "online", 3);
         setInterval(() => Jeep3.move_online_jeep(3), 1000)
 
         addRoutes(map);
