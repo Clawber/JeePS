@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: jeeps-view
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node build/index.js
+    autoDeploy: true
