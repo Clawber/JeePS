@@ -2,8 +2,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { Pool } = require('pg');
 
 // DB Connection
-// (change this to internal conn once deployed on Render)
-const connection = 'postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a.singapore-postgres.render.com:5432/jeeps?ssl=true';
+// (change this to internal conn once deployed on Render) (OK)
+const connection = 'postgres://admin:FWq5lKmt9n8rGtyDZoUPGuTkrR8XM7v6@dpg-cgtqnlt269vbmevdbd9g-a/jeeps?ssl=true';
 const sequelize = new Sequelize(connection, {
     dialect: "postgres"
 });
