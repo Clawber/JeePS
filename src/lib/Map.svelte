@@ -65,9 +65,9 @@
 
         var jeepRoutes = {
           "Ikot" : ikotRoute,
-          "Ikot(Old)" : ikotRouteOld,
-          "Ikot(Night)" : ikotEveningRoute,
-          "Toki" : tokiRoute,
+          // "Ikot(Old)" : ikotRouteOld,
+          // "Ikot(Night)" : ikotEveningRoute,
+          // "Toki" : tokiRoute,
         }
         // var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
 
