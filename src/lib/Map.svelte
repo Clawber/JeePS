@@ -73,6 +73,22 @@ class Jeep {
     this.index = index
     this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
     // console.log(`${index}`);
+    // if (this.mode === "online") {
+
+    // }
+  }
+
+  fetch_coords_from_api(id) {
+    let coords
+
+    fetch(URL + "/" + id)
+      .then((response) => response.json())
+      .then((data) => {
+        data
+        coords = [data.coords[0], data.coords[1]]
+      })
+
+    return coords
   }
 
   move_online_jeep(id) {
@@ -87,9 +103,13 @@ class Jeep {
         console.log(result);
         let new_coord = [result.coords[0], result.coords[1]]
 
+        // // old code
         this.marker.remove(this.map)
         this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
         this.marker.addTo(this.map);
+
+        // new code
+        // this.marker.setLatLng(new_coord)
         })
   }
 }
