@@ -4,6 +4,17 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeep_marker from '$lib/images/jeep_marker.png';
 
+  const apiUrl = 'https://jeeps-api.onrender.com/api/jeeps'
+
+  async function get_coords_from_api(id) {
+  const response = await fetch(`${apiUrl}/${id}`);
+  const coords = await response.json();
+  console.log("new fetch");
+  console.log(coords);
+  return coords;
+  }
+
+
   let mapElement;
   let map;
 
@@ -94,6 +105,7 @@ class Jeep {
 
 
   move_online_jeep(id) {
+    get_coords_from_api(id)
     let result = ""
     fetch(URL + "/" + id)
       // .then(commits => console.log(commits));
@@ -122,13 +134,13 @@ class Jeep {
         map.addLayer(layer);
 
         let Jeep1 = new Jeep(map, ikotRoutePoints, 1000, "online", 1);
-        setInterval(() => Jeep1.move_online_jeep(1), 1000)
+        setInterval(() => Jeep1.move_online_jeep(1), 5000)
 
         let Jeep2 = new Jeep(map, ikotRoutePoints, 1000, "online", 2);
-        setInterval(() => Jeep2.move_online_jeep(2), 1000)
+        setInterval(() => Jeep2.move_online_jeep(2), 5000)
 
         let Jeep3 = new Jeep(map, ikotRoutePoints, 1000, "online", 3);
-        setInterval(() => Jeep3.move_online_jeep(3), 1000)
+        setInterval(() => Jeep3.move_online_jeep(3), 5000)
 
         addRoutes(map);
 
