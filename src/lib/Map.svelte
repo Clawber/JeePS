@@ -6,12 +6,11 @@
 
   const apiUrl = 'https://jeeps-api.onrender.com/api/jeeps'
 
+  // promise based function
   async function get_coords_from_api(id) {
-  const response = await fetch(`${apiUrl}/${id}`);
-  const coords = await response.json();
-  console.log("new fetch");
-  console.log(coords);
-  return coords;
+    const response = await fetch(`${apiUrl}/${id}`);
+    const coords = await response.json();
+    return coords;
   }
 
 
@@ -86,46 +85,25 @@ class Jeep {
     // console.log(`${index}`);
 
     if (mode === "online") {
-      console.log("online sya");
-      let result = ""
-      fetch(URL + "/" + id)
-      .then((response) => response.json())
+      let new_coords 
+      get_coords_from_api(id)
       .then((data) => {
-        console.log(data);
-        let new_coord = [data.coords[0], data.coords[1]]
-
-        this.marker.remove(this.map)
-        this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
+        new_coords = [data.coords[0], data.coords[1]]
+        this.marker = new L.Marker(new_coords, {icon: IKOTicon}).bindPopup('Test').openPopup();
         this.marker.addTo(this.map);
-
-        })
+      })
     }
   }
 
 
 
   move_online_jeep(id) {
+    let new_coords 
     get_coords_from_api(id)
-    let result = ""
-    fetch(URL + "/" + id)
-      // .then(commits => console.log(commits));
-      .then((response) => response.json())
       .then((data) => {
-        // result = output of url/id
-        result=data;
-        console.log(result);
-        let new_coord = [result.coords[0], result.coords[1]]
-
-        // this.marker.remove(this.map)
-        // this.marker = new L.Marker(new_coord, {icon: IKOTicon}).bindPopup('Test').openPopup();
-        // this.marker.addTo(this.map);
-
-        this.marker.setLatLng(new_coord)
-
-        })
-
-      
-        
+        new_coords = [data.coords[0], data.coords[1]]
+        this.marker.setLatLng(new_coords)  
+      })
   }
 }
 
