@@ -1,39 +1,33 @@
 // db model (all tables)
-// Note: Sequelize automatically adds id column by default
+// Note: Sequelize automatically adds id column by default, but we modify it to be a generated column
 // allowNull defaults to true
 // defaultValue defaults to NULL
+// In the future, we can add trigger functions to further automate updating of frontend.
+// DataTypes.ARRAY() and DataTypes.GEOMETR('PATH') may be used in the future.
 module.exports = (sequelize, DataTypes) => {
     const Driver = sequelize.define("driver", {
-        firstName: {
+        firstname: {
             type: DataTypes.STRING(50),
             allowNull: false
         },
-        lastName: {
+        lastname: {
             type: DataTypes.STRING(50),
             allowNull: false
         }
     }, {
         freezeTableName: true,
-        tableName: "drivers",
+        tableName: "driver",
         timestamps: false
     });
 
     const Jeepney = sequelize.define("jeepney", {
-        trackerid: {
-            type: DataTypes.INTEGER
-        },
-        routeid: {
-            type: DataTypes.INTEGER
-        },
-        driverid: {
-            type: DataTypes.INTEGER
-        },
         platenumber: {
             type: DataTypes.STRING(6),
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         capacity: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.SMALLINT,
             allowNull: false
         }
     }, {
@@ -54,23 +48,46 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         path: {
-            type: DataTypes.ARRAY(DataTypes.GEOMETRY('POINT'))
+            type: 'PATH',
+            allowNull: false
         }
     }, {
         freezeTableName: true,
         tableName: "route",
         timestamps: false
-    })
+    });
 
     const Tracker = sequelize.define("tracker", {
         coords: {
-            type: DataTypes.GEOMETRY('POINT')
+            type: 'POINT',
+            allowNull: false
         }
     }, {
         freezeTableName: true,
         tableName: "tracker",
-        timestamps: false 
-    })
+        timestamps: false
+    });
 
-    return [Driver, Jeepney, Route, Tracker]
- }
+    // Driver 1 : many Jeepney
+    Driver.hasMany(Jeepney, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    });
+    Jeepney.belongsTo(Driver);
+
+    // Route 1 : many Jeepney
+    Route.hasMany(Jeepney, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    });
+    Jeepney.belongsTo(Route);
+
+    // Tracker 1 : 1 Jeepney
+    Tracker.hasOne(Jeepney, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    });
+    Jeepney.belongsTo(Tracker);
+
+    return [Driver, Jeepney, Route, Tracker];
+}

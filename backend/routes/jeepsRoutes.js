@@ -2,7 +2,7 @@ const Joi = require('joi');
 const express = require("express");
 const router = express.Router()
 
-const { db, pool } = require('../models')
+const { db, pool } = require('../models');
 
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
@@ -42,12 +42,12 @@ const getJeepById = (request, response) => {
 router.get('/', getJeeps)
 router.get('/:id', getJeepById)
 
-
 /*
 Sample request:
 POST website/api/jeeps/1
 {"coords": [14.64827247,121.0737752]}
 */
+
 router.post('/:id', (request, response) => {
   const { error } = coords_schema.validate(request.body)
   if (error) {
