@@ -4,14 +4,6 @@ const router = express.Router()
 
 const { db, pool } = require('../models');
 
-// Synchronize .csv files with database
-const { csv_sync } = require('../controllers/dbController')
-
-const Driver = db.driver;
-const Jeepney = db.jeepney;
-const Route = db.route;
-const Tracker = db.tracker;
-
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
 })
@@ -30,18 +22,17 @@ const getJeepById = (request, response) => {
   console.log("GET by ID");
   const id = parseInt(request.params.id)
 
-  pool.query(`SELECT coords FROM tracker WHERE id = ${id} ORDER BY id`, (error, results) => {
-    if (error) {
-      throw error
-    } 
-
-    coords = results.rows[0].coords
-    message = {"id": id,
-          "coords": [coords.x, coords.y]
-        }
-
-    response.status(200).json(message)
-  } )
+  pool.query(`SELECT coords FROM tracker WHERE id = ${id}`, (error, results) => {
+    try {
+      coords = results.rows[0].coords
+      message = {"id": id,
+            "coords": [coords.x, coords.y]
+          }
+      response.status(200).json(message)
+    } catch(err) {
+      console.log(err.message)
+    }
+  })
 }
 
 // https://jeeps-api.onrender.com/api/jeeps/1

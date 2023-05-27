@@ -18,7 +18,7 @@ sequelize.authenticate().then(() => {
 });
 
 const db = {}
-db.Sequelize = Sequelize;   // Sequelize entrypoint (unused)
+db.Sequelize = Sequelize;   // Sequelize entrypoint (converts db to a Sequelize class)
 db.sequelize = sequelize;   // Actual db connection
 
 // Note: You can use sequelize.sync() to automatically synchronize all models. (see server.js)

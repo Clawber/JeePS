@@ -6,6 +6,10 @@
 // DataTypes.ARRAY() and DataTypes.GEOMETR('PATH') may be used in the future.
 module.exports = (sequelize, DataTypes) => {
     const Driver = sequelize.define("driver", {
+        id: {
+            type: DataTypes.SMALLINT,
+            primaryKey: true
+        },
         firstname: {
             type: DataTypes.STRING(50),
             allowNull: false
@@ -20,11 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
     });
 
+    // PUV plate number formats: PBC 1234, 123PBC, P123BC
     const Jeepney = sequelize.define("jeepney", {
         platenumber: {
-            type: DataTypes.STRING(6),
-            allowNull: false,
-            unique: true
+            type: DataTypes.STRING(8),
+            primaryKey: true
         },
         capacity: {
             type: DataTypes.SMALLINT,
@@ -41,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     const Route = sequelize.define("route", {
         name: {
             type: DataTypes.STRING(20),
-            allowNull: false
+            primaryKey: true
         },
         color: {
             type: DataTypes.INTEGER,
@@ -50,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         path: {
             type: 'PATH',
             allowNull: false
-        }
+        },
     }, {
         freezeTableName: true,
         tableName: "route",
@@ -58,6 +62,10 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     const Tracker = sequelize.define("tracker", {
+        id: {
+            type: DataTypes.SMALLINT,
+            primaryKey: true
+        },
         coords: {
             type: 'POINT',
             allowNull: false
@@ -83,6 +91,12 @@ module.exports = (sequelize, DataTypes) => {
     Jeepney.belongsTo(Route);
 
     // Tracker 1 : 1 Jeepney
+    // I've internally debated this for a long time,
+    // but the fact remains that we can use Tracker 1 for Jeepney 3, and that's it.
+    // Assignment of trackers to jeepneys are at the hands of the users, which
+    // may be done via hardcoding it in the .csv file (so we avoid autoincrement here)
+    // or via a website interface (dropdowns! future goal)
+    // Same idea with driver:jeepney relation. Do it yourself, user!
     Tracker.hasOne(Jeepney, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
