@@ -1,4 +1,6 @@
 <script>
+    import {} from 'dotenv/config';
+    
     //get screen size
     $: innerWidth = 0;
     $: innerHeight = 0;
@@ -21,7 +23,8 @@
                 method: "POST",
                 body: data,
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": process.env.apikey
                 }
             }).then((res) => res.text()).then(data => {alert(`${data}`)})
         } else {
@@ -40,7 +43,8 @@
             method: "POST",
             body: data,
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": process.env.apikey
             }
         }).then((res) => res.text()).then(data => alert(`${data}`))
     }
