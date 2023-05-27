@@ -19,9 +19,7 @@ function init(model, filepath) {
     fs.createReadStream(filepath)
     .pipe(parse({delimiter: ",", from_line: 1, trim: true, columns:true}))
     .on("data", async (row) => {
-        let len = Object.keys(row).length;
         let columns = Object.keys(row);
-        let values = Object.values(row);
         await model.create(row, {fields: columns})
     })
     .on("end", () => {
