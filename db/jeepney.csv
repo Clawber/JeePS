@@ -1,6 +1,6 @@
-trackerid,routeid,driverid,platenumber,capacity
-1,1,1,PLT001,18
-2,2,2,PLT002,20
-3,3,3,PLT003,18
-4,4,4,PLT004,20
-5,5,5,PLT005,18
+platenumber,capacity,driverId,routeId,trackerId
+PLT001,18,1,1,1
+PLT002,20,2,2,2
+PLT003,18,3,3,3
+PLT004,20,4,4,4
+PLT005,18,5,5,5
