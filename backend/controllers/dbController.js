@@ -1,10 +1,3 @@
-const { db, pool } = require("../models");
-
-const Driver = db.driver;
-const Jeepney = db.jeepney;
-const Route = db.route;
-const Tracker = db.tracker;
-
 // TODO: Wrap this as a transaction.
 
 // Parsing .csv files from /db
@@ -12,10 +5,10 @@ const Tracker = db.tracker;
 const fs = require('fs')
 const { parse } = require('csv-parse')
 
-// Initialize database with .csv
+// Sync database with .csv
 // A model is a table.
 // TODO: Find a better way to read the number of columns in a csv file.
-function init(model, filepath) {
+function csv_sync(model, filepath) {
     fs.createReadStream(filepath)
     .pipe(parse({delimiter: ",", from_line: 1, trim: true, columns:true}))
     .on("data", async (row) => {
@@ -29,9 +22,7 @@ function init(model, filepath) {
         console.log(error.message);
     });
 }
-init(Driver, 'db/driver.csv')
 
 // Keep database synced with .csv
 
-
-module.exports = {};
+module.exports = csv_sync;

@@ -5,7 +5,12 @@ const router = express.Router()
 const { db, pool } = require('../models');
 
 // Synchronize .csv files with database
-const dbController = require('../controllers/dbController')
+const { csv_sync } = require('../controllers/dbController')
+
+const Driver = db.driver;
+const Jeepney = db.jeepney;
+const Route = db.route;
+const Tracker = db.tracker;
 
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()

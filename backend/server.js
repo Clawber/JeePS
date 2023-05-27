@@ -24,8 +24,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+// TODO: Non-destructive sync of .csv with db
 db.sequelize.sync().then(() => {
-    console.log('DB has been synced.')
+    console.log('Users has been synced.')
 })
 
 // Assign handler modules to URIs
