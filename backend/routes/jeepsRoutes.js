@@ -4,10 +4,12 @@ const router = express.Router()
 
 const { db, pool } = require('../models');
 
+// Synchronize .csv files with database
+const dbController = require('../controllers/dbController')
+
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
 })
-
 
 const getJeeps = (request, response) => {
   console.log("GET all");

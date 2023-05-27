@@ -4,23 +4,6 @@ const dotenv = require('dotenv').config()
 
 const debug = true;
 
-// Parsing .csv files from /db
-// Note: fs (file system) runs on root
-const fs = require('fs')
-const { parse } = require('csv-parse')
-
-fs.createReadStream('./db/driver.csv')
-    .pipe(parse({ delimiter: ",", from_line: 2}))
-    .on("data", (row) => {
-        console.log(row);
-    })
-    .on("end", () => {
-        console.log("finished");
-    })
-    .on("error", (error) => {
-        console.log(error.message);
-    })
-
 // DB Connection
 const connection = (debug ? process.env.testString : process.env.connectionString);
 const sequelize = new Sequelize(connection, {

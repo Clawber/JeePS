@@ -4,11 +4,13 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeep_marker from '$lib/images/jeep_marker.png';
 
+  const debug = true;
+  const testUrl = 'http://localhost:8080/api/jeeps'
   const apiUrl = 'https://jeeps-api.onrender.com/api/jeeps'
 
   // promise based function
   async function get_coords_from_api(id) {
-    const response = await fetch(`${apiUrl}/${id}`);
+    const response = await fetch(`${(debug ? testUrl : apiUrl)}/${id}`);
     const coords = await response.json();
     return coords;
   }
