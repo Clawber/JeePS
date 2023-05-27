@@ -2,9 +2,27 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { Pool } = require('pg'); 
 const dotenv = require('dotenv').config()
 
+const debug = true;
+
+// Parsing .csv files from /db
+// Note: fs (file system) runs on root
+const fs = require('fs')
+const { parse } = require('csv-parse')
+
+fs.createReadStream('./db/driver.csv')
+    .pipe(parse({ delimiter: ",", from_line: 2}))
+    .on("data", (row) => {
+        console.log(row);
+    })
+    .on("end", () => {
+        console.log("finished");
+    })
+    .on("error", (error) => {
+        console.log(error.message);
+    })
+
 // DB Connection
-// (change this to internal conn once deployed on Render) (OK)
-const connection = process.env.connectionString;
+const connection = (debug ? process.env.testString : process.env.connectionString);
 const sequelize = new Sequelize(connection, {
     dialect: "postgres"
 });
@@ -17,10 +35,13 @@ sequelize.authenticate().then(() => {
 });
 
 const db = {}
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+db.Sequelize = Sequelize;   // Sequelize entrypoint
+db.sequelize = sequelize;   // Actual db connection
 
-//connecting to model
+// Connecting to models
+// Note: Create other tables first before creating jeepney table due to FK relationships
+// Or add reference check deferral
+[db.driver, db.jeepney, db.route, db.tracker] = require('./dbModel') (sequelize, DataTypes)
 db.users = require('./userModel') (sequelize, DataTypes)
 
 // NOTE: Reuse DB connection with other stuff
