@@ -18,8 +18,10 @@ sequelize.authenticate().then(() => {
 });
 
 const db = {}
-db.Sequelize = Sequelize;   // Sequelize entrypoint
+db.Sequelize = Sequelize;   // Sequelize entrypoint (unused)
 db.sequelize = sequelize;   // Actual db connection
+
+// Note: You can use sequelize.sync() to automatically synchronize all models. (see server.js)
 
 // Connecting to models
 // Note: Create other tables first before creating jeepney table due to FK relationships
