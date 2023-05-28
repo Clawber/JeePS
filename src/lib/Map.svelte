@@ -23,16 +23,18 @@
 
       // Leaflet Map initialization
       // Set up Map Options
-      const southWest = L.latLng(14.6405,121.0542);
-      const northEast = L.latLng(14.6618,121.0819);
+      const southWest = L.latLng(14.28654, 120.80366);
+      const northEast = L.latLng(14.84474, 121.27631);
       const bounds = L.latLngBounds(southWest, northEast);
 
       const mapOptions = {
-        // maxBounds: bounds,
-        maxZoom: 19,
+        maxBounds: bounds,
+        maxZoom: 18,
         minZoom: 10,
-        center: [14.6517,121.0681],
-        zoom: 16
+        center: L.latLng(14.6524,121.0681),
+        zoom: 16,
+        zoomSnap: 0.25,
+        wheelPxPerZoomLevel: 120
       }
       
       // Instantiate map and add desired tile layer (routes and markers to follow)
