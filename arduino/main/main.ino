@@ -23,15 +23,14 @@ const int ledWiFi = 2;
 const int ledALL = 14;
 
 /************* Select Target PHP Server *************/
-const char* serverName = "jeeps-api.onrender.com";  // // "https://"; //"http://10.0.1.101:8080/database/post-esp-data.php";  // "https://httpbin.org/";
-const char* uri        = "/api/jeeps/1";
+const char* serverName = "jeeps-alt.onrender.com";  //"jeeps-alt.onrender.com";
+const char* uri = "/api/jeeps/1";
 
 /************* Configure TrackerID::JeepID mapping  *************/
 const char* JeepID = "1";  // For testing, use JeepID = "1"
 
-// "http://192.168.56.1:8080/database/post-esp-data.php"
-
-const char fingerprint[] PROGMEM = "E1 B8 81 4C FF 40 71 61 96 53 44 47 6E 43 BD B2 B6 17 F7 20";  //jeeps onrender
+const char fingerprint[] PROGMEM = "0C 0D 28 8D EE 2F D9 F6 A3 88 E2 A9 9A CD 32 40 FD 6F 61 11";  //jeeps-alt
+// const char fingerprint[] PROGMEM = "E1 B8 81 4C FF 40 71 61 96 53 44 47 6E 43 BD B2 B6 17 F7 20";  //jeeps-api onrender
 // const char fingerprint [] PROGMEM = "85 9A AD 92 D7 8A 4B 46 97 6C F4 67 91 19 65 1A 04 63 08 4D"; //requestcatcher
 // const char fingerprint [] PROGMEM = "22:6E:AC:E3:C9:9C:47:AF:D4:53:CE:CC:A4:EC:F0:A2:E5:30:D7:62"; //httpbin.org;
 
@@ -51,6 +50,7 @@ unsigned long timerDelayGPS = 1000;
 // method declarations
 void displayInfo();
 void checkGPS();
+void(* resetFunc) (void) = 0;
 
 void setup() {
 
@@ -93,45 +93,8 @@ void loop() {
     lastTimeGPS = 0;
   }
   if ((millis() - lastTimeWifi) > timerDelayWifi) {
-    // Check WiFi connection status
-    Serial.println("TEST");
-    if (WiFi.status() == WL_CONNECTED) {
-      WiFiClientSecure client;
-      HTTPClient https;
-
-      client.setFingerprint(fingerprint);
-      yield();
-      https.begin(client, serverName, 443, uri);
-      
-      /************* Send HTTP POST Data *************/
-      Serial.print("HTTPRequest: ");
-      Serial.println(httpRequestData);
-
-      Serial.print("Attempting to Post to ");
-      Serial.println(serverName);
-      https.addHeader("Content-Type", "application/json");
-      int httpCode = https.POST(httpRequestData);
-      yield();
-
-      /************* Verify response to HTTP POST *************/
-      if (httpCode > 0) {
-        Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
-        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-          String payload = https.getString();
-          Serial.println(payload);
-        }
-      } else {
-        Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
-      }
-      // Free resources
-      https.end();
-      yield();
-    } else {
-      Serial.println("WiFi Disconnected");
-      digitalWrite(ledWiFi, LOW);
-    }
+    sendPOST();
     lastTimeWifi = millis();
-    yield();
   }
   yield();
 }
@@ -162,11 +125,6 @@ void displayInfo() {
       gpsFlag = true;
       digitalWrite(ledGPS, HIGH);
     }
-    strcpy(httpRequestData, "{\"coords\":[");
-    strcat(httpRequestData, fBuffLat);
-    strcat(httpRequestData, ",");
-    strcat(httpRequestData, fBuffLng);
-    strcat(httpRequestData, "]}");
 
     // Serial.print("httpRequestData: ");
     // Serial.println(httpRequestData);
@@ -177,4 +135,56 @@ void displayInfo() {
       digitalWrite(ledGPS, LOW);
     }
   }
+}
+
+void sendPOST() {
+  /************* Send HTTP POST Data *************/
+  Serial.println("TEST");
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClientSecure client;
+    HTTPClient https;
+
+    client.setFingerprint(fingerprint);
+    yield();
+    https.begin(client, serverName, 443, uri);
+
+    /************* Send HTTP POST Data *************/
+    Serial.print("HTTPRequest: ");
+    Serial.println(httpRequestData);
+
+    Serial.print("Attempting to Post to ");
+    Serial.println(serverName);
+    https.addHeader("Content-Type", "application/json");
+
+    strcpy(httpRequestData, "{\"coords\":[");
+    strcat(httpRequestData, fBuffLat);
+    strcat(httpRequestData, ",");
+    strcat(httpRequestData, fBuffLng);
+    strcat(httpRequestData, "]}");
+
+    int httpCode = https.POST(httpRequestData);
+    //int httpCode = https.POST("{\"coords\":[12,34]}");
+    //int httpCode = https.GET();
+    yield();
+
+    /************* Verify response to HTTP POST *************/
+    if (httpCode > 0) {
+      Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
+      if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        String payload = https.getString();
+        Serial.println(payload);
+      }
+    } else {
+      Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+    }
+    // Free resources
+    https.end();
+    yield();
+  } else {
+    /************* upon Disconnection, reset device *************/
+    Serial.println("WiFi Disconnected");
+    digitalWrite(ledWiFi, LOW);
+    resetFunc();
+  }
+  yield();
 }
