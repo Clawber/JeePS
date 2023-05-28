@@ -35,6 +35,7 @@ diff.log
 tempCodeRunner.js
 /.netlify
 /backup
+/db/old-schema
 
 .DS_Store
 node_modules
