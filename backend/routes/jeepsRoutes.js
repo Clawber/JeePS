@@ -9,9 +9,10 @@ const trackerDataSchema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
 })
 
-const getJeeps = (request, response) => {
+// Can all getCoords or by platenumber 
+const getCoords = (request, response) => {
   if (request.body.platenumber === undefined) {
-    console.log("GET all");
+    console.log("GET all coords");
     pool.query("SELECT platenumber, coords FROM jeepney", (err, results) => {
       if (err) {
         throw err
@@ -28,7 +29,7 @@ const getJeeps = (request, response) => {
           response.status(400).send("Undefined read from table.")
         } else {
           const coords = res.rows[0].coords;
-
+          // .json also jsonifies arrays!
           message = {"platenumber": plateNumber, "coords": [coords.x, coords.y]}
           response.status(200).json(message)
         }
@@ -39,15 +40,17 @@ const getJeeps = (request, response) => {
   }
 }
 
-// https://jeeps-api.onrender.com/api/jeeps/1
-// http://localhost:3000/api/jeeps/
-router.get('/', getJeeps)
+// Returns all jeepneys as an array
+const getJeeps = async (request, response) => {
+  console.log("Get all jeepneys");
+  const Jeepney = db.jeepney;
+  const jeepneys = await Jeepney.findAll({raw: true});
+  response.status(200).json(JSON.stringify(jeepneys));
+}
 
-/*
-Sample request:
-POST website/api/jeeps/1
-{"coords": [14.64827247,121.0737752]}
-*/
+router.get('/', getCoords);
+
+router.get('/jeepney', getJeeps)
 
 router.post('/', (request, response) => {
   const { error } = trackerDataSchema.validate(request.body);
