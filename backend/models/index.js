@@ -2,9 +2,10 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { Pool } = require('pg'); 
 const dotenv = require('dotenv').config()
 
+const debug = false;
+
 // DB Connection
-// (change this to internal conn once deployed on Render) (OK)
-const connection = process.env.connectionString;
+const connection = (debug ? process.env.testString : process.env.connectionString);
 const sequelize = new Sequelize(connection, {
     dialect: "postgres"
 });
@@ -17,10 +18,15 @@ sequelize.authenticate().then(() => {
 });
 
 const db = {}
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+db.Sequelize = Sequelize;   // Sequelize entrypoint (converts db to a Sequelize class)
+db.sequelize = sequelize;   // Actual db connection
 
-//connecting to model
+// Note: You can use sequelize.sync() to automatically synchronize all models. (see server.js)
+
+// Connecting to models
+// Note: Create other tables first before creating jeepney table due to FK relationships
+// Or add reference check deferral
+[db.driver, db.jeepney, db.route, db.tracker] = require('./dbModel') (sequelize, DataTypes)
 db.users = require('./userModel') (sequelize, DataTypes)
 
 // NOTE: Reuse DB connection with other stuff

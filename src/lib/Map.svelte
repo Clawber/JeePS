@@ -4,15 +4,16 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeep_marker from '$lib/images/jeep_marker.png';
 
-  const apiUrl = 'https://jeeps-api.onrender.com/api/jeeps'
+  const debug = false;
+  const testUrl = 'http://localhost:8080/api/jeeps'
+  const apiUrl = 'https://jeeps-alt.onrender.com/api/jeeps' // backend and frontend
 
   // promise based function
   async function get_coords_from_api(id) {
-    const response = await fetch(`${apiUrl}/${id}`);
+    const response = await fetch(`${(debug ? testUrl : apiUrl)}/${id}`);
     const coords = await response.json();
     return coords;
   }
-
 
   let mapElement;
   let map;
@@ -31,7 +32,7 @@
         // maxBounds: bounds,
         maxZoom: 19,
         minZoom: 10,
-        center: [14.6516,121.0678],
+        center: [14.6517,121.0681],
         zoom: 16
       }
       
@@ -72,40 +73,37 @@
         // var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
 
       }
-      
-        // Backend server (also hosts the frontend);
-  const URL = 'https://jeeps-api.onrender.com/api/jeeps';
 
-class Jeep {
-  constructor(map, route, index, mode, id) {
-    this.map = map
-    this.route = route
-    this.index = index
-    this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
-    // console.log(`${index}`);
+    class Jeep {
+      constructor(map, route, index, mode, id) {
+        this.map = map
+        this.route = route
+        this.index = index
+        this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
+        // console.log(`${index}`);
 
-    if (mode === "online") {
+        if (mode === "online") {
+          let new_coords 
+          get_coords_from_api(id)
+          .then((data) => {
+            new_coords = [data.coords[0], data.coords[1]]
+            this.marker = new L.Marker(new_coords, {icon: IKOTicon}).bindPopup('Test').openPopup();
+            this.marker.addTo(this.map);
+          })
+        }
+      }
+
+
+
+    move_online_jeep(id) {
       let new_coords 
       get_coords_from_api(id)
-      .then((data) => {
-        new_coords = [data.coords[0], data.coords[1]]
-        this.marker = new L.Marker(new_coords, {icon: IKOTicon}).bindPopup('Test').openPopup();
-        this.marker.addTo(this.map);
-      })
+        .then((data) => {
+          new_coords = [data.coords[0], data.coords[1]]
+          this.marker.setLatLng(new_coords)  
+        })
     }
   }
-
-
-
-  move_online_jeep(id) {
-    let new_coords 
-    get_coords_from_api(id)
-      .then((data) => {
-        new_coords = [data.coords[0], data.coords[1]]
-        this.marker.setLatLng(new_coords)  
-      })
-  }
-}
 
       function displayMap() {
         let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
@@ -130,14 +128,14 @@ class Jeep {
       
       displayMap()
     }
-  });
+});
 
-  onDestroy(async () => {
-    if(map) {
-      console.log('Unloading Leaflet map.');
-      map.remove();
-    }
-  });
+onDestroy(async () => {
+  if(map) {
+    console.log('Unloading Leaflet map.');
+    map.remove();
+  }
+});
 
 </script>
 

@@ -2,12 +2,11 @@ const Joi = require('joi');
 const express = require("express");
 const router = express.Router()
 
-const { db, pool } = require('../models')
+const { db, pool } = require('../models');
 
 const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
 })
-
 
 const getJeeps = (request, response) => {
   console.log("GET all");
@@ -23,18 +22,17 @@ const getJeepById = (request, response) => {
   console.log("GET by ID");
   const id = parseInt(request.params.id)
 
-  pool.query(`SELECT coords FROM tracker WHERE id = ${id} ORDER BY id`, (error, results) => {
-    if (error) {
-      throw error
-    } 
-
-    coords = results.rows[0].coords
-    message = {"id": id,
-          "coords": [coords.x, coords.y]
-        }
-
-    response.status(200).json(message)
-  } )
+  pool.query(`SELECT coords FROM tracker WHERE id = ${id}`, (error, results) => {
+    try {
+      coords = results.rows[0].coords
+      message = {"id": id,
+            "coords": [coords.x, coords.y]
+          }
+      response.status(200).json(message)
+    } catch(err) {
+      console.log(err.message)
+    }
+  })
 }
 
 // https://jeeps-api.onrender.com/api/jeeps/1
@@ -42,12 +40,12 @@ const getJeepById = (request, response) => {
 router.get('/', getJeeps)
 router.get('/:id', getJeepById)
 
-
 /*
 Sample request:
 POST website/api/jeeps/1
 {"coords": [14.64827247,121.0737752]}
 */
+
 router.post('/:id', (request, response) => {
   const { error } = coords_schema.validate(request.body)
   if (error) {
