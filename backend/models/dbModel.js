@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         capacity: {
             type: DataTypes.SMALLINT,
             allowNull: false
+        },
+        coords: {
+            type: 'POINT',
+            allowNull: false
         }
     }, {
         freezeTableName: true,
@@ -61,21 +65,6 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
     });
 
-    const Tracker = sequelize.define("tracker", {
-        id: {
-            type: DataTypes.SMALLINT,
-            primaryKey: true
-        },
-        coords: {
-            type: 'POINT',
-            allowNull: false
-        }
-    }, {
-        freezeTableName: true,
-        tableName: "tracker",
-        timestamps: false
-    });
-
     // Driver 1 : many Jeepney
     Driver.hasMany(Jeepney, {
         onDelete: 'SET NULL',
@@ -90,18 +79,5 @@ module.exports = (sequelize, DataTypes) => {
     });
     Jeepney.belongsTo(Route);
 
-    // Tracker 1 : 1 Jeepney
-    // I've internally debated this for a long time,
-    // but the fact remains that we can use Tracker 1 for Jeepney 3, and that's it.
-    // Assignment of trackers to jeepneys are at the hands of the users, which
-    // may be done via hardcoding it in the .csv file (so we avoid autoincrement here)
-    // or via a website interface (dropdowns! future goal)
-    // Same idea with driver:jeepney relation. Do it yourself, user!
-    Tracker.hasOne(Jeepney, {
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE'
-    });
-    Jeepney.belongsTo(Tracker);
-
-    return [Driver, Jeepney, Route, Tracker];
+    return [Driver, Jeepney, Route];
 }

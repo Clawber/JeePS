@@ -7,7 +7,8 @@ const debug = false;
 // DB Connection
 const connection = (debug ? process.env.testString : process.env.connectionString);
 const sequelize = new Sequelize(connection, {
-    dialect: "postgres"
+    dialect: "postgres",
+    logging: false
 });
 
 // Checking if connection is done

@@ -26,31 +26,26 @@ app.use(cookieParser())
 
 // TODO: Non-destructive sync of .csv with db. Uses Migrations.
 // Selective sync, then Synchronize .csv files with database
-const csvsync = require('./controllers/dbController')
+const csvSync = require('./controllers/dbController')
 const [Driver, Jeepney, Route, Tracker] = [db.driver, db.jeepney, db.route, db.tracker];
 // const filepaths = ['db/driver.csv', 'db/route.csv', 'db/tracker.csv', 'db/jeepney.csv']
 
-Driver.sync({force: true}).then(() => {
+Driver.sync({force:true}).then(() => {
     console.log('Driver has been synced.');
-    csvsync(Driver, 'db/driver.csv')
+    csvSync(Driver, 'db/driver.csv')
 }).then(() => {
-    Route.sync({force: true}).then(() => {
+    Route.sync({force:true}).then(() => {
         console.log('Route has been synced.');
-        csvsync(Route, 'db/route.csv');
+        csvSync(Route, 'db/route.csv');
     }).then(() => {
-        Tracker.sync({force: true}).then(() => {
-            console.log('Tracker has been synced.');
-            csvsync(Tracker, 'db/tracker.csv');
-        }).then(() => {
-            Jeepney.sync({force: true}).then(() => {
-                console.log('Jeepney has been synced.');
-                csvsync(Jeepney, 'db/jeepney.csv');
-            })
+        Jeepney.sync({force:true}).then(() => {
+            console.log('Jeepney has been synced.');
+            csvSync(Jeepney, 'db/jeepney.csv');
         })
     })
 })
 
-db.users.sync();
+db.users.sync({force:true});
 
 // Assign handler modules to URIs
 app.use('/api/users', userRoutes)
