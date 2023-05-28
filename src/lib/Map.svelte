@@ -112,7 +112,7 @@
             jeepneys.push(new Jeep(map, jeep.platenumber, jeep.capacity, jeep.coords, jeep.driverid, jeep.routename));
           })
         }).then(() => {
-          setInterval(updateJeeps, 1000 * 5)
+          setInterval(updateJeeps, 1000 * 3)
         })
       })
 
