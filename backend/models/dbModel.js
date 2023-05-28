@@ -75,9 +75,10 @@ module.exports = (sequelize, DataTypes) => {
     // Route 1 : many Jeepney
     Route.hasMany(Jeepney, {
         onDelete: 'SET NULL',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        foreignKey: 'routename',
     });
-    Jeepney.belongsTo(Route);
+    Jeepney.belongsTo(Route, {foreignKey: 'routename'});
 
     return [Driver, Jeepney, Route];
 }
