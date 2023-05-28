@@ -4,8 +4,8 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeepMarker from '$lib/images/jeep_marker.png';
 
-  const getCoordsURL = 'http://localhost:8080/api/jeeps' // backend
-  const getJeepneysURL = 'http://localhost:8080/api/jeeps/jeepney'
+  const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
+  const getJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
 
   // promise based function
   async function getCoords() {
