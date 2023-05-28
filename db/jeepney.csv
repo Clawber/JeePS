@@ -1,4 +1,4 @@
-platenumber,capacity,driverId,routeName,coords
+platenumber,capacity,driverid,routename,coords
 PLT001,18,1,Ikot,"(14.647712102528592, 121.06385850423928)"
 PLT002,20,2,Toki,"(14.647807309146891, 121.06537885865805)"
 PLT003,18,3,Philcoa,"(14.647226548271563, 121.06789310211127)"
