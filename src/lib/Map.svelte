@@ -29,7 +29,7 @@
           bounds = L.latLngBounds(southWest, northEast);
 
       let mapOptions = {
-        maxBounds: bounds,
+        // maxBounds: bounds,
         maxZoom: 19,
         minZoom: 10,
         center: [14.6517,121.0681],
