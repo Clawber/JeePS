@@ -6,11 +6,11 @@
 
   const debug = false;
   const testUrl = 'http://localhost:8080/api/jeeps'
-  const apiUrl = 'https://jeeps-alt.onrender.com/api/jeeps' // backend and frontend
+  const apiUrl = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
 
   // promise based function
-  async function get_coords_from_api(id) {
-    const response = await fetch(`${(debug ? testUrl : apiUrl)}/${id}`);
+  async function get_coords_from_api() {
+    const response = await fetch(`${(debug ? testUrl : apiUrl)}`);
     const coords = await response.json();
     return coords;
   }
@@ -86,7 +86,7 @@
           let new_coords 
           get_coords_from_api(id)
           .then((data) => {
-            new_coords = [data.coords[0], data.coords[1]]
+            new_coords = L.latLng(data.coords.x, data.coords.y)
             this.marker = new L.Marker(new_coords, {icon: IKOTicon}).bindPopup('Test').openPopup();
             this.marker.addTo(this.map);
           })
@@ -99,7 +99,7 @@
       let new_coords 
       get_coords_from_api(id)
         .then((data) => {
-          new_coords = [data.coords[0], data.coords[1]]
+          new_coords = [data.coords.x, data.coords.y]
           this.marker.setLatLng(new_coords)  
         })
     }
