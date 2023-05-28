@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { Pool } = require('pg'); 
 const dotenv = require('dotenv').config()
 
-const debug = true;
+const debug = false;
 
 // DB Connection
 const connection = (debug ? process.env.testString : process.env.connectionString);
