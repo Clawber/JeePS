@@ -6,6 +6,7 @@ const { db, pool } = require('./models')
 
 const userRoutes = require('./routes/userRoutes')
 const jeepsRoutes = require('./routes/jeepsRoutes')
+const jeepsInfoRoutes = require('./routes/jeepsInfoRoutes')
 
 const Joi = require('joi')
 const cors = require('cors')
@@ -30,7 +31,8 @@ db.sequelize.sync().then(() => {
 
 // Assign handler modules to URIs
 app.use('/api/users', userRoutes)
-app.use('/api/jeeps', jeepsRoutes)
+app.use('/api/jeeps/coords', jeepsRoutes)
+app.use('/api/jeeps/info', jeepsInfoRoutes)
 
 // Listening to server connection
 app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))
