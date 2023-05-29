@@ -8,6 +8,9 @@ const coords_schema = Joi.object({
   coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
 })
 
+const roundToFiveDecimals = (x) => {
+  return Number.parseFloat(x).toFixed(5)
+}
 
 const getJeeps = (request, response) => {
   console.log("GET all");
@@ -59,9 +62,9 @@ router.post('/:id', (request, response) => {
     const data = request.body;
 
     console.log(data);
-
-    let x = data.coords[0]
-    let y = data.coords[1]
+    
+    let x = roundToFiveDecimals(data.coords[0])
+    let y = roundToFiveDecimals(data.coords[1])
 
     // Update jeep location on the database
     let query = `UPDATE tracker SET coords = '(${x},${y})' WHERE id = ${id}`;
