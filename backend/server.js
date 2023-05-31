@@ -45,7 +45,7 @@ Driver.sync({force:true}).then(() => {
     })
 })
 
-db.users.sync({force:true});
+db.users.sync();
 
 // Assign handler modules to URIs
 app.use('/api/users', userRoutes)
