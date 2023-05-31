@@ -15,3 +15,12 @@ ON (j.driverID = d.ID)
 INNER JOIN route AS r
 ON (j.routeID = r.ID)
 ORDER BY (j.id);
+
+-- Updated query
+SELECT j.platenumber, j.capacity, j.coords, d.firstname AS driverfirstname, d.lastname AS driverlastname, r.name AS routename, r.color AS routecolor, r.path AS routepath
+FROM jeepney AS j
+INNER JOIN driver AS d
+ON (j.driverID = d.ID)
+INNER JOIN route AS r
+ON (j.routename = r.name)
+ORDER BY (j.platenumber);
