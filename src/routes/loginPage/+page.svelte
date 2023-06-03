@@ -36,16 +36,13 @@
     let username = '', email = '', pw = '', cpw = '', key = '';
     let pw_not_same = false, pw_is_cpw = false;
 
-    $: showlist = true;
-    $: showadd = false;
-    $: showdelete = false;
-    $: showmodify = false;
-    $: modifiable = false;
+    $: modifiable = false;    
 
-    
+    // replaced showlist, show add, boolean with the ff:
     $: activeOperation = "list"     // list, add delete or modify
     $: activeTable = "jeepneys"     // jeepneys, drivers, routes
     
+
     // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
     // TODO: Security considerations: API key, and removing console.logs
     function SIGNUP(username, email, pw, cpw) {
@@ -298,12 +295,12 @@
                 
                 <!--Show list  -->
                 <div class="flex justify-center">
-                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${showlist === true ? 'visible' : 'hidden'}`}>
+                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${activeOperation == "list" ? 'visible' : 'hidden'}`}>
                     <div class="flex flex-wrap justify-center">
-                    <button on:click={() => {showlist=true; showadd=false; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showlist === true ? 'underline' : ''}`}>LIST</button>
-                    <button on:click={() => {showlist=false; showadd=true; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showadd === true ? 'underline' : ''}`}>ADD</button>
-                    <button on:click={() => {showlist=false; showadd=false; showdelete=true; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showdelete === true ? 'underline' : ''}`}>DELETE</button>
-                    <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
+                    <button on:click={() => {activeOperation = "list"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "list" ? 'underline' : ''}`}>LIST</button>
+                    <button on:click={() => {activeOperation = "add"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "add" ? 'underline' : ''}`}>ADD</button>
+                    <button on:click={() => {activeOperation = "delete"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "delete" ? 'underline' : ''}`}>DELETE</button>
+                    <button on:click={() => {activeOperation = "modify"; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "modify" ? 'underline' : ''}`}>MODIFY</button>
                     </div>
 
                     <div class="flex flex-wrap justify-center">
@@ -357,12 +354,12 @@
 
                 <!--ADD  -->
                 <div class="flex justify-center">
-                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${showadd === true ? 'visible' : 'hidden'}`}>
+                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${activeOperation == "add" ? 'visible' : 'hidden'}`}>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showlist=true; showadd=false; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showlist === true ? 'underline' : ''}`}>LIST</button>
-                        <button on:click={() => {showlist=false; showadd=true; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showadd === true ? 'underline' : ''}`}>ADD</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=true; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showdelete === true ? 'underline' : ''}`}>DELETE</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
+                        <button on:click={() => {activeOperation = "list"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "list" ? 'underline' : ''}`}>LIST</button>
+                        <button on:click={() => {activeOperation = "add"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "add" ? 'underline' : ''}`}>ADD</button>
+                        <button on:click={() => {activeOperation = "delete"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "delete" ? 'underline' : ''}`}>DELETE</button>
+                        <button on:click={() => {activeOperation = "modify"; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "modify" ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
                         <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
@@ -422,12 +419,12 @@
 
                 <!--DELETE  -->
                 <div class="flex justify-center">
-                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${showdelete === true ? 'visible' : 'hidden'}`}>
+                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${activeOperation == "delete" ? 'visible' : 'hidden'}`}>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showlist=true; showadd=false; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showlist === true ? 'underline' : ''}`}>LIST</button>
-                        <button on:click={() => {showlist=false; showadd=true; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showadd === true ? 'underline' : ''}`}>ADD</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=true; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showdelete === true ? 'underline' : ''}`}>DELETE</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
+                        <button on:click={() => {activeOperation = "list"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "list" ? 'underline' : ''}`}>LIST</button>
+                        <button on:click={() => {activeOperation = "add"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "add" ? 'underline' : ''}`}>ADD</button>
+                        <button on:click={() => {activeOperation = "delete"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "delete" ? 'underline' : ''}`}>DELETE</button>
+                        <button on:click={() => {activeOperation = "modify"; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "modify" ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
                         <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
@@ -477,12 +474,12 @@
 
                 <!--MODIFY  -->
                 <div class="flex justify-center">
-                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${showmodify === true ? 'visible' : 'hidden'}`}>
+                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${activeOperation == "modify" ? 'visible' : 'hidden'}`}>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showlist=true; showadd=false; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showlist === true ? 'underline' : ''}`}>LIST</button>
-                        <button on:click={() => {showlist=false; showadd=true; showdelete=false; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showadd === true ? 'underline' : ''}`}>ADD</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=true; showmodify=false;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showdelete === true ? 'underline' : ''}`}>DELETE</button>
-                        <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
+                        <button on:click={() => {activeOperation = "list"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "list" ? 'underline' : ''}`}>LIST</button>
+                        <button on:click={() => {activeOperation = "add"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "add" ? 'underline' : ''}`}>ADD</button>
+                        <button on:click={() => {activeOperation = "delete"}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "delete" ? 'underline' : ''}`}>DELETE</button>
+                        <button on:click={() => {activeOperation = "modify"; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${activeOperation == "modify" ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
                         <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
