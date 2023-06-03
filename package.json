@@ -1,11 +1,11 @@
 {
-	"name": "root",
+	"name": "jeeps",
 	"version": "1.0.0",
 	"type": "module",
-	"main": "./models/index.js",
+	"main": "./api/app.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "nodemon ./api/app.js --exec babel-node --",
+		"start": "nodemon app.js --exec babel-node --",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -23,6 +23,7 @@
 		"autoprefixer": "^10.4.14",
 		"nodemon": "^2.0.22",
 		"postcss": "^8.4.23",
+		"sequelize-cli": "^6.6.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^2.9.2",
 		"tailwindcss": "^3.3.2",
@@ -42,7 +43,7 @@
 		"leaflet": "^1.9.3",
 		"pg": "^8.11.0",
 		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.31.1"
+		"sequelize": "^6.32.0"
 	},
 	"engines": {
 		"node": ">=16.14"
