@@ -7,6 +7,7 @@
 // Note: fs (file system) runs on root
 const fs = require('fs')
 const { parse } = require('csv-parse')
+require('dotenv').config();
 
 // Sync database with .csv
 // A model is a table.

@@ -4,6 +4,7 @@ const { db, pool } = require('./models');
 const userRoutes = require('./routes/userRoutes');
 const jeepsRoutes = require('./routes/jeepsRoutes');
 const cors = require('cors');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 8080
 
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const csvSync = require('./controllers/dbController')
-const [Driver, Jeepney, Route, Tracker] = [db.driver, db.jeepney, db.route, db.tracker];
+const [Driver, Jeepney, Route] = [db.Driver, db.Jeepney, db.Route];
 // const filepaths = ['db/driver.csv', 'db/route.csv', 'db/tracker.csv', 'db/jeepney.csv']
 
 Driver.sync({force:true}).then(() => {
@@ -32,7 +33,7 @@ Driver.sync({force:true}).then(() => {
     })
 })
 
-db.users.sync();
+db.User.sync();
 
 app.use('/api/users', userRoutes)
 app.use('/api/jeeps', jeepsRoutes)
