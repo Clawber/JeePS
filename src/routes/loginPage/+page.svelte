@@ -1,7 +1,8 @@
 <script>
     import { onMount } from "svelte"
-    import { global_isloggedin, global_username, activeOperation } from "../../components/store.js"
+    import { global_isloggedin, global_username, activeOperation, activeTable } from "../../components/store.js"
     import CrudButtons from "./CrudButtons.svelte";
+    import TableButtons from "./TableButtons.svelte";
 
     //save the value of global_isloggedin
     let savestore = false;
@@ -38,11 +39,6 @@
     let pw_not_same = false, pw_is_cpw = false;
 
     $: modifiable = false;    
-
-    // replaced showlist, show add, boolean with the ff:
-    // $: activeOperation = "list"     // list, add delete or modify
-    
-    $: activeTable = "jeepneys"     // jeepneys, drivers, routes
     
 
     // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
@@ -299,15 +295,11 @@
                 <div class="flex justify-center">
                 <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "list" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
-                    
-                    <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
-                    </div>
+                    <TableButtons/>
+
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (activeTable == "jeepneys")}
+                    {#if ($activeTable == "jeepneys")}
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each jeepneys as jeepney}
                             <div class="flex flex-wrap">
@@ -321,7 +313,7 @@
                         {/each}
                         </div>
                         <!-- list of drivers -->
-                    {:else if (activeTable == "drivers")}
+                    {:else if ($activeTable == "drivers")}
                     <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each drivers as driver}
                             <div class="flex flex-wrap">
@@ -353,10 +345,10 @@
                 <div class="flex justify-center">
                     <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "add" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
-
+                    <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (activeTable == "jeepneys")}
+                    {#if ($activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={ADDJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
@@ -372,7 +364,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (activeTable == "drivers")}
+                    {:else if ($activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={ADDDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
@@ -409,14 +401,10 @@
                 <div class="flex justify-center">
                 <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "delete" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
-                    <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
-                    </div>
+                    <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (activeTable == "jeepneys")}
+                    {#if ($activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
@@ -426,7 +414,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (activeTable == "drivers")}
+                    {:else if ($activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
@@ -459,14 +447,10 @@
                 <div class="flex justify-center">
                     <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "modify" ? 'visible' : 'hidden'}`}>
                         <CrudButtons/>
-                    <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {activeTable = "drivers";}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
-                    </div>
+                        <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (activeTable == "jeepneys")}
+                    {#if ($activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={MODIFYJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number (answer first)</h1>
@@ -482,7 +466,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (activeTable == "drivers")}
+                    {:else if ($activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={MODIFYDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (answer first)</h1>
