@@ -39,11 +39,12 @@
     $: showlist = true;
     $: showadd = false;
     $: showdelete = false;
-    $: showjeepney = true;
-    $: showdriver = false;
-    $: showroute = false;
     $: showmodify = false;
     $: modifiable = false;
+
+    
+    $: activeOperation = "list"     // list, add delete or modify
+    $: activeTable = "jeepneys"     // jeepneys, drivers, routes
     
     // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
     // TODO: Security considerations: API key, and removing console.logs
@@ -306,13 +307,13 @@
                     </div>
 
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showjeepney=true; showdriver=false; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showjeepney === true ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=true; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showdriver === true ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=false; showroute=true;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showroute === true ? 'underline' : ''}`}>ROUTES</button>
+                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
+                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
+                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
                     </div>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (showjeepney == true)}
+                    {#if (activeTable == "jeepneys")}
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each jeepneys as jeepney}
                             <div class="flex flex-wrap">
@@ -326,7 +327,7 @@
                         {/each}
                         </div>
                         <!-- list of drivers -->
-                    {:else if (showdriver == true)}
+                    {:else if (activeTable == "drivers")}
                     <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each drivers as driver}
                             <div class="flex flex-wrap">
@@ -364,13 +365,13 @@
                         <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showjeepney=true; showdriver=false; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showjeepney === true ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=true; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showdriver === true ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=false; showroute=true;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showroute === true ? 'underline' : ''}`}>ROUTES</button>
+                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
+                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
+                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
                     </div>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (showjeepney == true)}
+                    {#if (activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={ADDJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
@@ -386,7 +387,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (showdriver == true)}
+                    {:else if (activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={ADDDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
@@ -429,13 +430,13 @@
                         <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true; MODIFYCLEAR();}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showjeepney=true; showdriver=false; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showjeepney === true ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=true; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showdriver === true ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=false; showroute=true;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showroute === true ? 'underline' : ''}`}>ROUTES</button>
+                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
+                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
+                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
                     </div>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (showjeepney == true)}
+                    {#if (activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
@@ -445,7 +446,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (showdriver == true)}
+                    {:else if (activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
@@ -484,13 +485,13 @@
                         <button on:click={() => {showlist=false; showadd=false; showdelete=false; showmodify=true;}} class={`mx-10 text-lg font-bold text-gray-200 mt-5 ${showmodify === true ? 'underline' : ''}`}>MODIFY</button>
                     </div>
                     <div class="flex flex-wrap justify-center">
-                        <button on:click={() => {showjeepney=true; showdriver=false; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showjeepney === true ? 'underline' : ''}`}>JEEPNEYS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=true; showroute=false;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showdriver === true ? 'underline' : ''}`}>DRIVERS</button>
-                        <button on:click={() => {showjeepney=false; showdriver=false; showroute=true;}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${showroute === true ? 'underline' : ''}`}>ROUTES</button>
+                        <button on:click={() => {activeTable = "jeepneys"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "jeepneys") ? 'underline' : ''}`}>JEEPNEYS</button>
+                        <button on:click={() => {activeTable = "drivers"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "drivers") ? 'underline' : ''}`}>DRIVERS</button>
+                        <button on:click={() => {activeTable = "routes"}} class={`mx-10 text-lg font-bold text-gray-400 mt-5 ${(activeTable == "routes") ? 'underline' : ''}`}>ROUTES</button>
                     </div>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if (showjeepney == true)}
+                    {#if (activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={MODIFYJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number (answer first)</h1>
@@ -506,7 +507,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if (showdriver == true)}
+                    {:else if (activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={MODIFYDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (answer first)</h1>
