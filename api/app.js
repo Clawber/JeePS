@@ -17,15 +17,15 @@ const csvSync = require('./controllers/dbController')
 const [Driver, Jeepney, Route] = [db.Driver, db.Jeepney, db.Route];
 // const filepaths = ['db/driver.csv', 'db/route.csv', 'db/tracker.csv', 'db/jeepney.csv']
 
-Driver.sync().then(() => {
+Driver.sync({force: true}).then(() => {
     console.log('Driver has been synced.');
     csvSync(Driver, 'db/driver.csv')
 }).then(() => {
-    Route.sync().then(() => {
+    Route.sync({force: true}).then(() => {
         console.log('Route has been synced.');
         csvSync(Route, 'db/route.csv');
     }).then(() => {
-        Jeepney.sync().then(() => {
+        Jeepney.sync({force: true}).then(() => {
             console.log('Jeepney has been synced.');
             csvSync(Jeepney, 'db/jeepney.csv');
         })
@@ -34,7 +34,7 @@ Driver.sync().then(() => {
 
 db.User.sync();
 
-//db.sequelize.sync();
+// db.sequelize.sync();
 
 app.use('/api/users', userRoutes)
 app.use('/api/jeeps', jeepsRoutes)

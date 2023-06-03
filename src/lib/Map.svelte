@@ -5,7 +5,7 @@
   import jeepMarker from '$lib/images/jeep_marker.png';
 
   const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
-  const getJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
+  const getAllJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
 
   // promise based function
   async function getCoords() {
@@ -93,7 +93,7 @@
 
       // Function for updating jeepneys in bulk
       function updateJeeps() {
-        fetch(getJeepneysURL).then((response) => {
+        fetch(getAllJeepneysURL).then((response) => {
             response.json().then((data) => {
               JSON.parse(data).forEach((jeep) => {
                 console.log(jeep);
@@ -107,7 +107,7 @@
 
       // Fetch all jeepneys and instantiate each jeepney
       // API returns array of jeepneys
-      await fetch(getJeepneysURL).then((response) => {
+      await fetch(getAllJeepneysURL).then((response) => {
         response.json().then((data) => {
           JSON.parse(data).forEach((jeep) => {
             console.log(jeep);
