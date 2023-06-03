@@ -1,6 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
   class Driver extends Model {

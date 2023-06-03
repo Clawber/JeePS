@@ -4,7 +4,6 @@ const { db, pool } = require('./models');
 const userRoutes = require('./routes/userRoutes');
 const jeepsRoutes = require('./routes/jeepsRoutes');
 const cors = require('cors');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 8080
 

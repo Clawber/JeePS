@@ -1,6 +1,4 @@
 //user model
-require('dotenv').config();
-
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define( "User", {
         username: {
