@@ -20,7 +20,7 @@ module.exports = {
       },
       coords: {
         type: 'POINT',
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

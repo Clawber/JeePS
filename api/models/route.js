@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Route.init({
     name: {
       type: DataTypes.STRING(50),
+      unique: true,
       allowNull: false
     },
     color: {
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     path: {
       type: 'PATH',
-      allowNull: false
+      allowNull: true
     },
   }, {
     sequelize,

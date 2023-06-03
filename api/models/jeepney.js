@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     coords: {
       type: 'POINT',
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,

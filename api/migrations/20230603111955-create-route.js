@@ -11,6 +11,7 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING(50),
+        unique: true,
         allowNull: false
       },
       color: {
@@ -19,7 +20,7 @@ module.exports = {
       },
       path: {
         type: 'PATH',
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
