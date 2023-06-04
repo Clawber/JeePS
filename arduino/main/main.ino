@@ -22,19 +22,19 @@ const int ledGPS = 0;
 const int ledWiFi = 2;
 const int ledALL = 14;
 
-/************* Select Target Backend Server *************/
+/************* Select Target PHP Server *************/
 const char* serverName = "jeeps-alt.onrender.com";  //"jeeps-alt.onrender.com";
-const char* uri = "/api/jeeps/1";
+const char* uri = "/api/jeeps/jeepney/1";
 
-/************* Configure Tracker with Platenumber of target Jeep  *************/
-const char* plateNumber = "PLT001";  // For testing, use plateNumber = "PLT001"
+/************* Configure TrackerID::JeepID mapping  *************/
+const char* JeepID = "1";  // For testing, use JeepID = "1"
 
 const char fingerprint[] PROGMEM = "0C 0D 28 8D EE 2F D9 F6 A3 88 E2 A9 9A CD 32 40 FD 6F 61 11";  //jeeps-alt
 // const char fingerprint[] PROGMEM = "E1 B8 81 4C FF 40 71 61 96 53 44 47 6E 43 BD B2 B6 17 F7 20";  //jeeps-api onrender
 // const char fingerprint [] PROGMEM = "85 9A AD 92 D7 8A 4B 46 97 6C F4 67 91 19 65 1A 04 63 08 4D"; //requestcatcher
 // const char fingerprint [] PROGMEM = "22:6E:AC:E3:C9:9C:47:AF:D4:53:CE:CC:A4:EC:F0:A2:E5:30:D7:62"; //httpbin.org;
 
-char httpRequestData[128];  // initialize http data buffer
+char httpRequestData[64];  // initialize http data buffer
 
 // Initialize GPS receiver variables and buffers
 float Latitude, Longitude;
@@ -114,8 +114,8 @@ void displayInfo() {
     // Serial.println("GPS info recieved!");
     Latitude = gps.location.lat();
     Longitude = gps.location.lng();
-    dtostrf(Latitude, -8, 4, fBuffLat);
-    dtostrf(Longitude, -8, 4, fBuffLng);
+    dtostrf(Latitude, -8, 5, fBuffLat);
+    dtostrf(Longitude, -8, 5, fBuffLng);
     // Serial.print("LatBuffer: ");
     // Serial.println(fBuffLat);
     // Serial.print("LngBuffer: ");
@@ -156,7 +156,11 @@ void sendPOST() {
     Serial.println(serverName);
     https.addHeader("Content-Type", "application/json");
 
-    snprintf(httpRequestData, 128, "{ 'platenumber': %s, 'coords': [%f, %f] }", plateNumber, fBuffLat, fBuffLng);
+    strcpy(httpRequestData, "{\"coords\":[");
+    strcat(httpRequestData, fBuffLat);
+    strcat(httpRequestData, ",");
+    strcat(httpRequestData, fBuffLng);
+    strcat(httpRequestData, "]}");
 
     int httpCode = https.POST(httpRequestData);
     //int httpCode = https.POST("{\"coords\":[12,34]}");
