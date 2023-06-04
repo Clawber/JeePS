@@ -116,13 +116,29 @@ class jeepsController {
         })
     }
 
+    // Has options to join tables by foreign key
     async getAllJeepneys(req, res) {
-        const jeepney = await Jeepney.findAll({
-            order: [['id', 'ASC']]
-        });
+        let jeepney;
+        if (req.body.joinDriver && req.body.joinRoute) {
+            jeepney = await Jeepney.findAll({
+                include: [{model: Driver},
+                    {model: Route, attributes: req.body.routeNoPath ? { exclude: ['path'] } : undefined}],
+                order: [['id', 'ASC']]
+            });
+        } else if (req.body.joinDriver || req.body.joinRoute) {
+            jeepney = await Jeepney.findAll({
+                include: req.body.joinDriver ? Driver : Route,
+                order: [['id', 'ASC']]
+            });
+        } else {
+            jeepney = await Jeepney.findAll({
+                order: [['id', 'ASC']]
+            });
+        }
+
         return res.status(200).json({
             success: true,
-            message: "Drivers successfully returned.",
+            message: "Jeepneys successfully returned.",
             ret: jeepney
         })
     }
@@ -144,7 +160,7 @@ class jeepsController {
         });
         return res.status(200).json({
             success: true,
-            message: "Drivers successfully returned.",
+            message: "Routes successfully returned.",
             ret: route
         })
     }
