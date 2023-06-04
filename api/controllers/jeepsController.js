@@ -239,18 +239,6 @@ class jeepsController {
     }
 
     async updateJeepney(req, res) {
-        if (!req.body.platenumber) {
-            return res.status(400).json({
-                success: false,
-                message: "Platenumber is required."
-            })
-        } else if (!req.body.capacity) {
-            return res.status(400).json({
-                success: false,
-                message: "Capacity is required."
-            })
-        }
-
         const id = parseInt(req.params.id, 10);
 
         Jeepney.update(req.body, {
@@ -287,18 +275,6 @@ class jeepsController {
     }
 
     async updateDriver(req, res) {
-        if (!req.body.firstname) {
-            return res.status(400).json({
-                success: false,
-                message: "Driver's firstname is required."
-            })
-        } else if (!req.body.lastname) {
-            return res.status(400).json({
-                success: false,
-                message: "Driver's lastname is required."
-            })
-        }
-
         const id = parseInt(req.params.id, 10);
 
         Driver.update(req.body, {
@@ -327,18 +303,6 @@ class jeepsController {
     }
 
     async updateRoute(req, res) {
-        if (!req.body.name) {
-            return res.status(400).json({
-                success: false,
-                message: "Route name is required."
-            })
-        } else if (!req.body.color) {
-            return res.status(400).json({
-                success: false,
-                message: "Route color is required."
-            })
-        }
-
         const id = parseInt(req.params.id, 10);
 
         Route.update(req.body, {
