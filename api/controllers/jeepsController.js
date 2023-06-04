@@ -4,6 +4,27 @@ const [Jeepney, Driver, Route] = [db.Jeepney, db.Driver, db.Route];
 
 // TODO: Add middleware for validating reqs (include Joi there)
 class jeepsController {
+    updateCoords(req, res) {
+        const schema = Joi.object({
+            coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
+        })
+        schema.validate(req.body).then(async () => {
+            const id = parseInt(req.params.id);
+            const x = req.body.coords[0], y = req.body.coords[1];
+            const jeepney = await Jeepney.update(
+                { coords: `(${x},${y})` },
+                { where: {id: id}});
+            return res.status(200).json({
+                success: true,
+                message: `Coords of Jeepney with ID ${id} successfully updated.`,
+                jeepney: await Jeepney.findByPk(id)
+            })
+        }).catch((err) => {
+            console.log(err)
+            return res.status(400).send(err.message)
+        })
+    }
+
     async createJeepney(req, res) {
         const schema = Joi.object({
             platenumber: Joi.string().alphanum().trim().min(6).max(8).required(),
