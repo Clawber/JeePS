@@ -75,7 +75,8 @@
           this.coords = L.latLng(details.coords.x, details.coords.y);
           this.driverid = details.driverid;
           this.routeid = details.routeid;
-          
+          this.routename = details.Route.name;
+
           this.marker.setLatLng(this.coords);
           this.popup();
         }
@@ -87,7 +88,7 @@
              Capacity: ${this.capacity}<br>
              Lat: ${this.coords.lat}<br>
              Long: ${this.coords.lng}<br>
-             DriverID: ${this.driver}<br>
+             DriverID: ${this.driverid}<br>
              RouteName: ${this.routename}`);
         }
       }
