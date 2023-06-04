@@ -417,7 +417,8 @@ class jeepsController {
                 success: false,
                 message: err.message
             })
-        })    }
+        })    
+    }
 
     async delRoute(req, res) {
         const id = parseInt(req.params.id, 10);
@@ -443,7 +444,8 @@ class jeepsController {
                 success: false,
                 message: err.message
             })
-        })    }
+        })    
+    }
 }
 
 module.exports = new jeepsController();
