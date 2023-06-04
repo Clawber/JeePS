@@ -2,16 +2,15 @@
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
-  import jeep_marker from '$lib/images/jeep_marker.png';
+  import jeepMarker from '$lib/images/jeep_marker.png';
 
-  const debug = false;
-  const testUrl = 'http://localhost:8080/api/jeeps'
-  const apiUrl = 'https://jeeps-alt.onrender.com/api/jeeps' // backend and frontend
+  const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
+  const getAllJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
 
   // promise based function
-  async function get_coords_from_api(id) {
-    const response = await fetch(`${(debug ? testUrl : apiUrl)}/${id}`);
-    const coords = await response.json();
+  async function getCoords() {
+    const response = await fetch(getCoordsURL);
+    const coords = await response.json().coords;
     return coords;
   }
 
@@ -20,44 +19,109 @@
 
   onMount(async () => {
     if (browser) {
-      const leaflet = await import('leaflet');
+      const L = await import('leaflet');
 
       // Leaflet Map initialization
-      // Set up map options
-      const southWest = L.latLng(14.6405,121.0542),
-          northEast = L.latLng(14.6618,121.0819),
-          bounds = L.latLngBounds(southWest, northEast);
+      // Set up Map Options
+      const southWest = L.latLng(14.28654, 120.80366);
+      const northEast = L.latLng(14.84474, 121.27631);
+      const bounds = L.latLngBounds(southWest, northEast);
 
-      let mapOptions = {
-        // maxBounds: bounds,
-        maxZoom: 19,
+      const mapOptions = {
+        maxBounds: bounds,
+        maxZoom: 18,
         minZoom: 10,
-        center: [14.6517,121.0681],
-        zoom: 16
+        center: L.latLng(14.6524,121.0681),
+        zoom: 16,
+        zoomSnap: 0.25,
+        wheelPxPerZoomLevel: 120
       }
       
-      // Instantiate map
-      map = leaflet.map(mapElement, mapOptions)
+      // Instantiate map and add desired tile layer (routes and markers to follow)
+      map = L.map(mapElement, mapOptions)
 
-      leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
-
-      var IKOTicon = L.icon({
-        iconUrl: jeep_marker,
+      
+      // Define Jeepney Class (represented by marker on map)
+      // All markers in all routes currently have same icon (lack of assets)
+      var jeepIcon = L.icon({
+        iconUrl: jeepMarker,
         iconSize:     [60, 60], // size of the icon
         iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
       });
 
-      // setup (1 lang muna ginawa ko sa driverNum)
-      let driverNum = 1;
-      let coordinates = [];
-      let markers = [];//(nakamap dito yung kada isang markers para pwedeng maremove at update)
-      for (let i=0; i<driverNum; i++){
-        coordinates[i] = [];
+      class Jeep {
+        constructor(map, details) {
+          this.map = map;
+          this.id = details.id;
+          this.platenumber = details.platenumber;
+          this.capacity = details.capacity;
+          this.coords = L.latLng(details.coords.x, details.coords.y);   // TODO: Round either in backend or here
+          this.driverid = details.driverid;
+          this.routeid = details.routeid;
+          this.routename = details.Route.name;
+
+          // Map this Jeep to a marker of its own
+          this.marker = new L.Marker(this.coords, {icon: jeepIcon});
+          this.marker.addTo(this.map);
+          this.popup();
+        }
+
+        set(details) {
+          this.capacity = details.capacity;
+          this.coords = L.latLng(details.coords.x, details.coords.y);
+          this.driverid = details.driverid;
+          this.routeid = details.routeid;
+          this.routename = details.Route.name;
+
+          this.marker.setLatLng(this.coords);
+          this.popup();
+        }
+
+        popup() {
+          this.marker.bindPopup(
+            `JeepneyID: ${this.id} <br>
+             Plate Number: ${this.platenumber}<br>
+             Capacity: ${this.capacity}<br>
+             Lat: ${this.coords.lat}<br>
+             Long: ${this.coords.lng}<br>
+             DriverID: ${this.driverid}<br>
+             RouteName: ${this.routename}`);
+        }
       }
 
+      var jeepneys = [];   // store instances in array, push here new jeepneys
+
+      // Function for updating markers in bulk
+      function updateJeeps() {
+        fetch(getAllJeepneysURL).then((res) => {
+            res.json().then(async (data) => {
+              data.ret.forEach((jeep) => {
+                jeepneys.find(elem => elem.id == jeep.id)
+                .set(jeep);
+              })
+            })
+          })
+      }
+
+      // Fetch all jeepneys and instantiate each jeepney
+      // API returns array of jeepneys
+      await fetch(getAllJeepneysURL).then((res) => {
+        console.log(res)
+        res.json().then((data) => {
+          data.ret.forEach((jeep) => {
+            jeepneys.push(new Jeep(map, jeep));
+          })
+        }).then(() => {
+          console.log(jeepneys);
+          setInterval(updateJeeps, 1000 * 3)
+        })
+      })
+
+      // Function addRoutes
       function addRoutes(map) {
         var ikotRoute = L.polyline(currentikotRoutePoints, {color: 'yellow'}).addTo(map);
         // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
@@ -65,68 +129,16 @@
         // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
 
         var jeepRoutes = {
-          "Ikot" : ikotRoute,
-          // "Ikot(Old)" : ikotRouteOld,
-          // "Ikot(Night)" : ikotEveningRoute,
-          // "Toki" : tokiRoute,
-        }
-        // var layerControl = L.control.layers(null, jeepRoutes).addTo(map);
-
-      }
-
-    class Jeep {
-      constructor(map, route, index, mode, id) {
-        this.map = map
-        this.route = route
-        this.index = index
-        this.marker = new L.Marker((this.route[0]), {icon: IKOTicon})
-        // console.log(`${index}`);
-
-        if (mode === "online") {
-          let new_coords 
-          get_coords_from_api(id)
-          .then((data) => {
-            new_coords = [data.coords[0], data.coords[1]]
-            this.marker = new L.Marker(new_coords, {icon: IKOTicon}).bindPopup('Test').openPopup();
-            this.marker.addTo(this.map);
-          })
+          "Ikot" : ikotRoute
         }
       }
 
+      addRoutes(map);
 
+      // map.on('click', function(ev){
+      //   var latlng = map.mouseEventToLatLng(ev.originalEvent);
+      // });
 
-    move_online_jeep(id) {
-      let new_coords 
-      get_coords_from_api(id)
-        .then((data) => {
-          new_coords = [data.coords[0], data.coords[1]]
-          this.marker.setLatLng(new_coords)  
-        })
-    }
-  }
-
-      function displayMap() {
-        let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-        map.addLayer(layer);
-
-        let Jeep1 = new Jeep(map, ikotRoutePoints, 1000, "online", 1);
-        setInterval(() => Jeep1.move_online_jeep(1), 5000)
-
-        let Jeep2 = new Jeep(map, ikotRoutePoints, 1000, "online", 2);
-        setInterval(() => Jeep2.move_online_jeep(2), 5000)
-
-        let Jeep3 = new Jeep(map, ikotRoutePoints, 1000, "online", 3);
-        setInterval(() => Jeep3.move_online_jeep(3), 5000)
-
-        addRoutes(map);
-
-        map.on('click', function(ev){
-          var latlng = map.mouseEventToLatLng(ev.originalEvent);
-        });
-
-      }
-      
-      displayMap()
     }
 });
 

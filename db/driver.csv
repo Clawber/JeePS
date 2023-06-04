@@ -1,6 +1,6 @@
-id,firstname,lastname
-1,Eli,Vance
-2,Isaac,Kleiner
-3,Gordon,Freeman
-4,Alyx,Vance
-5,Barney,Calhoun
+firstname,lastname
+Eli,Vance
+Isaac,Kleiner
+Gordon,Freeman
+Alyx,Vance
+Barney,Calhoun

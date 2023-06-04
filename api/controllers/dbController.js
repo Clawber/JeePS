@@ -1,5 +1,5 @@
 // Synchronize .csv files with database on backend startup
-// Approach recreates all db tables using .csv records, aside from users table
+// Approach relies on enforcing of UNIQUE constraints
 
 // TODO: Wrap this in a transaction.
 
@@ -10,14 +10,13 @@ const { parse } = require('csv-parse')
 
 // Sync database with .csv
 // A model is a table.
-// TODO: Find a better way to read the number of columns in a csv file.
-// ASSUMPTION: Gaps in IDs are okay!
 // ASSUMPTION: driver id and tracker id are now HARDCODED. Client ensures that these are unique.
-function csvsync(model, filepath) {
+function csvSync(model, filepath) {
     fs.createReadStream(filepath)
     .pipe(parse({delimiter: ",", from_line: 1, trim: true, columns:true}))
     .on("data", (row) => {
-        model.create(row)
+        let PK = Object.entries(row)[0]
+        model.create(row).catch((err) => console.log(model.name, PK, err.name))
     })
     .on("end", () => {
         console.log(`Finished reading ${filepath}`);
@@ -27,4 +26,4 @@ function csvsync(model, filepath) {
     });
 }
 
-module.exports = csvsync;
+module.exports = csvSync;
