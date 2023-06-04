@@ -60,8 +60,9 @@
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
           this.coords = L.latLng(details.coords.x, details.coords.y);   // TODO: Round either in backend or here
-          this.driver = details.driverid;
-          this.route = details.routeid;
+          this.driverid = details.driverid;
+          this.routeid = details.routeid;
+          this.routename = details.Route.name;
 
           // Map this Jeep to a marker of its own
           this.marker = new L.Marker(this.coords, {icon: jeepIcon});
@@ -72,8 +73,8 @@
         set(details) {
           this.capacity = details.capacity;
           this.coords = L.latLng(details.coords.x, details.coords.y);
-          this.driver = details.driverid;
-          this.route = details.routeid;
+          this.driverid = details.driverid;
+          this.routeid = details.routeid;
           
           this.marker.setLatLng(this.coords);
           this.popup();
@@ -87,11 +88,11 @@
              Lat: ${this.coords.lat}<br>
              Long: ${this.coords.lng}<br>
              DriverID: ${this.driver}<br>
-             RouteID: ${this.route}`);
+             RouteName: ${this.routename}`);
         }
       }
 
-      var jeepneys = [];   // store instances in array
+      var jeepneys = [];   // store instances in array, push here new jeepneys
 
       // Function for updating markers in bulk
       function updateJeeps() {
@@ -110,11 +111,11 @@
       await fetch(getAllJeepneysURL).then((res) => {
         console.log(res)
         res.json().then((data) => {
-          data.ret.forEach((jeep) => console.log(jeep))
           data.ret.forEach((jeep) => {
             jeepneys.push(new Jeep(map, jeep));
           })
         }).then(() => {
+          console.log(jeepneys);
           setInterval(updateJeeps, 1000 * 3)
         })
       })
