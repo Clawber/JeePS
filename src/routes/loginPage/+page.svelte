@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte"
-    import { global_isloggedin, global_username, activeOperation, activeTable } from "../../components/store.js"
+    import { global_isloggedin, global_username, activeOperation, activeTable } from "@/components/store.js"
     import CrudButtons from "./CrudButtons.svelte";
     import TableButtons from "./TableButtons.svelte";
 
@@ -9,7 +9,7 @@
     $: if (savestore && $global_isloggedin) {
         window.sessionStorage.setItem("global_isloggedin", JSON.stringify($global_isloggedin));
     }
-    
+
     onMount(async () => {
         let ses = window.sessionStorage.getItem("global_isloggedin");
         if (ses) {
@@ -20,13 +20,14 @@
     })
 
     //check if currently logged in
+    let login;
     let isloggedin;
     global_isloggedin.subscribe(value => {
         isloggedin = value;
     });
     console.log(isloggedin);
 
-    
+
 
     //get screen size
     $: innerWidth = 0;
@@ -38,13 +39,13 @@
     let username = '', email = '', pw = '', cpw = '', key = '';
     let pw_not_same = false, pw_is_cpw = false;
 
-    $: modifiable = false;    
-    
+    $: modifiable = false;
+
 
     // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
     // TODO: Security considerations: API key, and removing console.logs
     function SIGNUP(username, email, pw, cpw) {
-        if (username == '' || email == '' || pw == '' || cpw == '') {
+        if (username === '' || email === '' || pw === '' || cpw === '') {
             alert("Blank fields are not allowed.")
             return
         }
@@ -58,7 +59,7 @@
                     "Content-type": "application/json; charset=UTF-8"
                 }
             }).then((res) => {
-            if (res.status == 201){
+            if (res.status === 201){
                 global_isloggedin.set(true);
                 global_username.set(username);
             }
@@ -69,9 +70,9 @@
             alert("Password and confirm password do not match.")
         }
     }
-    
+
     function LOGIN(username, pw) {
-        if (username == '' || pw == '') {
+        if (username === '' || pw === '') {
             alert("Blank fields are not allowed.")
             return
         }
@@ -87,7 +88,7 @@
         // global_isloggedin.set(true);
         // global_username.set(username);
         }).then((res) => {
-            if (res.status == 201){
+            if (res.status === 201){
                 global_isloggedin.set(true);
                 global_username.set(username);
             }
@@ -100,11 +101,7 @@
     }
 
     function check_pass() {
-        if (pw === cpw && pw !== '' && cpw !== '') {
-            pw_is_cpw = true;
-        } else {
-            pw_is_cpw = false;
-        }
+        pw_is_cpw = pw === cpw && pw !== '' && cpw !== '';
     }
 
     function LOGOUT(){
@@ -172,7 +169,7 @@
     function ADDJEEPNEY(){
         //to backend developers: pls add codes
     }
-    
+
     function ADDDRIVER(){
         //to backend developers: pls add codes
     }
@@ -220,13 +217,13 @@
     }
 
     function MODIFYCLEAR(){
-        mplatenum = '', mcapacity = '', mroutename = '', mdriverid = '';
+        mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
         mid = '',mfirstname = '', mlastname;
         mroute = '', mcolor = '', mpath = '';
     }
 
 
-    
+
 </script>
 
 <!--get screen size-->
@@ -291,13 +288,13 @@
                 
                 <!--Show list  -->
                 <div class="flex justify-center">
-                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "list" ? 'visible' : 'hidden'}`}>
+                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "list" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
                     <TableButtons/>
 
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if ($activeTable == "jeepneys")}
+                    {#if ($activeTable === "jeepneys")}
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each jeepneys as jeepney}
                             <div class="flex flex-wrap">
@@ -312,7 +309,7 @@
                         {/each}
                         </div>
                         <!-- list of drivers -->
-                    {:else if ($activeTable == "drivers")}
+                    {:else if ($activeTable === "drivers")}
                     <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each drivers as driver}
                             <div class="flex flex-wrap">
@@ -342,12 +339,12 @@
 
                 <!--ADD  -->
                 <div class="flex justify-center">
-                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "add" ? 'visible' : 'hidden'}`}>
+                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "add" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
                     <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if ($activeTable == "jeepneys")}
+                    {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={ADDJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
@@ -363,7 +360,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if ($activeTable == "drivers")}
+                    {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={ADDDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
@@ -396,12 +393,12 @@
 
                 <!--DELETE  -->
                 <div class="flex justify-center">
-                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "delete" ? 'visible' : 'hidden'}`}>
+                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "delete" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
                     <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if ($activeTable == "jeepneys")}
+                    {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
@@ -411,7 +408,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if ($activeTable == "drivers")}
+                    {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
@@ -442,12 +439,12 @@
 
                 <!--MODIFY  -->
                 <div class="flex justify-center">
-                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation == "modify" ? 'visible' : 'hidden'}`}>
+                    <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "modify" ? 'visible' : 'hidden'}`}>
                         <CrudButtons/>
                         <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
                         <!-- list of jeepneys -->
-                    {#if ($activeTable == "jeepneys")}
+                    {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={MODIFYJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
@@ -466,7 +463,7 @@
                         
                         </div>
                         <!-- list of drivers -->
-                    {:else if ($activeTable == "drivers")}
+                    {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={MODIFYDRIVER()}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
