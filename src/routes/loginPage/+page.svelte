@@ -87,7 +87,7 @@
         // global_isloggedin.set(true);
         // global_username.set(username);
         }).then((res) => {
-            if (res.status == 401){
+            if (res.status == 201){
                 global_isloggedin.set(true);
                 global_username.set(username);
             }
@@ -132,19 +132,19 @@
     }
 
     //add
-    let jplatenum = '', jcapacity = '', jroutename = '', jdriverid = '';
+    let jid = '', jplatenum = '', jcapacity = '', jroutename = '', jdriverid = '', jrouteid = '';
     let did = '',dfirstname = '', dlastname;
     let rroutename = '', rcolor = '', rpath = '';
     //modify
-    let mplatenum = '', mcapacity = '', mroutename = '', mdriverid = '';
+    let mjeepid = '', mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
     let mid = '',mfirstname = '', mlastname;
     let mroute = '', mcolor = '', mpath = '';
     //delete
-    let delete_jeepney = '', delete_driver = '', delete_route= '';
+    let delete_jeepney = '', delete_driver = '', delete_route= ''; // These are all IDs
 
     //to backend developers: pls fetch the actual data
     let jeepneys =[
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
+        {jid, platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
@@ -286,9 +286,7 @@
             <div class={`w-full ${isloggedin === true ? 'visible' : 'hidden'}`}>
                 <!--Logout button -->
                 <div class="flex justify-center">
-                <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-[100px] h-[50px] drop-shadow-xl flex justify-center`}>
-                    <button data-sveltekit-preload-data="tap" on:click={() => LOGOUT()} class="h-[30px] mt-[10px] bg-white rounded"><h1 class="m-0.5">Logout</h1></button>
-                </div>
+                    <button data-sveltekit-preload-data="tap" on:click={() => LOGOUT()} class="mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-[100px] h-[50px] drop-shadow-xl flex justify-center text-white"><h1 class="m-0.5 mt-3">Logout</h1></button>
                 </div>
                 
                 <!--Show list  -->
@@ -303,6 +301,7 @@
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
                         {#each jeepneys as jeepney}
                             <div class="flex flex-wrap">
+                            <p class="mx-12 mt-2">Plate ID : {jeepney.jid}</p> <!-- TODO: Add jid nonhardcode-->
                             <p class="mx-12 mt-2">Plate Number : {jeepney.platenum}</p>
                             <p class="ml-12 mt-2">Driver ID : {jeepney.driverid}</p>
                             <p class="ml-12 mt-2">Capacity : {jeepney.capacity}</p>
@@ -353,12 +352,12 @@
                             <form on:submit|preventDefault={ADDJEEPNEY()}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
                                 <input class="mt-3 ml-5" bind:value={jplatenum}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jdriverid}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                 <input  class="mt-3 ml-5" bind:value={jcapacity}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
-                                <input class="mt-3 ml-5" bind:value={jroutename}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
+                                <input class="mt-3 ml-5" bind:value={jdriverid}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
+                                <input class="mt-3 ml-5" bind:value={jrouteid}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                             </form>
                         
@@ -367,8 +366,6 @@
                     {:else if ($activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={ADDDRIVER()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                            <input class="mt-3 ml-5" bind:value={did}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
                             <input class="mt-3 ml-5" bind:value={dfirstname}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
@@ -407,7 +404,7 @@
                     {#if ($activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY()}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
                                 <input class="mt-3 ml-5" bind:value={delete_jeepney}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                             </form>
@@ -426,7 +423,7 @@
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEROUTE()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route Name</h1>
+                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
                             <input class="mt-3 ml-5" bind:value={delete_route}>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                         </form>
@@ -453,14 +450,17 @@
                     {#if ($activeTable == "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={MODIFYJEEPNEY()}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number (answer first)</h1>
-                                <input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={mdriverid}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
+                                <!--<input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>-->
+                                <input class="mt-3 ml-5" bind:value={mjeepid}> <!--TODO: Fix variable names-->
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
+                                <input  class="mt-3 ml-5" bind:value={mplatenum}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                 <input  class="mt-3 ml-5" bind:value={mcapacity}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
-                                <input class="mt-3 ml-5" bind:value={mroutename}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
+                                <input class="mt-3 ml-5" bind:value={mdriverid}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
+                                <input class="mt-3 ml-5" bind:value={mrouteid}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                             </form>
                         
@@ -469,8 +469,8 @@
                     {:else if ($activeTable == "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={MODIFYDRIVER()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (answer first)</h1>
-                            <input on:keydown={FETCHDRIVER(mid)} class="mt-3 ml-5" bind:value={mid}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
+                            <input class="mt-3 ml-5" bind:value={mid}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
                             <input class="mt-3 ml-5" bind:value={mfirstname}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
@@ -482,8 +482,8 @@
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={MODIFYROUTE()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route Name (answer first)</h1>
-                            <input on:keydown={FETCHROUTE(mroute)} class="mt-3 ml-5" bind:value={mroute}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (required)</h1>
+                            <input class="mt-3 ml-5" bind:value={mroute}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Color</h1>
                             <input class="mt-3 ml-5" bind:value={mcolor}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Path</h1>

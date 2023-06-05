@@ -93,7 +93,7 @@
     </li>
 
     <!--Login Link-->
-    <li class={`${innerWidth > 900 ? 'visible' : 'hidden'}`}>
+    <li class={`${innerWidth > 500 ? 'visible' : 'hidden'}`}>
     <a href="/loginPage">
     <div class={`mt-3 h-full w-full bg-navbar-highlight-color bg-opacity-0 hover:bg-opacity-100 ${currentRoute === '/loginPage' ? 'bg-opacity-100' : 'bg-opacity-0'}`} >
         <img src="../gray-tag.png" alt="gray-tag" class="w-24 -mt-3 ">
