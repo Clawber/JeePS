@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte"
-    import { global_isloggedin, global_username, activeOperation, activeTable } from "@/components/store.js"
+    import { global_isloggedin, global_username, activeOperation, activeTable } from "../../components/store.js"
     import CrudButtons from "./CrudButtons.svelte";
     import TableButtons from "./TableButtons.svelte";
 
@@ -44,7 +44,7 @@
 
     // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
     // TODO: Security considerations: API key, and removing console.logs
-    function SIGNUP(username, email, pw, cpw) {
+    function SIGNUP() {
         if (username === '' || email === '' || pw === '' || cpw === '') {
             alert("Blank fields are not allowed.")
             return
@@ -71,7 +71,7 @@
         }
     }
 
-    function LOGIN(username, pw) {
+    function LOGIN() {
         if (username === '' || pw === '') {
             alert("Blank fields are not allowed.")
             return
@@ -217,9 +217,16 @@
     }
 
     function MODIFYCLEAR(){
-        mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
-        mid = '',mfirstname = '', mlastname;
-        mroute = '', mcolor = '', mpath = '';
+        mplatenum = '';
+        mcapacity = '';
+        mrouteid = '';
+        mdriverid = '';
+        mid = '';
+        mfirstname = '';
+        mlastname = '';
+        mroute = '';
+        mcolor = '';
+        mpath = '';
     }
 
 
@@ -246,7 +253,7 @@
                 <img src="../navbar-jeep.png" alt="" class="absolute h-[250px] -right-[50px] top-[20px]">
                 <button on:click={() => login=true} class={`absolute text-lg font-bold text-gray-200 left-10 top-[20px] ${login === true ? 'underline' : ''}`}>LOGIN</button>
                 <button on:click={() => login=false} class={`absolute text-lg font-bold text-gray-200 left-32 top-[20px] ${login === false ? 'underline' : ''}`}>SIGN UP</button>
-                <form on:submit|preventDefault={LOGIN(username, pw)}>
+                <form on:submit|preventDefault={LOGIN}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[40px]">Username</h1>
                     <input label='username' class="absolute top-[90px] left-10" bind:value={username}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[120px]">Password</h1>
@@ -260,7 +267,7 @@
                 <img src="../navbar-jeep.png" alt="" class="absolute h-[250px] -right-[50px] top-[20px]">
                 <button on:click={() => login=true} class={`absolute text-lg font-bold text-gray-200 left-10 top-[20px] ${login === true ? 'underline' : ''}`}>LOGIN</button>
                 <button on:click={() => login=false} class={`absolute text-lg font-bold text-gray-200 left-32 top-[20px] ${login === false ? 'underline' : ''}`}>SIGN UP</button>
-                <form on:submit|preventDefault={SIGNUP(username, email, pw, cpw)}>    
+                <form on:submit|preventDefault={SIGNUP}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[40px]">Username</h1>
                     <input label='username' class="absolute top-[90px] left-10" bind:value={username}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[120px]">Email</h1>

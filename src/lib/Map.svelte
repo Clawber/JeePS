@@ -4,15 +4,10 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeepMarker from '$lib/images/jeep_marker.png';
 
+  // For development, use 'http://localhost:8080/api/jeeps/jeepney'
+  // For production, use 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
   const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
-  const getAllJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
-
-  // promise based function
-  async function getCoords() {
-    const response = await fetch(getCoordsURL);
-    const coords = await response.json().coords;
-    return coords;
-  }
+  const getAllJeepneysURL = 'http://localhost:8080/api/jeeps/jeepney'
 
   let mapElement;
   let map;
@@ -83,13 +78,13 @@
 
         popup() {
           this.marker.bindPopup(
-            `JeepneyID: ${this.id} <br>
+            `Jeepney ID: ${this.id} <br>
              Plate Number: ${this.platenumber}<br>
              Capacity: ${this.capacity}<br>
-             Lat: ${this.coords.lat}<br>
-             Long: ${this.coords.lng}<br>
-             DriverID: ${this.driverid}<br>
-             RouteName: ${this.routename}`);
+             Driver Name: ${this.driverid}<br>
+             Route Name: ${this.routename}<br>
+             Coords: (${this.coords.lat},${this.coords.lng})<br>`
+            );
         }
       }
 
@@ -100,7 +95,7 @@
         fetch(getAllJeepneysURL).then((res) => {
             res.json().then(async (data) => {
               data.ret.forEach((jeep) => {
-                jeepneys.find(elem => elem.id == jeep.id)
+                jeepneys.find(elem => elem.id === jeep.id)
                 .set(jeep);
               })
             })
