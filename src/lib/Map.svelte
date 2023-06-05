@@ -7,7 +7,7 @@
   // For development, use 'http://localhost:8080/api/jeeps/jeepney'
   // For production, use 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
   const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
-  const getAllJeepneysURL = 'http://localhost:8080/api/jeeps/jeepney'
+  const getAllJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
 
   let mapElement;
   let map;
