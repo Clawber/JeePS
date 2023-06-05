@@ -6,6 +6,29 @@
     //get screen size
     $: innerWidth = 0;
     $: innerHeight = 0;
+
+    //getting value of username
+    import { onMount } from "svelte"
+    import { global_username } from "../components/store.js"
+
+    let savestore = false;
+    $: if (savestore && $global_username) {
+        window.sessionStorage.setItem("global_username", JSON.stringify($global_username));
+    }
+    
+    onMount(async () => {
+        let ses = window.sessionStorage.getItem("global_username");
+        if (ses) {
+            console.log("sob-- ~ loading ses", ses);
+            $global_username = JSON.parse(ses);
+        }
+        savestore = true;
+    })
+
+    let hasusername;
+    global_username.subscribe(value => {
+        hasusername = value;
+    });
     
 </script>
 
@@ -70,12 +93,12 @@
     </li>
 
     <!--Login Link-->
-    <li class={`${innerWidth > 900 ? 'visible' : 'hidden'}`}>
+    <li class={`${innerWidth > 500 ? 'visible' : 'hidden'}`}>
     <a href="/loginPage">
     <div class={`mt-3 h-full w-full bg-navbar-highlight-color bg-opacity-0 hover:bg-opacity-100 ${currentRoute === '/loginPage' ? 'bg-opacity-100' : 'bg-opacity-0'}`} >
         <img src="../gray-tag.png" alt="gray-tag" class="w-24 -mt-3 ">
         <img src="../blue-tag.png" alt="yellow-tag" class={` w-24 -mt-13.5 ${currentRoute === '/loginPage' ? 'opacity-100' : 'opacity-0'}`}>
-        <h1 class="-my-10 mx-3">LOGIN</h1>
+        <h1 class="-my-10 mx-3">{hasusername}</h1>
     </div>
     </a>
     </li>

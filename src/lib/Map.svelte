@@ -135,9 +135,9 @@
 
       addRoutes(map);
 
-      // map.on('click', function(ev){
-      //   var latlng = map.mouseEventToLatLng(ev.originalEvent);
-      // });
+      map.on('click', function(ev){
+        var latlng = map.mouseEventToLatLng(ev.originalEvent);
+      });
 
     }
 });
