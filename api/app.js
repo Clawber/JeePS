@@ -28,6 +28,11 @@ Driver.sync({force: true}).then(() => {
         Jeepney.sync({force: true}).then(() => {
             console.log('Jeepney has been synced.');
             csvSync(Jeepney, 'db/jeepney.csv');
+        }).then(() => {
+            app.use('/api/users', userRoutes)
+            app.use('/api/jeeps', jeepsRoutes)
+
+            app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))
         })
     })
 })
@@ -36,7 +41,3 @@ db.User.sync();
 
 // db.sequelize.sync();
 
-app.use('/api/users', userRoutes)
-app.use('/api/jeeps', jeepsRoutes)
-
-app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))
