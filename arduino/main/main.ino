@@ -116,6 +116,8 @@ void displayInfo() {
     Longitude = gps.location.lng();
     dtostrf(Latitude, -8, 5, fBuffLat);
     dtostrf(Longitude, -8, 5, fBuffLng);
+    printf(fBuffLat);
+    printf(fBuffLng);
     // Serial.print("LatBuffer: ");
     // Serial.println(fBuffLat);
     // Serial.print("LngBuffer: ");
@@ -129,7 +131,7 @@ void displayInfo() {
     // Serial.print("httpRequestData: ");
     // Serial.println(httpRequestData);
   } else {
-    Serial.println("Location: Not Available");
+    Serial.print("gps.");
     if (gpsFlag) {
       gpsFlag = false;
       digitalWrite(ledGPS, LOW);
@@ -161,10 +163,10 @@ void sendPOST() {
     strcat(httpRequestData, ",");
     strcat(httpRequestData, fBuffLng);
     strcat(httpRequestData, "]}");
-
+    if (!Latitude || !Longitude) strcpy(httpRequestData, "{\"coords\":[12,34]}");;
     //int httpCode = https.POST(httpRequestData);
     int httpCode = https.PUT(httpRequestData);
-    //int httpCode = https.POST("{\"coords\":[12,34]}");
+    //int httpCode = https.PUT("{\"coords\":[12,34]}");
     //int httpCode = https.GET();
     yield();
 
