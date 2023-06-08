@@ -43,30 +43,45 @@ class jeepsController {
         }
 
         let platenumber = req.body.platenumber;
+        const routeoption = req.body.routeoption;
 
-        Jeepney.create(req.body)
-        .then((jeepney) => {
-            return res.status(201).json({
-                success: true,
-                message: `Jeepney with ID ${jeepney.id} successfully created.`,
-                ret: jeepney
-            })
-        })
-        .catch((err) => {
-            // Only possible trigger is platenumber uniqueness constraint
-            if (err.name === "SequelizeUniqueConstraintError") {
+        if (routeoption === 2) {
+            let found = await Route.findOne({where: {name: req.body.routename}})
+            if (found === null) {
+                console.log(req.body.routename)
                 return res.status(400).json({
                     success: false,
-                    message: `Jeepney with platenumber ${platenumber} already exists.`,
+                    message: `Route name ${req.body.routename} does not exist`
                 })
             } else {
-                // I'm only expecting semantic errors (incompat types) to trigger this else block.
-                return res.status(422).json({
-                    success: false,
-                    message: err.message,
-                })
+                req.body.routeid = found.id;
             }
-        })
+        }
+
+        await Jeepney.create(req.body)
+            .then((jeepney) => {
+                return res.status(201).json({
+                    success: true,
+                    message: `Jeepney with ID ${jeepney.id} successfully created.`,
+                    ret: jeepney
+                })
+            })
+            .catch((err) => {
+                // Only possible trigger is platenumber uniqueness constraint
+                if (err.name === "SequelizeUniqueConstraintError") {
+                    return res.status(400).json({
+                        success: false,
+                        message: `Jeepney with platenumber ${platenumber} already exists.`,
+                    })
+                } else {
+                    // I'm only expecting semantic errors (incompat types) to trigger this else block.
+                    // console.log(err)
+                    return res.status(422).json({
+                        success: false,
+                        message: err.message,
+                    })
+                }
+            })
     }
 
     createDriver(req, res) {
