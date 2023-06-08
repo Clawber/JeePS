@@ -3,7 +3,7 @@ const JC = require('../controllers/jeepsController.js');
 require('dotenv').config()
 
 // For the tracker
-router.post('/jeepney/:id', JC.updateCoords);
+router.put('/jeepney/:id', JC.updateCoords);
 
 // For the frontend
 router.post('/jeepney', JC.createJeepney);
