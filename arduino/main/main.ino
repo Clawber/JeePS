@@ -162,7 +162,8 @@ void sendPOST() {
     strcat(httpRequestData, fBuffLng);
     strcat(httpRequestData, "]}");
 
-    int httpCode = https.POST(httpRequestData);
+    //int httpCode = https.POST(httpRequestData);
+    int httpCode = https.PUT(httpRequestData);
     //int httpCode = https.POST("{\"coords\":[12,34]}");
     //int httpCode = https.GET();
     yield();
