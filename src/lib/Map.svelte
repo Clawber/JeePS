@@ -4,10 +4,10 @@
   import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
   import jeepMarker from '$lib/images/jeep_marker.png';
 
+  const DEV = false;
   // For development, use 'http://localhost:8080/api/jeeps/jeepney'
   // For production, use 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
-  const getCoordsURL = 'https://jeeps-alt.onrender.com/api/jeeps' // backend
-  const getAllJeepneysURL = 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
+  const GET_ALL_JEEPNEYS_URL = DEV ? 'http://localhost:8080/api/jeeps/jeepney' : 'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
 
   let mapElement;
   let map;
@@ -92,7 +92,7 @@
 
       // Function for updating markers in bulk
       function updateJeeps() {
-        fetch(getAllJeepneysURL).then((res) => {
+        fetch(GET_ALL_JEEPNEYS_URL).then((res) => {
             res.json().then(async (data) => {
               data.ret.forEach((jeep) => {
                 jeepneys.find(elem => elem.id === jeep.id)
@@ -104,7 +104,7 @@
 
       // Fetch all jeepneys and instantiate each jeepney
       // API returns array of jeepneys
-      await fetch(getAllJeepneysURL).then((res) => {
+      await fetch(GET_ALL_JEEPNEYS_URL).then((res) => {
         console.log(res)
         res.json().then((data) => {
           data.ret.forEach((jeep) => {

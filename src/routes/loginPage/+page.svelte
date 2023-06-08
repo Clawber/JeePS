@@ -4,6 +4,10 @@
     import CrudButtons from "./CrudButtons.svelte";
     import TableButtons from "./TableButtons.svelte";
 
+    const DEV = false;
+    const LOGIN_URL = DEV ? 'http://localhost:8080/api/users/login' : 'https://jeeps-alt.onrender.com/api/users/login'
+    const SIGNUP_URL = DEV ? 'http://localhost:8080/api/users/signup' : 'https://jeeps-alt.onrender.com/api/users/signup'
+
     //save the value of global_isloggedin
     let savestore = false;
     $: if (savestore && $global_isloggedin) {
@@ -27,12 +31,9 @@
     });
     console.log(isloggedin);
 
-
-
     //get screen size
     $: innerWidth = 0;
     $: innerHeight = 0;
-
 
     //declare and set values
     $: login = true;
@@ -41,8 +42,6 @@
 
     $: modifiable = false;
 
-
-    // TODO: COMPLETE CLIENT-SIDE VALIDATION (email and stuff)
     // TODO: Security considerations: API key, and removing console.logs
     function SIGNUP() {
         if (username === '' || email === '' || pw === '' || cpw === '') {
@@ -52,7 +51,7 @@
         if (pw === cpw) {
             pw_not_same = false;
             let data = JSON.stringify({ username, email, password: pw })
-            fetch("https://jeeps-alt.onrender.com/api/users/signup", {
+            fetch(SIGNUP_URL, {
                 method: "POST",
                 body: data,
                 headers: {
@@ -77,7 +76,7 @@
             return
         }
         let data = JSON.stringify({ username, password: pw })
-        fetch("https://jeeps-alt.onrender.com/api/users/login", {
+        fetch(LOGIN_URL, {
             method: "POST",
             body: data,
             headers: {
@@ -129,8 +128,8 @@
     }
 
     //add
-    let jid = '', jplatenum = '', jcapacity = '', jroutename = '', jdriverid = '', jrouteid = '';
-    let did = '',dfirstname = '', dlastname;
+    let jplatenum = '', jcapacity = '', jroutename = '', jdriverid = '', jrouteid = '';
+    let dfirstname = '', dlastname;
     let rroutename = '', rcolor = '', rpath = '';
     //modify
     let mjeepid = '', mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
@@ -141,7 +140,7 @@
 
     //to backend developers: pls fetch the actual data
     let jeepneys =[
-        {jid, platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
+        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
@@ -167,7 +166,8 @@
     ];
 
     function ADDJEEPNEY(){
-        //to backend developers: pls add codes
+        // Remember that jeepney coords is nullable
+
     }
 
     function ADDDRIVER(){
@@ -362,6 +362,7 @@
                                 <input class="mt-3 ml-5" bind:value={jdriverid}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
                                 <input class="mt-3 ml-5" bind:value={jrouteid}>
+
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                             </form>
                         
