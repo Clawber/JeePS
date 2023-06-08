@@ -5,8 +5,11 @@
     import TableButtons from "./TableButtons.svelte";
 
     const DEV = false;
-    const LOGIN_URL = DEV ? 'http://localhost:8080/api/users/login' : 'https://jeeps-alt.onrender.com/api/users/login'
-    const SIGNUP_URL = DEV ? 'http://localhost:8080/api/users/signup' : 'https://jeeps-alt.onrender.com/api/users/signup'
+    const LOGIN_URL =   DEV ? 'http://localhost:8080/api/users/login' : 'https://jeeps-alt.onrender.com/api/users/login'
+    const SIGNUP_URL =  DEV ? 'http://localhost:8080/api/users/signup' : 'https://jeeps-alt.onrender.com/api/users/signup'
+    const JEEPNEY_URL = DEV ? 'http://localhost:8080/api/jeeps/jeepney' :  'https://jeeps-alt.onrender.com/api/jeeps/jeepney'
+    const DRIVER_URL =  DEV ? 'http://localhost:8080/api/jeeps/driver' : 'https://jeeps-alt.onrender.com/api/jeeps/driver'
+    const ROUTE_URL =   DEV ? 'http://localhost:8080/api/jeeps/route' : 'https://jeeps-alt.onrender.com/api/jeeps/route'
 
     //save the value of global_isloggedin
     let savestore = false;
@@ -82,10 +85,6 @@
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
-        // }).then((res) => res.text()
-        //  ).then(data => alert(`${data}`));
-        // global_isloggedin.set(true);
-        // global_username.set(username);
         }).then((res) => {
             if (res.status === 201){
                 global_isloggedin.set(true);
@@ -127,10 +126,12 @@
 
     }
 
-    //add
-    let jplatenum = '', jcapacity = '', jroutename = '', jdriverid = '', jrouteid = '';
+    // ADD
+    let jadd_platenum = '', jadd_capacity = '', jadd_driverid = '', jadd_route = '';
+    let jadd_route_radio = 1;
     let dfirstname = '', dlastname;
     let rroutename = '', rcolor = '', rpath = '';
+
     //modify
     let mjeepid = '', mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
     let mid = '',mfirstname = '', mlastname;
@@ -141,33 +142,37 @@
     //to backend developers: pls fetch the actual data
     let jeepneys =[
         {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'},
-        {platenum : 'IKT001', capacity : 18, routename : 'IKOT', driverid : 1, coords : '(x,y)'}
     ];
     let drivers = [
         {id: '1', firstname : 'yenzy', lastname : 'hebron'},
-        {id: '1', firstname : 'yenzy', lastname : 'hebron'},
-        {id: '1', firstname : 'yenzy', lastname : 'hebron'}
     ];
     let routes = [
         {routename: 'IKOT', color : 'yellow', path : '71693812892939710247197423786981270129679125'},
-        {routename: 'IKOT', color : 'yellow', path : '71693812892939710247197423786981270129679125'},
-        {routename: 'IKOT', color : 'yellow', path : '71693812892939710247197423786981270129679125, 916279367891737912467138753812583178629'}
-
     ];
 
+    // TODO: Make it so that when you click Route Name, you're gonna fetch the list of
+    // available routes from the database. Use dropdown.
     function ADDJEEPNEY(){
         // Remember that jeepney coords is nullable
+        // Form validation done at the backend
+        let data = JSON.stringify({
+                platenumber: jadd_platenum,
+                capacity: jadd_capacity,
+                driverid: jadd_driverid,
+                routeid: jadd_route,
+                routename: jadd_route,
+                routeoption: jadd_route_radio
+        })
 
+        fetch(JEEPNEY_URL, {
+            method: "POST",
+            body: data,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function ADDDRIVER(){
@@ -241,8 +246,8 @@
     <!--space on left-->
     <div class="w-1/12 absolute h-full">
     </div>
-    
-    
+
+
     <!--actual space-->
     <div class="absolute ml-[8.6%] w-9/12 mt-14">
         <ul class="flex flex-wrap justify-center">
@@ -292,7 +297,7 @@
                 <div class="flex justify-center">
                     <button data-sveltekit-preload-data="tap" on:click={() => LOGOUT()} class="mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-[100px] h-[50px] drop-shadow-xl flex justify-center text-white"><h1 class="m-0.5 mt-3">Logout</h1></button>
                 </div>
-                
+
                 <!--Show list  -->
                 <div class="flex justify-center">
                 <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "list" ? 'visible' : 'hidden'}`}>
@@ -340,7 +345,7 @@
                         </div>
                     {/if}
                     </div>
-                    
+
                 </div>
                 </div>
 
@@ -353,19 +358,48 @@
                         <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
-                            <form on:submit|preventDefault={ADDJEEPNEY()}>
+                            <form on:submit|preventDefault={ADDJEEPNEY}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
-                                <input class="mt-3 ml-5" bind:value={jplatenum}>
+                                <input class="mt-3 ml-5" bind:value={jadd_platenum}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
-                                <input  class="mt-3 ml-5" bind:value={jcapacity}>
+                                <input  class="mt-3 ml-5" bind:value={jadd_capacity}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jdriverid}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jrouteid}>
-
+                                <input class="mt-3 ml-5" bind:value={jadd_driverid}>
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
+                                <div class="flex gap-10">
+                                    <div class="inline-flex items-center">
+                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_id" data-ripple-dark="true">
+                                            <input id="jadd_route_id" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={1}
+                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
+                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
+                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
+                                                </svg>
+                                            </div>
+                                        </label>
+                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_id">
+                                            Route ID
+                                        </label>
+                                    </div>
+                                    <div class="inline-flex items-center">
+                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_name" data-ripple-dark="true">
+                                            <input id="jadd_route_name" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={2}
+                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
+                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
+                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
+                                                </svg>
+                                            </div>
+                                        </label>
+                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_name">
+                                            Route Name
+                                        </label>
+                                    </div>
+                                </div>
+                                <input class="mt-3 ml-5" bind:value={jadd_route}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                             </form>
-                        
+
                         </div>
                         <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
@@ -395,7 +429,7 @@
                     </div>
 
 
-                        
+
                 </div>
                 </div>
 
@@ -413,7 +447,7 @@
                                 <input class="mt-3 ml-5" bind:value={delete_jeepney}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                             </form>
-                        
+
                         </div>
                         <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
@@ -438,8 +472,8 @@
 
 
 
-                
-                    
+
+
                 </div>
                 </div>
 
@@ -468,7 +502,7 @@
                                 <input class="mt-3 ml-5" bind:value={mrouteid}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                             </form>
-                        
+
                         </div>
                         <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
@@ -505,9 +539,9 @@
 
             </div>
         </ul>
-    
+
     </div>
-    
+
     <!--space on left-->
     <div class="w-2/12 absolute h-full right-0">
     </div>

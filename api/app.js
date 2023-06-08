@@ -17,17 +17,17 @@ const csvSync = require('./controllers/dbController')
 const [Driver, Jeepney, Route] = [db.Driver, db.Jeepney, db.Route];
 // const filepaths = ['db/driver.csv', 'db/route.csv', 'db/tracker.csv', 'db/jeepney.csv']
 
-Driver.sync({force: true}).then(() => {
+Driver.sync().then(() => {
     console.log('Driver has been synced.');
-    csvSync(Driver, 'db/driver.csv')
+    //csvSync(Driver, 'db/driver.csv')
 }).then(() => {
-    Route.sync({force: true}).then(() => {
+    Route.sync().then(() => {
         console.log('Route has been synced.');
-        csvSync(Route, 'db/route.csv');
+        //csvSync(Route, 'db/route.csv');
     }).then(() => {
-        Jeepney.sync({force: true}).then(() => {
+        Jeepney.sync().then(() => {
             console.log('Jeepney has been synced.');
-            csvSync(Jeepney, 'db/jeepney.csv');
+            //csvSync(Jeepney, 'db/jeepney.csv');
         }).then(() => {
             app.use('/api/users', userRoutes)
             app.use('/api/jeeps', jeepsRoutes)
