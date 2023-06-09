@@ -81,7 +81,6 @@
             `Jeepney ID: ${this.id} <br>
              Plate Number: ${this.platenumber}<br>
              Capacity: ${this.capacity}<br>
-             Driver Name: ${this.driverid}<br>
              Route Name: ${this.routename}<br>
              Coords: (${this.coords.lat},${this.coords.lng})<br>`
             );

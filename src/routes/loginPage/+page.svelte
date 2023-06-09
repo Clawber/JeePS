@@ -338,26 +338,38 @@
         })
     }
 
-    async function FETCHJEEPNEY(){
-        fetch(JEEPNEY_URL).then((res) => {
-            return res.json()
+    function FETCHJEEPNEY(){
+        return new Promise(resolve => {
+            fetch(JEEPNEY_URL).then((res) => {
+                res.json().then((data) => {
+                    console.log(data.ret)
+                    resolve(data.ret)
+                })
+            })
         })
     }
 
     function FETCHDRIVER(){
-        //to backend developers: pls add codes
+        return new Promise(resolve => {
+            fetch(DRIVER_URL).then((res) => {
+                res.json().then((data) => {
+                    console.log(data.ret)
+                    resolve(data.ret)
+                })
+            })
+        })
     }
 
     function FETCHROUTE(){
-        //to backend developers: pls add codes
+        return new Promise(resolve => {
+            fetch(ROUTE_URL).then((res) => {
+                res.json().then((data) => {
+                    console.log(data.ret)
+                    resolve(data.ret)
+                })
+            })
+        })
     }
-
-    function MODIFYCLEAR(){
-    }
-
-
-
-
 
 </script>
 
@@ -428,46 +440,49 @@
                     <TableButtons/>
 
                     <div class="flex flex-wrap justify-center my-5">
-                    <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
-                            {#await FETCHJEEPNEY() then data}
-                            {#each Array(data) as jeepney}
-                            <div class="flex flex-wrap">
-                                <p class="mx-12 mt-2">{data}</p>
-<!--                                <p class="mx-12 mt-2">Jeepney ID : {jeepney.id}</p>-->
-<!--                                <p class="mx-12 mt-2">Plate Number : {jeepney.platenum}</p>-->
-<!--                                <p class="ml-12 mt-2">Driver ID : {jeepney.driverid}</p>-->
-<!--                                <p class="ml-12 mt-2">Capacity : {jeepney.capacity}</p>-->
-<!--                                <p class="ml-12 mt-2">Route : {jeepney.routename}</p>-->
-<!--                                <p class="ml-12 mt-2">Coordinates : {jeepney.coords}</p>-->
-                            </div>
-                                <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
-                            {/each}
+                            {#await FETCHJEEPNEY() then jeepneys}
+                                {#each jeepneys as jeepney}
+                                    <div class="flex flex-wrap">
+                                        <p class="mx-12 mt-2">Jeepney ID : {jeepney.id}</p>
+                                        <p class="mx-12 mt-2">Plate Number : {jeepney.platenumber}</p>
+                                        <p class="ml-12 mt-2">Capacity : {jeepney.capacity}</p>
+                                        <p class="ml-12 mt-2">Driver: {jeepney.Driver ? `${jeepney.Driver.firstname} ${jeepney.Driver.lastname}` : 'Undefined'}</p>
+                                        <p class="ml-12 mt-2">Route: {jeepney.Route ? jeepney.Route.name : 'Undefined'}</p>
+                                        <p class="ml-12 mt-2">Coords : {jeepney.coords ? `(${jeepney.coords.x}, ${jeepney.coords.y})` : 'Undefined'}</p>
+                                    </div>
+                                    <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
+                                {/each}
                             {/await}
                         </div>
-                        <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
-                    <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
-                        {#each drivers as driver}
-                            <div class="flex flex-wrap">
-                            <p class="mx-12 mt-2">Driver ID : {driver.id}</p>
-                            <p class="ml-12 mt-2">Name : {driver.lastname}, {driver.firstname}</p>
-                            </div>
-                            <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
-                        {/each}
+                        <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
+                            {#await FETCHDRIVER() then drivers}
+                                {#each drivers as driver}
+                                    <div class="flex flex-wrap">
+                                        <p class="mx-12 mt-2">Driver ID : {driver.id}</p>
+                                        <p class="ml-12 mt-2">Name : {driver.lastname}, {driver.firstname}</p>
+                                    </div>
+                                    <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
+                                {/each}
+                            {/await}
                         </div>
-                        <!-- list of routes -->
                     {:else}
-                    <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
-                        {#each routes as route}
-                            <div class="flex flex-wrap">
-                            <p class="mx-12 mt-2">Route : {route.routename}</p>
-                            <p class="ml-12 mt-2">Color : {route.color}</p>
-                            <p class="ml-12 mt-2">Path : {route.path}</p>
-                            </div>
-                            <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
-                        {/each}
+                        <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
+                            {#await FETCHROUTE() then routes}
+                                {#each routes as route}
+                                    <div class="flex flex-wrap">
+                                        <p class="mx-12 mt-2">Route ID : {route.id}</p>
+                                        <p class="mx-12 mt-2">Route Name : {route.name}</p>
+                                        <p class="ml-12 mt-2">Color : {route.color}</p>
+                                        <p class="ml-12 mt-2">Path :
+                                            <a class="underline text-blue-800" href={decodeURI(encodeURI(ROUTE_URL +`/${route.id}`))}>Download</a>
+                                        </p>
+                                    </div>
+                                    <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
+                                {/each}
+                            {/await}
                         </div>
                     {/if}
                     </div>
@@ -551,9 +566,6 @@
                         </div>
                     {/if}
                     </div>
-
-
-
                 </div>
                 </div>
 
@@ -590,15 +602,8 @@
                         </div>
                     {/if}
                     </div>
-
-
-
-
-
                 </div>
                 </div>
-
-
 
                 <!--MODIFY  -->
                 <div class="flex justify-center">
