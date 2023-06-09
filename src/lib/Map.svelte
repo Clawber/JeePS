@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  import {ikotRoutePoints, ikotEveningRoutePoints, tokiRoutePoints, currentikotRoutePoints } from './jeepRoutes.js';
+  import {IKOTRoutePoints, SMPANTRANCORoutePoints, TOKIDAYRoutePoints, TOKINIGHTRoutePoints, PHILCOADAYRoutePoints, PHILCOANIGHTRoutePoints, KATIPUNANDAYRoutePoints, KATIPUNANNIGHTRoutePoints} from './jeepRoutes.js';
   import jeepMarker from '$lib/images/jeep_marker.png';
 
   const DEV = false;
@@ -118,14 +118,29 @@
 
       // Function addRoutes
       function addRoutes(map) {
-        var ikotRoute = L.polyline(currentikotRoutePoints, {color: 'yellow'}).addTo(map);
+        var IKOTRoute = L.polyline(IKOTRoutePoints, {color: '#ffcd32', weight: 5, smoothFactor: 3}).addTo(map);
+        var SMPANTRANCORoute = L.polyline(SMPANTRANCORoutePoints, {color: '#329a9a', weight: 5, smoothFactor: 3})
+        var TOKIDAYRoute = L.polyline(TOKIDAYRoutePoints, {color: '#f68c34', weight: 5, smoothFactor: 3})
+        var TOKINIGHTRoute = L.polyline(TOKINIGHTRoutePoints, {color: '#88202c', weight: 5, smoothFactor: 3})
+        var PHILCOADAYRoute = L.polyline(PHILCOADAYRoutePoints, {color: '#98cd67', weight: 5, smoothFactor: 3})
+        var PHILCOANIGHTRoute = L.polyline(PHILCOANIGHTRoutePoints, {color: '#0f6752', weight: 5, smoothFactor: 3})
+        var KATIPUNANDAYRoute = L.polyline(KATIPUNANDAYRoutePoints, {color: '#e42f59', weight: 5, smoothFactor: 3})
+        var KATIPUNANNIGHTRoute = L.polyline(KATIPUNANNIGHTRoutePoints, {color: '#663367', weight: 5, smoothFactor: 3})
         // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
         // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
         // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
 
         var jeepRoutes = {
-          "Ikot" : ikotRoute
+          "Ikot" : IKOTRoute,
+          "SM North - Pantranco" : SMPANTRANCORoute,
+          "Toki - Day" : TOKIDAYRoute,
+          "Toki - Night" : TOKINIGHTRoute,
+          "Philcoa - Day" : PHILCOADAYRoute,
+          "Philcoa - Night" : PHILCOANIGHTRoute,
+          "Katipunan - Day" : KATIPUNANDAYRoute,
+          "Katipunan - Night" : KATIPUNANNIGHTRoute,
         }
+        L.control.layers(null, jeepRoutes).addTo(map);
       }
 
       addRoutes(map);
