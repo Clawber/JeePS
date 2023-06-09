@@ -23,4 +23,8 @@ router.delete('/jeepney/:id', JC.delJeepney);
 router.delete('/driver/:id', JC.delDriver);
 router.delete('/route/:id', JC.delRoute);
 
+router.get('/', (req, res) => {
+    res.status(200).send("Welcome to the JeePS endpoint.")
+});
+
 module.exports = router;
