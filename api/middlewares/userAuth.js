@@ -9,6 +9,10 @@ const User = db.User;
  const saveUser = async (req, res, next) => {
  //search the database to see if user exist
  try {
+     if (req.body.key !== process.env.ADMIN_KEY) {
+         return res.status(409).send("Wrong admin key. Please contact JeePS support.")
+     }
+
    const username = await User.findOne({
      where: {
        username: req.body.username,

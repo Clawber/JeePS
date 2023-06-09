@@ -53,7 +53,7 @@
         }
         if (pw === cpw) {
             pw_not_same = false;
-            let data = JSON.stringify({ username, email, password: pw })
+            let data = JSON.stringify({ username, email, password: pw, key })
             fetch(SIGNUP_URL, {
                 method: "POST",
                 body: data,
@@ -61,12 +61,12 @@
                     "Content-type": "application/json; charset=UTF-8"
                 }
             }).then((res) => {
-            if (res.status === 201){
-                global_isloggedin.set(true);
-                global_username.set(username);
-            }
-            return res.text();
-        }).then(data => alert(`${data}`));
+                if (res.status === 201){
+                    global_isloggedin.set(true);
+                    global_username.set(username);
+                }
+                return res.text();
+            }).then(data => alert(`${data}`));
         } else {
             pw_not_same = true;
             alert("Password and confirm password do not match.")
@@ -413,13 +413,13 @@
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[120px]">Email</h1>
                     <input label='email' class="absolute top-[170px] left-10" bind:value={email}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[200px]">Password</h1>
-                    <input label='Password' type='password' class={`absolute top-[250px] left-10 ${pw_is_cpw ? 'bg-green-200' : ''} ${pw_not_same ? 'bg-red-200' : ''}`}
+                    <input label='password' type='password' class={`absolute top-[250px] left-10 ${pw_is_cpw ? 'bg-green-200' : ''} ${pw_not_same ? 'bg-red-200' : ''}`}
                             on:click={reset_col} on:keyup={check_pass} bind:value={pw}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[280px]">Confirm Password</h1>
-                    <input label='Password' type='password'  class={`absolute top-[330px] left-10 ${pw_is_cpw ? 'bg-green-200' : ''} ${pw_not_same ? 'bg-red-200' : ''}`}
+                    <input label='confirm password' type='password'  class={`absolute top-[330px] left-10 ${pw_is_cpw ? 'bg-green-200' : ''} ${pw_not_same ? 'bg-red-200' : ''}`}
                             on:click={reset_col} on:keyup={check_pass} bind:value={cpw}>
                     <h1 class="absolute text-s text-gray-300 mt-5 mb-5 left-10 top-[360px]">Admin Key</h1>
-                    <input label='Password' type='password'  class={`absolute top-[410px] left-10`} on:click={reset_col} on:keyup={check_pass} bind:value={key}>
+                    <input label='admin key' type='password'  class={`absolute top-[410px] left-10`} bind:value={key}>
                     <button type="submit" class="absolute top-[450px] left-10 bg-white rounded"><h1 class="m-0.5">Submit</h1></button>
                 </form>
             </div>
