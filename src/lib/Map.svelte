@@ -60,7 +60,7 @@
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
           // Map this Jeep to a marker of its own
-          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(0,0), {icon: jeepIcon});
+          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862), {icon: jeepIcon});
           this.marker.addTo(this.map);
           this.popup();
         }
@@ -73,7 +73,7 @@
           this.routeid = details.routeid ? details.routeid : 'Undefined';
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
-          this.marker.setLatLng(details.coords ? this.coords : L.latLng(0,0));
+          this.marker.setLatLng(details.coords ? this.coords : L.latLng(14.65491, 121.06862));
           this.popup();
         }
 
