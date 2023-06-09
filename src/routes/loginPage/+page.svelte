@@ -126,18 +126,22 @@
 
     }
 
-    // ADD
-    let jadd_platenum = '', jadd_capacity = '', jadd_driverid = '', jadd_route = '';
-    let jadd_route_radio = 1;
-    let dfirstname = '', dlastname;
-    let rroutename = '', rcolor = '', rpath = '';
+    // Ready files object for receiving path files
+    let files;
 
-    //modify
-    let mjeepid = '', mplatenum = '', mcapacity = '', mrouteid = '', mdriverid = '';
-    let mid = '',mfirstname = '', mlastname;
-    let mroute = '', mcolor = '', mpath = '';
-    //delete
-    let delete_jeepney = '', delete_driver = '', delete_route= ''; // These are all IDs
+    // ADD
+    let jadd_platenum, jadd_capacity, jadd_driverid, jadd_route;
+    let jadd_route_radio = 1;
+    let dadd_firstname, dadd_lastname;
+    let radd_routename, radd_color;
+
+    // MODIFY
+    let jmod_id, jmod_platenum, jmod_capacity, jmod_routeid, jmod_driverid;
+    let dmod_id, dmod_firstname, dmod_lastname;
+    let rmod_id, rmod_name, rmod_color;
+
+    // DELETE
+    let jdel_id, ddel_id, rdel_id; // These are all IDs
 
     //to backend developers: pls fetch the actual data
     let jeepneys =[
@@ -156,12 +160,12 @@
         // Remember that jeepney coords is nullable
         // Form validation done at the backend
         let data = JSON.stringify({
-                platenumber: jadd_platenum,
-                capacity: jadd_capacity,
-                driverid: jadd_driverid,
-                routeid: jadd_route,
-                routename: jadd_route,
-                routeoption: jadd_route_radio
+            platenumber: jadd_platenum,
+            capacity: jadd_capacity,
+            driverid: jadd_driverid,
+            routeid: jadd_route,
+            routename: jadd_route,
+            routeoption: jadd_route_radio
         })
 
         fetch(JEEPNEY_URL, {
@@ -176,41 +180,168 @@
     }
 
     function ADDDRIVER(){
-        //to backend developers: pls add codes
+        let data = JSON.stringify({
+            firstname: dadd_firstname,
+            lastname: dadd_lastname
+        })
+
+        fetch(DRIVER_URL, {
+            method: "POST",
+            body: data,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
-    function ADDROUTE(){
-        //to backend developers: pls add codes
+    // PATH PARSER
+    function PATHPARSER() {
+        return new Promise(resolve => {
+            let path = '';
+            if (files.length > 0) {
+                let file = files[0]
+                let reader = new FileReader()
+                reader.readAsText(file)
+                reader.onload = function(event) {
+                    let csvdata = event.target.result.split('\n')[1];
+                    let firstNumberIndex = csvdata.search(/\d/)
+                    if (firstNumberIndex) {
+                        console.log(firstNumberIndex)
+                        csvdata = csvdata.slice(firstNumberIndex)
+                        let lastNumberIndex = csvdata.indexOf(')')
+                        csvdata = csvdata.slice(0, lastNumberIndex)
+                        csvdata = csvdata.split(',')
+                        csvdata.forEach((elem) => {
+                            let coords = '(' + elem.trim().replace(' ', ',') + '),'
+                            path = path + coords
+                        })
+                        path = '(' + path.slice(0,path.length-1) + ')'
+                        console.log(path)
+                        resolve(path)
+                    } else {
+                        alert("Path file doesn't have any numbers.")
+                    }
+                }
+            } else {
+                alert("No file added");
+            }
+        })
+    }
+    async function ADDROUTE(){
+        // Note that path is nullable
+        const path = await PATHPARSER();
+        fetch(ROUTE_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                name: radd_routename,
+                color: radd_color,
+                path: files ? path : null
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function DELETEJEEPNEY(){
-        //to backend developers: pls add codes
+        fetch(JEEPNEY_URL + `/${jdel_id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function DELETEDRIVER(){
-        //to backend developers: pls add codes
+        fetch(DRIVER_URL + `/${ddel_id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function DELETEROUTE(){
-        //to backend developers: pls add codes
+        fetch(ROUTE_URL + `/${rdel_id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function MODIFYJEEPNEY(){
-        //to backend developers: pls add codes
+        // Remember that jeepney coords is nullable
+        // Form validation done at the backend
+        let data = JSON.stringify({
+            platenumber: jmod_platenum,
+            capacity: jmod_capacity,
+            driverid: jmod_driverid,
+            routeid: jmod_routeid
+        })
+
+        fetch(JEEPNEY_URL + `/${jmod_id}`, {
+            method: "PUT",
+            body: data,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
     function MODIFYDRIVER(){
-        //to backend developers: pls add codes
+        let data = JSON.stringify({
+            firstname: dmod_firstname,
+            lastname: dmod_lastname
+        })
+
+        fetch(DRIVER_URL + `/${dmod_id}`, {
+            method: "PUT",
+            body: data,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
-    function MODIFYROUTE(){
-        //to backend developers: pls add codes
+    async function MODIFYROUTE(){
+        // Note that path is nullable
+        console.log(rmod_id)
+        console.log(files)
+        const path = files ? await PATHPARSER() : undefined;
+        fetch(ROUTE_URL + `/${rmod_id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                name: rmod_name,
+                color: rmod_color,
+                path: path
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then((res) => {
+            res.json().then(msg => alert(msg.message))
+        })
     }
 
-    function FETCHJEEPNEY(platenum){
-        //to backend developers: pls add codes
-        //if input is invalid, make sure to empty the value of jcapacity = '', jroutename = '', jdriverid = ''; dfirstname = '', dlastname; rcolor = '', rpath = '';
-        console.log(platenum);
+    async function FETCHJEEPNEY(){
+        fetch(JEEPNEY_URL).then((res) => {
+            return res.json()
+        })
     }
 
     function FETCHDRIVER(){
@@ -222,17 +353,9 @@
     }
 
     function MODIFYCLEAR(){
-        mplatenum = '';
-        mcapacity = '';
-        mrouteid = '';
-        mdriverid = '';
-        mid = '';
-        mfirstname = '';
-        mlastname = '';
-        mroute = '';
-        mcolor = '';
-        mpath = '';
     }
+
+
 
 
 
@@ -298,27 +421,30 @@
                     <button data-sveltekit-preload-data="tap" on:click={() => LOGOUT()} class="mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-[100px] h-[50px] drop-shadow-xl flex justify-center text-white"><h1 class="m-0.5 mt-3">Logout</h1></button>
                 </div>
 
-                <!--Show list  -->
+                <!--LIST-->
                 <div class="flex justify-center">
                 <div class={`mt-10 bg-navbar-main-color rounded-2xl opacity-80 w-10/12 h-full drop-shadow-xl ${$activeOperation === "list" ? 'visible' : 'hidden'}`}>
                     <CrudButtons/>
                     <TableButtons/>
 
                     <div class="flex flex-wrap justify-center my-5">
-                        <!-- list of jeepneys -->
+                    <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="bg-white opacity-70 h-full w-9/12 rounded-xl">
-                        {#each jeepneys as jeepney}
+                            {#await FETCHJEEPNEY() then data}
+                            {#each Array(data) as jeepney}
                             <div class="flex flex-wrap">
-                            <p class="mx-12 mt-2">Plate ID : {jeepney.jid}</p> <!-- TODO: Add jid nonhardcode-->
-                            <p class="mx-12 mt-2">Plate Number : {jeepney.platenum}</p>
-                            <p class="ml-12 mt-2">Driver ID : {jeepney.driverid}</p>
-                            <p class="ml-12 mt-2">Capacity : {jeepney.capacity}</p>
-                            <p class="ml-12 mt-2">Route : {jeepney.routename}</p>
-                            <p class="ml-12 mt-2">GPS Coordinates : {jeepney.coords}</p>
+                                <p class="mx-12 mt-2">{data}</p>
+<!--                                <p class="mx-12 mt-2">Jeepney ID : {jeepney.id}</p>-->
+<!--                                <p class="mx-12 mt-2">Plate Number : {jeepney.platenum}</p>-->
+<!--                                <p class="ml-12 mt-2">Driver ID : {jeepney.driverid}</p>-->
+<!--                                <p class="ml-12 mt-2">Capacity : {jeepney.capacity}</p>-->
+<!--                                <p class="ml-12 mt-2">Route : {jeepney.routename}</p>-->
+<!--                                <p class="ml-12 mt-2">Coordinates : {jeepney.coords}</p>-->
                             </div>
-                            <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
-                        {/each}
+                                <div class='bg-navbar-main-color w-full h-0.5 mt-2'></div>
+                            {/each}
+                            {/await}
                         </div>
                         <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
@@ -355,7 +481,6 @@
                     <CrudButtons/>
                     <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
-                        <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={ADDJEEPNEY}>
@@ -401,28 +526,27 @@
                             </form>
 
                         </div>
-                        <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={ADDDRIVER()}>
+                        <form on:submit|preventDefault={ADDDRIVER}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
-                            <input class="mt-3 ml-5" bind:value={dfirstname}>
+                            <input class="mt-3 ml-5" bind:value={dadd_firstname}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
-                            <input  class="mt-3 ml-5" bind:value={dlastname}>
+                            <input  class="mt-3 ml-5" bind:value={dadd_lastname}>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                         </form>
                         </div>
-                        <!-- list of routes -->
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={ADDROUTE()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route Name</h1>
-                            <input class="mt-3 ml-5" bind:value={rroutename}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Color</h1>
-                            <input class="mt-3 ml-5" bind:value={rcolor}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Path</h1>
-                            <input  class="mt-3 ml-5" bind:value={rpath}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
+                        <form on:submit|preventDefault={ADDROUTE}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Route Name</h1>
+                            <input class="mt-3 ml-20" bind:value={radd_routename}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color</h1>
+                            <input class="mt-3 ml-20" bind:value={radd_color}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Upload a Path file (.csv)</h1>
+                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                            <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
+                            <button type="submit" class="bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                         </form>
                         </div>
                     {/if}
@@ -439,31 +563,28 @@
                     <CrudButtons/>
                     <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
-                        <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
-                            <form on:submit|preventDefault={DELETEJEEPNEY()}>
+                            <form on:submit|preventDefault={DELETEJEEPNEY}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
-                                <input class="mt-3 ml-5" bind:value={delete_jeepney}>
+                                <input class="mt-3 ml-5" bind:value={jdel_id}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                             </form>
 
                         </div>
-                        <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={DELETEDRIVER()}>
+                        <form on:submit|preventDefault={DELETEDRIVER}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                            <input class="mt-3 ml-5" bind:value={delete_driver}>
+                            <input class="mt-3 ml-5" bind:value={ddel_id}>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                         </form>
                         </div>
-                        <!-- list of routes -->
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={DELETEROUTE()}>
+                        <form on:submit|preventDefault={DELETEROUTE}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                            <input class="mt-3 ml-5" bind:value={delete_route}>
+                            <input class="mt-3 ml-5" bind:value={rdel_id}>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
                         </form>
                         </div>
@@ -485,48 +606,48 @@
                         <CrudButtons/>
                         <TableButtons/>
                     <div class="flex flex-wrap justify-center my-5">
-                        <!-- list of jeepneys -->
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
-                            <form on:submit|preventDefault={MODIFYJEEPNEY()}>
+                            <form on:submit|preventDefault={MODIFYJEEPNEY}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
                                 <!--<input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>-->
-                                <input class="mt-3 ml-5" bind:value={mjeepid}> <!--TODO: Fix variable names-->
+                                <input class="mt-3 ml-5" bind:value={jmod_id}> <!--TODO: Fix variable names-->
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
-                                <input  class="mt-3 ml-5" bind:value={mplatenum}>
+                                <input  class="mt-3 ml-5" bind:value={jmod_platenum}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
-                                <input  class="mt-3 ml-5" bind:value={mcapacity}>
+                                <input  class="mt-3 ml-5" bind:value={jmod_capacity}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={mdriverid}>
+                                <input class="mt-3 ml-5" bind:value={jmod_driverid}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                                <input class="mt-3 ml-5" bind:value={mrouteid}>
+                                <input class="mt-3 ml-5" bind:value={jmod_routeid}>
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                             </form>
 
                         </div>
-                        <!-- list of drivers -->
                     {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYDRIVER()}>
+                        <form on:submit|preventDefault={MODIFYDRIVER}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
-                            <input class="mt-3 ml-5" bind:value={mid}>
+                            <input class="mt-3 ml-5" bind:value={dmod_id}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
-                            <input class="mt-3 ml-5" bind:value={mfirstname}>
+                            <input class="mt-3 ml-5" bind:value={dmod_firstname}>
                             <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
-                            <input  class="mt-3 ml-5" bind:value={mlastname}>
+                            <input  class="mt-3 ml-5" bind:value={dmod_lastname}>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                         </form>
                         </div>
-                        <!-- list of routes -->
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYROUTE()}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (required)</h1>
-                            <input class="mt-3 ml-5" bind:value={mroute}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Color</h1>
-                            <input class="mt-3 ml-5" bind:value={mcolor}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Path</h1>
-                            <input  class="mt-3 ml-5" bind:value={mpath}>
+                        <form on:submit|preventDefault={MODIFYROUTE}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Route ID (required)</h1>
+                            <input class="mt-3 ml-20" bind:value={rmod_id}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Name</h1>
+                            <input class="mt-3 ml-20" bind:value={rmod_name}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color</h1>
+                            <input class="mt-3 ml-20" bind:value={rmod_color}>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
+                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                            <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                         </form>
                         </div>

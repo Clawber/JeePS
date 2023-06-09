@@ -4,28 +4,8 @@ const [Jeepney, Driver, Route] = [db.Jeepney, db.Driver, db.Route];
 
 // TODO: Add middleware for validating reqs (include Joi there)
 class jeepsController {
-    updateCoords(req, res) {
-        const schema = Joi.object({
-            coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
-        })
-        schema.validate(req.body).then(async () => {
-            const id = parseInt(req.params.id);
-            const x = req.body.coords[0], y = req.body.coords[1];
-            const jeepney = await Jeepney.update(
-                { coords: `(${x},${y})` },
-                { where: {id: id}});
-            return res.status(200).json({
-                success: true,
-                message: `Coords of Jeepney with ID ${id} successfully updated.`,
-                jeepney: await Jeepney.findByPk(id)
-            })
-        }).catch((err) => {
-            console.log(err)
-            return res.status(400).send(err.message)
-        })
-    }
-
     async createJeepney(req, res) {
+        console.log('Executing createJeepney...')
         const schema = Joi.object({
             platenumber: Joi.string().alphanum().trim().min(6).max(8).required(),
             coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required()
@@ -85,6 +65,7 @@ class jeepsController {
     }
 
     createDriver(req, res) {
+        console.log('Executing createDriver...')
         if (!req.body.firstname) {
             return res.status(400).json({
                 success: false,
@@ -114,6 +95,8 @@ class jeepsController {
     }
 
     createRoute(req, res) {
+        console.log('Executing createRoute...')
+        console.log(req.body.path)
         if (!req.body.name) {
             return res.status(400).json({
                 success: false,
@@ -153,6 +136,7 @@ class jeepsController {
     }
 
     async getAllJeepneys(req, res) {
+        console.log('Executing getAllJeepneys...')
         const jeepney = await Jeepney.findAll({
             include: [Driver,
                 {model: Route, attributes: { exclude: ['path']}}],
@@ -166,6 +150,7 @@ class jeepsController {
     }
 
     async getAllDrivers(req, res) {
+        console.log('Executing getAllDrivers...')
         const drivers = await Driver.findAll({
             order: [['id', 'ASC']]
         });
@@ -177,6 +162,7 @@ class jeepsController {
     }
 
     async getAllRoutes(req, res) {
+        console.log('Executing getAllRoutes...')
         const route = await Route.findAll({
             order: [['id', 'ASC']]
         });
@@ -188,6 +174,7 @@ class jeepsController {
     }
 
     async getJeepney(req, res) {
+        console.log('Executing getJeepney...')
         const id = parseInt(req.params.id, 10);
         const jeepney = await Jeepney.findByPk(id).catch((err) => {
             return res.status(405).json({
@@ -210,6 +197,7 @@ class jeepsController {
     }
 
     async getDriver(req, res) {
+        console.log('Executing getDriver...')
         const id = parseInt(req.params.id, 10);
         const driver = await Driver.findByPk(id).catch((err) => {
             return res.status(405).json({
@@ -232,6 +220,7 @@ class jeepsController {
     }
 
     async getRoute(req, res) {
+        console.log('Executing getRoute...')
         const id = parseInt(req.params.id, 10);
         const route = await Route.findByPk(id).catch((err) => {
             return res.status(405).json({
@@ -253,43 +242,69 @@ class jeepsController {
         }
     }
 
+    // If there's coords, only coords will be updated
     async updateJeepney(req, res) {
+        console.log('Executing updateJeepney...')
+        const schema = Joi.object({
+            coords: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2)
+        })
+
         const id = parseInt(req.params.id, 10);
 
-        Jeepney.update(req.body, {
-            where: { id: id }
-        })
-        .then(async (check) => {
-            if (check[0]) {
-                return res.status(201).json({
+        let x, y;
+        if (req.body.coords) {
+            schema.validate(req.body).then(async () => {
+                x = req.body.coords[0];
+                y = req.body.coords[1];
+                await Jeepney.update(
+                    { coords: `(${x},${y})` },
+                    { where: {id: id}});
+                return res.status(200).json({
                     success: true,
-                    message: `Jeepney with ID ${id} successfully updated.`,
-                    ret: await Jeepney.findByPk(id)
+                    message: `Coords of Jeepney with ID ${id} successfully updated.`,
+                    jeepney: await Jeepney.findByPk(id)
                 })
-            } else {
-                return res.status(404).json({
-                    success: false,
-                    message: `Didn't find jeepney corresponding to ID ${id}`
+            }).catch((err) => {
+                console.log(err)
+                return res.status(400).send(err.message)
+            })
+        } else {
+            Jeepney.update(req.body, {
+                where: { id: id }
+            })
+                .then(async (check) => {
+                    if (check[0]) {
+                        return res.status(201).json({
+                            success: true,
+                            message: `Jeepney with ID ${id} successfully updated.`,
+                            ret: await Jeepney.findByPk(id)
+                        })
+                    } else {
+                        return res.status(404).json({
+                            success: false,
+                            message: `Didn't find jeepney corresponding to ID ${id} or missing arguments.`
+                        })
+                    }
                 })
-            }
-        })
-        .catch((err) => {
-            // Only possible trigger is platenumber uniqueness constraint
-            if (err.name === "SequelizeUniqueConstraintError") {
-                return res.status(400).json({
-                    success: false,
-                    message: `Jeepney with platenumber ${platenumber} already exists.`,
+                .catch((err) => {
+                    // Only possible trigger is platenumber uniqueness constraint
+                    if (err.name === "SequelizeUniqueConstraintError") {
+                        return res.status(400).json({
+                            success: false,
+                            message: `Jeepney with platenumber ${platenumber} already exists.`,
+                        })
+                    } else {
+                        return res.status(422).json({
+                            success: false,
+                            message: err.message
+                        })
+                    }
                 })
-            } else {
-                return res.status(422).json({
-                    success: false,
-                    message: err.message
-                })
-            }
-        })
+        }
     }
 
     async updateDriver(req, res) {
+        console.log('Executing updateDriver...')
         const id = parseInt(req.params.id, 10);
 
         Driver.update(req.body, {
@@ -318,7 +333,10 @@ class jeepsController {
     }
 
     async updateRoute(req, res) {
+        console.log('Executing updateRoute...')
         const id = parseInt(req.params.id, 10);
+
+        console.log(req.body)
 
         Route.update(req.body, {
             where: { id: id }
@@ -346,6 +364,7 @@ class jeepsController {
     }
 
     async delJeepney(req, res) {
+        console.log('Executing delJeepney...')
         const id = parseInt(req.params.id, 10);
 
         Jeepney.destroy({
@@ -373,6 +392,7 @@ class jeepsController {
     }
 
     async delDriver(req, res) {
+        console.log('Executing delDriver...')
         const id = parseInt(req.params.id, 10);
 
         Driver.destroy({
@@ -400,6 +420,7 @@ class jeepsController {
     }
 
     async delRoute(req, res) {
+        console.log('Executing delRoute...')
         const id = parseInt(req.params.id, 10);
 
         Route.destroy({

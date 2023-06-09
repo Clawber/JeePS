@@ -2,9 +2,6 @@ const router = require("express").Router();
 const JC = require('../controllers/jeepsController.js');
 require('dotenv').config()
 
-// For the tracker
-router.put('/jeepney/:id', JC.updateCoords);
-
 // For the frontend
 router.post('/jeepney', JC.createJeepney);
 router.post('/driver', JC.createDriver);
@@ -18,7 +15,7 @@ router.get('/jeepney/:id', JC.getJeepney);
 router.get('/driver/:id', JC.getDriver);
 router.get('/route/:id', JC.getRoute);
 
-router.put('/jeepney/:id', JC.updateJeepney);
+router.put('/jeepney/:id', JC.updateJeepney);   // including tracker
 router.put('/driver/:id', JC.updateDriver);
 router.put('/route/:id', JC.updateRoute);
 
