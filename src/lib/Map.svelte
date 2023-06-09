@@ -54,25 +54,26 @@
           this.id = details.id;
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
-          this.coords = L.latLng(details.coords.x, details.coords.y);   // TODO: Round either in backend or here
-          this.driverid = details.driverid;
-          this.routeid = details.routeid;
-          this.routename = details.Route.name;
+          this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
+          this.driverid = details.driverid ? details.driverid : 'Undefined';
+          this.routeid = details.routeid ? details.routeid : 'Undefined';
+          this.routename = details.Route ? details.Route.name : 'Undefined';
 
           // Map this Jeep to a marker of its own
-          this.marker = new L.Marker(this.coords, {icon: jeepIcon});
+          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(0,0), {icon: jeepIcon});
           this.marker.addTo(this.map);
           this.popup();
         }
 
         set(details) {
+          this.platenumber = details.platenumber;
           this.capacity = details.capacity;
-          this.coords = L.latLng(details.coords.x, details.coords.y);
-          this.driverid = details.driverid;
-          this.routeid = details.routeid;
-          this.routename = details.Route.name;
+          this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
+          this.driverid = details.driverid ? details.driverid : 'Undefined';
+          this.routeid = details.routeid ? details.routeid : 'Undefined';
+          this.routename = details.Route ? details.Route.name : 'Undefined';
 
-          this.marker.setLatLng(this.coords);
+          this.marker.setLatLng(details.coords ? this.coords : L.latLng(0,0));
           this.popup();
         }
 
@@ -94,8 +95,12 @@
         fetch(GET_ALL_JEEPNEYS_URL).then((res) => {
             res.json().then(async (data) => {
               data.ret.forEach((jeep) => {
-                jeepneys.find(elem => elem.id === jeep.id)
-                .set(jeep);
+                let found = jeepneys.find(elem => elem.id === jeep.id);
+                if (found === undefined) {
+                  jeepneys.push(new Jeep(map, jeep));
+                } else {
+                  found.set(jeep);
+                }
               })
             })
           })
