@@ -48,6 +48,24 @@
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
       });
 
+      var jeeptags = L.Icon.extend({
+      options: {
+        iconSize:     [80, 96], // size of the icon
+        iconAnchor:   [40, 88], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+      }
+      });
+
+    var IkotTag = new jeeptags({iconUrl: '../IkotTag.png'}),
+      SMNorthPantrancoTag = new jeeptags({iconUrl: '../SMNorthPantrancoTag.png'}),
+      KatipunanDayTag = new jeeptags({iconUrl: '../KatipunanDayTag.png'}),
+      KatipunanNightTag = new jeeptags({iconUrl: '../KatipunanNightTag.png'}),
+      TokiDayTag = new jeeptags({iconUrl: '../TokiDayTag.png'}),
+      TokiNightTag = new jeeptags({iconUrl: '../TokiNightTag.png'}),
+      PhilcoaDayTag = new jeeptags({iconUrl: '../PhilcoaDayTag.png'}),
+      PhilcoaNightTag = new jeeptags({iconUrl: '../PhilcoaNightTag.png'});
+      //paayos na lang yung tamang tag na lalabas na tag
+
       class Jeep {
         constructor(map, details) {
           this.map = map;
@@ -60,7 +78,7 @@
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
           // Map this Jeep to a marker of its own
-          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862), {icon: jeepIcon});
+          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862), {icon: IkotTag});//dapat palitan to
           this.marker.addTo(this.map);
           this.popup();
         }
