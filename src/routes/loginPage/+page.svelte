@@ -556,7 +556,7 @@
                         <form on:submit|preventDefault={ADDROUTE}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Route Name</h1>
                             <input class="mt-3 ml-20" bind:value={radd_routename}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color</h1>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
                             <input class="mt-3 ml-20" bind:value={radd_color}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Upload a Path file (.csv)</h1>
                             <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
@@ -648,7 +648,7 @@
                             <input class="mt-3 ml-20" bind:value={rmod_id}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Name</h1>
                             <input class="mt-3 ml-20" bind:value={rmod_name}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color</h1>
+                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
                             <input class="mt-3 ml-20" bind:value={rmod_color}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
                             <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>

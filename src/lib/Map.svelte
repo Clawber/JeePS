@@ -35,6 +35,7 @@
       // Instantiate map and add desired tile layer (routes and markers to follow)
       map = L.map(mapElement, mapOptions)
 
+      // TODO: Dark mode toggle
       // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       // }).addTo(map);
@@ -131,6 +132,10 @@
         })
       })
 
+      // TODO: Add orientation (arrows) to route
+      class Route {
+
+      }
       // Function addRoutes
       function addRoutes(map) {
         var IKOTRoute = L.polyline(IKOTRoutePoints, {color: '#ffcd32', weight: 5, smoothFactor: 3}).addTo(map);
