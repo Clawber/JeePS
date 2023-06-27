@@ -22,6 +22,19 @@
       const northEast = L.latLng(14.84474, 121.27631);
       const bounds = L.latLngBounds(southWest, northEast);
 
+      // TILELAYERS
+      var tileLight = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      });
+
+      var tileDark = L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        minZoom: 0,
+        maxZoom: 22,
+        subdomains: 'abcd',
+        accessToken: '9fOCsMcK18SMc09DhrvoFakvomCQptCvmQibfQ8486sAjaENeb8QOzKFAwyf8Vau'
+      });
+
       const mapOptions = {
         maxBounds: bounds,
         maxZoom: 18,
@@ -29,11 +42,17 @@
         center: L.latLng(14.6524,121.0681),
         zoom: 16,
         zoomSnap: 0.25,
-        wheelPxPerZoomLevel: 120
+        wheelPxPerZoomLevel: 120,
+        layers: [tileLight, tileDark]
       }
       
       // Instantiate map and add desired tile layer (routes and markers to follow)
       map = L.map(mapElement, mapOptions)
+
+      var tiles = {
+        "Light Mode": tileLight,
+        "Dark Mode": tileDark
+      }
 
       // TODO: Dark mode toggle
       // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -157,7 +176,7 @@
           "Katipunan - Day" : KATIPUNANDAYRoute,
           "Katipunan - Night" : KATIPUNANNIGHTRoute,
         }
-        L.control.layers(null, jeepRoutes).addTo(map);
+        L.control.layers(tiles, jeepRoutes).addTo(map);
       }
 
       addRoutes(map);
