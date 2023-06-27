@@ -2,7 +2,6 @@
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
   import {IKOTRoutePoints, SMPANTRANCORoutePoints, TOKIDAYRoutePoints, TOKINIGHTRoutePoints, PHILCOADAYRoutePoints, PHILCOANIGHTRoutePoints, KATIPUNANDAYRoutePoints, KATIPUNANNIGHTRoutePoints} from './jeepRoutes.js';
-  import jeepMarker from '$lib/images/jeep_marker.png';
 
   const DEV = false;
   // For development, use 'http://localhost:8080/api/jeeps/jeepney'
