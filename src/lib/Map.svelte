@@ -41,7 +41,7 @@
       
       // Define Jeepney Class (represented by marker on map)
 
-      var jeeptags = L.Icon.extend({
+      var jeepTag = L.Icon.extend({
         options: {
           iconSize:     [80, 96], // size of the icon
           iconAnchor:   [40, 88], // point of the icon which will correspond to marker's location
@@ -49,14 +49,14 @@
         }
       });
 
-      var IkotTag = new jeeptags({iconUrl: '../IkotTag.png'}),
-        SMNorthPantrancoTag = new jeeptags({iconUrl: '../SMNorthPantrancoTag.png'}),
-        KatipunanDayTag = new jeeptags({iconUrl: '../KatipunanDayTag.png'}),
-        KatipunanNightTag = new jeeptags({iconUrl: '../KatipunanNightTag.png'}),
-        TokiDayTag = new jeeptags({iconUrl: '../TokiDayTag.png'}),
-        TokiNightTag = new jeeptags({iconUrl: '../TokiNightTag.png'}),
-        PhilcoaDayTag = new jeeptags({iconUrl: '../PhilcoaDayTag.png'}),
-        PhilcoaNightTag = new jeeptags({iconUrl: '../PhilcoaNightTag.png'});
+      var IkotTag = new jeepTag({iconUrl: '../Ikot.png'}),
+        SMNorthPantrancoTag = new jeepTag({iconUrl: '../SM North Pantranco.png'}),
+        KatipunanDayTag = new jeepTag({iconUrl: '../Katipunan Day.png'}),
+        KatipunanNightTag = new jeepTag({iconUrl: '../Katipunan Night.png'}),
+        TokiDayTag = new jeepTag({iconUrl: '../Toki Day.png'}),
+        TokiNightTag = new jeepTag({iconUrl: '../Toki Night.png'}),
+        PhilcoaDayTag = new jeepTag({iconUrl: '../Philcoa Day.png'}),
+        PhilcoaNightTag = new jeepTag({iconUrl: '../Philcoa Night.png'});
         //paayos na lang yung tamang tag na lalabas na tag
 
       class Jeep {
@@ -71,7 +71,8 @@
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
           // Map this Jeep to a marker of its own
-          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862), {icon: IkotTag});//dapat palitan to
+          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862),
+                        {icon: new jeepTag({iconUrl: `../tags/${this.routename}.png`})});
           this.marker.addTo(this.map);
           this.popup();
         }
