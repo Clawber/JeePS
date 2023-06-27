@@ -29,6 +29,7 @@ Driver.sync().then(() => {
             console.log('Jeepney has been synced.');
             //csvSync(Jeepney, 'db/jeepney.csv');
         }).then(() => {
+            app.get('/', (req, res) => {res.status(200).send("This is the JeePS endpoint.")})
             app.use('/api/users', userRoutes)
             app.use('/api/jeeps', jeepsRoutes)
 
