@@ -53,19 +53,6 @@
         "Dark Mode": tileDark
       }
 
-      // TODO: Dark mode toggle
-      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      // }).addTo(map);
-
-      L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
-        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        minZoom: 0,
-        maxZoom: 22,
-        subdomains: 'abcd',
-        accessToken: '9fOCsMcK18SMc09DhrvoFakvomCQptCvmQibfQ8486sAjaENeb8QOzKFAwyf8Vau'
-      }).addTo(map);
-
       // Define Jeepney Class (represented by marker on map)
 
       var jeepTag = L.Icon.extend({
