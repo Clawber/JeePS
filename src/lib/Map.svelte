@@ -47,7 +47,7 @@
         subdomains: 'abcd',
         accessToken: '9fOCsMcK18SMc09DhrvoFakvomCQptCvmQibfQ8486sAjaENeb8QOzKFAwyf8Vau'
       }).addTo(map);
-      
+
       // Define Jeepney Class (represented by marker on map)
 
       var jeepTag = L.Icon.extend({
@@ -186,18 +186,5 @@ onDestroy(async () => {
   @import 'leaflet/dist/leaflet.css';
   main div {
     height: 800px;
-  }
-  :root {
-    --leaflet-tile-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .leaflet-tile {
-      filter: var(--leaflet-tile-filter, none);
-    }
-
-    .leaflet-container {
-      background: #303030;
-    }
   }
 </style>
