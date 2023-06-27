@@ -73,7 +73,7 @@
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
           this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
-          this.drivername = details.Driver ? details.Driver.firstname : 'Undefined';
+          this.drivername = details.Driver ? (details.Driver.firstname + ' ' + details.Driver.lastname) : 'Undefined';
           this.routeid = details.routeid ? details.routeid : 'Undefined';
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
@@ -87,7 +87,7 @@
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
           this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
-          this.drivername = details.Driver ? details.Driver.firstname : 'Undefined';
+          this.drivername = details.Driver ? (details.Driver.firstname + ' ' + details.Driver.lastname) : 'Undefined';
           this.routeid = details.routeid ? details.routeid : 'Undefined';
           this.routename = details.Route ? details.Route.name : 'Undefined';
 
