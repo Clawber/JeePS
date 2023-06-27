@@ -35,8 +35,16 @@
       // Instantiate map and add desired tile layer (routes and markers to follow)
       map = L.map(mapElement, mapOptions)
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      // }).addTo(map);
+
+      L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        minZoom: 0,
+        maxZoom: 22,
+        subdomains: 'abcd',
+        accessToken: '9fOCsMcK18SMc09DhrvoFakvomCQptCvmQibfQ8486sAjaENeb8QOzKFAwyf8Vau'
       }).addTo(map);
       
       // Define Jeepney Class (represented by marker on map)
@@ -48,16 +56,6 @@
           popupAnchor:  [0, -68] // point from which the popup should open relative to the iconAnchor
         }
       });
-
-      var IkotTag = new jeepTag({iconUrl: '../Ikot.png'}),
-        SMNorthPantrancoTag = new jeepTag({iconUrl: '../SM North Pantranco.png'}),
-        KatipunanDayTag = new jeepTag({iconUrl: '../Katipunan Day.png'}),
-        KatipunanNightTag = new jeepTag({iconUrl: '../Katipunan Night.png'}),
-        TokiDayTag = new jeepTag({iconUrl: '../Toki Day.png'}),
-        TokiNightTag = new jeepTag({iconUrl: '../Toki Night.png'}),
-        PhilcoaDayTag = new jeepTag({iconUrl: '../Philcoa Day.png'}),
-        PhilcoaNightTag = new jeepTag({iconUrl: '../Philcoa Night.png'});
-        //paayos na lang yung tamang tag na lalabas na tag
 
       class Jeep {
         constructor(map, details) {
@@ -183,5 +181,18 @@ onDestroy(async () => {
   @import 'leaflet/dist/leaflet.css';
   main div {
     height: 800px;
+  }
+  :root {
+    --leaflet-tile-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .leaflet-tile {
+      filter: var(--leaflet-tile-filter, none);
+    }
+
+    .leaflet-container {
+      background: #303030;
+    }
   }
 </style>
