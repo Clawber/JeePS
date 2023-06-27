@@ -40,31 +40,24 @@
       }).addTo(map);
       
       // Define Jeepney Class (represented by marker on map)
-      // All markers in all routes currently have same icon (lack of assets)
-      var jeepIcon = L.icon({
-        iconUrl: jeepMarker,
-        iconSize:     [60, 60], // size of the icon
-        iconAnchor:   [30, 60], // point of the icon which will correspond to marker's location
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-      });
 
       var jeeptags = L.Icon.extend({
-      options: {
-        iconSize:     [80, 96], // size of the icon
-        iconAnchor:   [40, 88], // point of the icon which will correspond to marker's location
-        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-      }
+        options: {
+          iconSize:     [80, 96], // size of the icon
+          iconAnchor:   [40, 88], // point of the icon which will correspond to marker's location
+          popupAnchor:  [0, -68] // point from which the popup should open relative to the iconAnchor
+        }
       });
 
-    var IkotTag = new jeeptags({iconUrl: '../IkotTag.png'}),
-      SMNorthPantrancoTag = new jeeptags({iconUrl: '../SMNorthPantrancoTag.png'}),
-      KatipunanDayTag = new jeeptags({iconUrl: '../KatipunanDayTag.png'}),
-      KatipunanNightTag = new jeeptags({iconUrl: '../KatipunanNightTag.png'}),
-      TokiDayTag = new jeeptags({iconUrl: '../TokiDayTag.png'}),
-      TokiNightTag = new jeeptags({iconUrl: '../TokiNightTag.png'}),
-      PhilcoaDayTag = new jeeptags({iconUrl: '../PhilcoaDayTag.png'}),
-      PhilcoaNightTag = new jeeptags({iconUrl: '../PhilcoaNightTag.png'});
-      //paayos na lang yung tamang tag na lalabas na tag
+      var IkotTag = new jeeptags({iconUrl: '../IkotTag.png'}),
+        SMNorthPantrancoTag = new jeeptags({iconUrl: '../SMNorthPantrancoTag.png'}),
+        KatipunanDayTag = new jeeptags({iconUrl: '../KatipunanDayTag.png'}),
+        KatipunanNightTag = new jeeptags({iconUrl: '../KatipunanNightTag.png'}),
+        TokiDayTag = new jeeptags({iconUrl: '../TokiDayTag.png'}),
+        TokiNightTag = new jeeptags({iconUrl: '../TokiNightTag.png'}),
+        PhilcoaDayTag = new jeeptags({iconUrl: '../PhilcoaDayTag.png'}),
+        PhilcoaNightTag = new jeeptags({iconUrl: '../PhilcoaNightTag.png'});
+        //paayos na lang yung tamang tag na lalabas na tag
 
       class Jeep {
         constructor(map, details) {
@@ -149,9 +142,6 @@
         var PHILCOANIGHTRoute = L.polyline(PHILCOANIGHTRoutePoints, {color: '#0f6752', weight: 5, smoothFactor: 3})
         var KATIPUNANDAYRoute = L.polyline(KATIPUNANDAYRoutePoints, {color: '#e42f59', weight: 5, smoothFactor: 3})
         var KATIPUNANNIGHTRoute = L.polyline(KATIPUNANNIGHTRoutePoints, {color: '#663367', weight: 5, smoothFactor: 3})
-        // var ikotRouteOld = L.polyline(ikotRoutePoints, {color: 'blue'}).addTo(map);
-        // var ikotEveningRoute = L.polyline(ikotEveningRoutePoints, {color: 'violet'}).addTo(map);
-        // var tokiRoute = L.polyline(tokiRoutePoints, {color: 'orange'}).addTo(map);
 
         var jeepRoutes = {
           "Ikot" : IKOTRoute,
