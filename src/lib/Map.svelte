@@ -14,6 +14,7 @@
   onMount(async () => {
     if (browser) {
       console.log("Jeep has been mounted");
+      await import('leaflet-polylinedecorator');
       const L = await import('leaflet');
 
       // Leaflet Map initialization
@@ -145,6 +146,14 @@
       // Function addRoutes
       function addRoutes(map) {
         var IKOTRoute = L.polyline(IKOTRoutePoints, {color: '#ffcd32', weight: 5, smoothFactor: 3}).addTo(map);
+        console.log(L);
+        console.log(L.polylineDecorator)
+          var decorator = L.polylineDecorator(IKOTRoute, {
+              patterns: [
+                  // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+                  {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: '#d5a600', weight: 0}})}
+              ]
+          }).addTo(map);
         var SMPANTRANCORoute = L.polyline(SMPANTRANCORoutePoints, {color: '#329a9a', weight: 5, smoothFactor: 3})
         var TOKIDAYRoute = L.polyline(TOKIDAYRoutePoints, {color: '#f68c34', weight: 5, smoothFactor: 3})
         var TOKINIGHTRoute = L.polyline(TOKINIGHTRoutePoints, {color: '#88202c', weight: 5, smoothFactor: 3})
