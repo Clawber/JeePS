@@ -13,6 +13,7 @@
 
   onMount(async () => {
     if (browser) {
+      console.log("Jeep has been mounted");
       const L = await import('leaflet');
 
       // Leaflet Map initialization
@@ -46,6 +47,7 @@
       }
       
       // Instantiate map and add desired tile layer (routes and markers to follow)
+      console.log("new map created");
       map = L.map(mapElement, mapOptions)
 
       var tiles = {
@@ -183,13 +185,19 @@ onDestroy(async () => {
 
 </script>
 
-<main>
-  <div bind:this={mapElement}></div>
-</main>
+
+<div class="mapElem" bind:this={mapElement}></div>
+
 
 <style>
   @import 'leaflet/dist/leaflet.css';
-  main div {
+  .mapElem {
     height: 800px;
+    width: 100%;
+    
+    position: absolute;
+    left: 50%;
+    top: 63%;
+    transform: translate(-50%, -50%);
   }
 </style>
