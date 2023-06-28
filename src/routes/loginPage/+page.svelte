@@ -136,8 +136,7 @@
     let radd_routename, radd_color;
 
     // MODIFY
-    let jmod_id=1, jmod_platenum, jmod_capacity, jmod_route, jmod_driverid;
-    let jmod_route_radio = 1;
+    let jmod_id=1, jmod_platenum, jmod_capacity, jmod_routeid, jmod_driverid;
     let dmod_id=1, dmod_firstname, dmod_lastname;
     let rmod_id=1, rmod_name, rmod_color;
 
@@ -288,9 +287,8 @@
             platenumber: jmod_platenum ? jmod_platenum : undefined,
             capacity: jmod_capacity ? jmod_capacity : undefined,
             driverid: jmod_driverid ? jmod_driverid : undefined,
-            routeid: jmod_route ? jmod_route : undefined,
-            routename: jmod_route ? jmod_route : undefined,
-            routeoption: jmod_route_radio ? jmod_route_radio : undefined
+            routeid: jmod_routeid ? jmod_routeid : undefined,
+            routename: jmod_routeid ? jmod_routeid : undefined,
         })
 
         fetch(JEEPNEY_URL + `/${jmod_id}`, {
@@ -304,8 +302,8 @@
             if (res.status === 201) {
                 jmod_platenum ? document.getElementById("jmod_platenum").placeholder=jmod_platenum : null;
                 jmod_capacity ? document.getElementById("jmod_capacity").placeholder=jmod_capacity : null;
-                jmod_driverid ? document.getElementById("jmod_driverid").placeholder=jmod_driverid : null;
-                jmod_route ? document.getElementById("jmod_routeid").placeholder=jmod_route : null;
+                jmod_driverid ? document.getElementById("jmod_driverid").textContent=jmod_driverid : null;
+                jmod_routeid ? document.getElementById("jmod_routeid").textContent=jmod_routeid : null;
             }
         })
     }
@@ -636,10 +634,22 @@
                                         <input  class="mt-3 ml-5" bind:value={jmod_platenum} id="jmod_platenum" placeholder={jeep.platenumber}>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                         <input  class="mt-3 ml-5" bind:value={jmod_capacity} id="jmod_capacity" placeholder={jeep.capacity}>
-                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                        <input class="mt-3 ml-5" bind:value={jmod_driverid} id="jmod_driverid" placeholder={jeep.driverid}>
-                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                                        <input class="mt-3 ml-5" bind:value={jmod_route} id="jmod_routeid" placeholder={jeep.routeid}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (current: <span id="jmod_driverid">{jeep.driverid}</span>)</h1>
+                                        <select class="mt-3 ml-5" bind:value={jmod_driverid} on:change={() => console.log(jmod_driverid)}>
+                                            {#await FETCHDRIVER() then drivers}
+                                                {#each drivers as driver}
+                                                    <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                {/each}
+                                            {/await}
+                                        </select>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (current: <span id="jmod_routeid">{jeep.routeid}</span>)</h1>
+                                        <select class="mt-3 ml-5" bind:value={jmod_routeid} on:change={() => console.log(jmod_driverid)}>
+                                            {#await FETCHROUTE() then routes}
+                                                {#each routes as route}
+                                                    <option value="{route.id}">{route.id} - {route.name}</option>
+                                                {/each}
+                                            {/await}
+                                        </select>
                                         <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                                     {/await}
                                 {/await}
