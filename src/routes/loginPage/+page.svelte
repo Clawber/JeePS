@@ -657,32 +657,52 @@
 
                         </div>
                     {:else if ($activeTable === "drivers")}
-                    <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYDRIVER}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
-                            <input class="mt-3 ml-5" bind:value={dmod_id}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
-                            <input class="mt-3 ml-5" bind:value={dmod_firstname}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
-                            <input  class="mt-3 ml-5" bind:value={dmod_lastname}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
-                        </form>
+                        <div class="flex flex-wrap justify-center my-5">
+                            <!-- Forms -->
+                            <form on:submit|preventDefault={MODIFYDRIVER}>
+                                <!-- initial data fetch, to fill out forms  -->
+                                {#await FETCHDRIVER() then drivers}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
+                                    <select class="mt-3 ml-5" bind:value={dmod_id} on:change={() => console.log(dmod_id)}>
+                                        {#each drivers as driver}
+                                            <option value="{driver.id}">{driver.id} </option>
+                                        {/each}
+                                    </select>
+                                    {#await drivers.find(driver => driver.id === dmod_id) then driver}
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={dmod_firstname} id="dmod_firstname" placeholder={driver.firstname}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={dmod_lastname} id="dmod_lastname" placeholder={driver.lastname}>
+                                        <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                    {/await}
+                                {/await}
+
+
+                            </form>
                         </div>
                     {:else}
-                    <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYROUTE}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Route ID (required)</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_id}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Name</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_name}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_color}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
-                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
-                            <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
-                        </form>
-                        </div>
+                        <div class="flex flex-wrap justify-center my-5">
+                            <form on:submit|preventDefault={MODIFYROUTE}>
+                                {#await FETCHROUTE() then routes}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (required)</h1>
+                                    <select class="mt-3 ml-5" bind:value={rmod_id} on:change={() => console.log(rmod_id)}>
+                                        {#each routes as route}
+                                            <option value="{route.id}">{route.id} </option>
+                                        {/each}
+                                    </select>
+                                    {#await routes.find(route => route.id === rmod_id) then route}
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={rmod_name} id="rmod_name" placeholder={route.name}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Hex Color (example: #ffcd32)</h1>
+                                        <input  class="mt-3 ml-5" bind:value={rmod_color} id="rmod_color" placeholder={route.color}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
+                                        <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                                        <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
+                                        <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                    {/await}
+                                {/await}
+                            </form>
+                        </div> 
                     {/if}
                     </div>
                 </div>
