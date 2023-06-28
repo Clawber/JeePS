@@ -1,4 +1,4 @@
-<script src="../dist/leaflet.polylineDecorator.js">
+<script>
 	import LeafletMap from '$lib/Map.svelte';
 	// import LeafletMap from '../lib/Map.svelte';
 </script>
