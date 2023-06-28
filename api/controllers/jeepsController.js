@@ -291,7 +291,7 @@ class jeepsController {
                     if (err.name === "SequelizeUniqueConstraintError") {
                         return res.status(400).json({
                             success: false,
-                            message: `Jeepney with platenumber ${platenumber} already exists.`,
+                            message: `Jeepney with platenumber ${req.body.platenumber} already exists.`,
                         })
                     } else {
                         return res.status(422).json({

@@ -43,7 +43,7 @@
         zoom: 16,
         zoomSnap: 0.25,
         wheelPxPerZoomLevel: 120,
-        layers: [tileLight, tileDark]
+        layers: [tileDark]
       }
       
       // Instantiate map and add desired tile layer (routes and markers to follow)
@@ -56,7 +56,6 @@
       }
 
       // Define Jeepney Class (represented by marker on map)
-
       var jeepTag = L.Icon.extend({
         options: {
           iconSize:     [80, 96], // size of the icon
@@ -78,7 +77,7 @@
 
           // Map this Jeep to a marker of its own
           this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862),
-                        {icon: new jeepTag({iconUrl: `../tags/${this.routename}.png`})});
+                        {icon: new jeepTag({iconUrl: `../tags/dark/${this.routename}.png`})});
           this.marker.addTo(this.map);
           this.popup();
         }
@@ -169,10 +168,24 @@
 
       addRoutes(map);
 
-      map.on('click', function(ev){
-        var latlng = map.mouseEventToLatLng(ev.originalEvent);
-      });
+      function updateIconMode() {
+          if (map.hasLayer(tileLight)) {
+              console.log("LIGHT");
+              jeepneys.forEach(jeep => {
+                  jeep.marker.setIcon(new jeepTag({iconUrl: `../tags/light/${jeep.routename}.png`}));
+              })
+          } else {
+              console.log("DARK");
+              jeepneys.forEach(jeep => {
+                  jeep.marker.setIcon(new jeepTag({iconUrl: `../tags/dark/${jeep.routename}.png`}));
+              })
+          }
+      }
 
+      // Add scale at lower left corner of the map
+      L.control.scale().addTo(map);
+
+      map.on('baselayerchange', updateIconMode);
     }
 });
 
