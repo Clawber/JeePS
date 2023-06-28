@@ -1,7 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  import {IKOTRoutePoints, SMPANTRANCORoutePoints, TOKIDAYRoutePoints, TOKINIGHTRoutePoints, PHILCOADAYRoutePoints, PHILCOANIGHTRoutePoints, KATIPUNANDAYRoutePoints, KATIPUNANNIGHTRoutePoints} from './jeepRoutes.js';
 
   const DEV = false;
   // For development, use 'http://localhost:8080/api/jeeps/jeepney'
@@ -87,7 +86,7 @@
           // Map this Jeep to a marker of its own
           this.marker = new L.Marker(this.coords, {icon: new jeepTag({
                   iconUrl: this.routename ? `../tags/dark/${this.routename}.png` : `../tags/dark/Ikot.png`})});
-          this.marker.addTo(this.map);
+          // this.marker.addTo(this.map);
           this.popup(details);
         }
 
@@ -177,7 +176,7 @@
 
               // Map this Route to a Polyline of its own
               this.polyline = new L.Polyline(this.path, {name: this.name, color: this.color, weight: 5, smoothFactor: 3});
-              this.layerGroup = new L.layerGroup()
+              this.decorator = new L.layerGroup()
                   .addLayer(this.polyline)
                   .addLayer(new L.polylineDecorator(this.path, {
                       patterns: [
@@ -185,8 +184,7 @@
                           {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: convertHex(this.color, 0.9), weight: 0}})}
                       ]
                   }));
-              if (this.name === 'Ikot') this.layerGroup.addTo(map);
-              mapControls.addOverlay(this.layerGroup, this.name);
+              // if (this.name === 'Ikot') this.layerGroup.addTo(map);
               this.popup();
           }
 
@@ -209,14 +207,20 @@
           }
       }
 
+      // Merges the Jeep and Route classes together
       class jeepRoute {
           constructor(map, route) {
               this.map = map;
               let jeeps = jeepneys.filter((elem) => elem.routeid === route.id);
-              jeeps.forEach((elem) => {elem.marker});
-              this.group = new L.layerGroup(jeeps)
-                  .addLayer(route.layerGroup);
-              this.group.addTo(map)
+              let markers = [];
+              jeeps.forEach((elem) => {markers.push(elem.marker)});
+              console.log(markers)
+              this.group = new L.layerGroup(markers)
+                  .addLayer(route.polyline)
+                  .addLayer(route.decorator);
+              mapControls.addOverlay(this.group, route.name);
+
+              if (route.name === "Ikot") this.group.addTo(map);
           }
       }
 
@@ -249,9 +253,9 @@
             })
         }).then(() => {
             console.log(routes);
-            // routes.forEach((route) => {
-            //     new jeepRoute(map, route)
-            // })
+            routes.forEach((route) => {
+                new jeepRoute(map, route);
+            })
             setInterval(updateRoutes, 1000 * 10)
         })
         })
