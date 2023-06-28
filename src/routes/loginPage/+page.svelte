@@ -136,7 +136,8 @@
     let radd_routename, radd_color;
 
     // MODIFY
-    let jmod_id=1, jmod_platenum, jmod_capacity, jmod_routeid, jmod_driverid;
+    let jmod_id=1, jmod_platenum, jmod_capacity, jmod_route, jmod_driverid;
+    let jmod_route_radio = 1;
     let dmod_id=1, dmod_firstname, dmod_lastname;
     let rmod_id=1, rmod_name, rmod_color;
 
@@ -284,10 +285,12 @@
         // Remember that jeepney coords is nullable
         // Form validation done at the backend
         let data = JSON.stringify({
-            platenumber: jmod_platenum,
-            capacity: jmod_capacity,
-            driverid: jmod_driverid,
-            routeid: jmod_routeid
+            platenumber: jmod_platenum ? jmod_platenum : undefined,
+            capacity: jmod_capacity ? jmod_capacity : undefined,
+            driverid: jmod_driverid ? jmod_driverid : undefined,
+            routeid: jmod_route ? jmod_route : undefined,
+            routename: jmod_route ? jmod_route : undefined,
+            routeoption: jmod_route_radio ? jmod_route_radio : undefined
         })
 
         fetch(JEEPNEY_URL + `/${jmod_id}`, {
@@ -302,7 +305,7 @@
                 jmod_platenum ? document.getElementById("jmod_platenum").placeholder=jmod_platenum : null;
                 jmod_capacity ? document.getElementById("jmod_capacity").placeholder=jmod_capacity : null;
                 jmod_driverid ? document.getElementById("jmod_driverid").placeholder=jmod_driverid : null;
-                jmod_routeid ? document.getElementById("jmod_routeid").placeholder=jmod_routeid : null;
+                jmod_route ? document.getElementById("jmod_routeid").placeholder=jmod_route : null;
             }
         })
     }
@@ -636,7 +639,7 @@
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
                                         <input class="mt-3 ml-5" bind:value={jmod_driverid} id="jmod_driverid" placeholder={jeep.driverid}>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                                        <input class="mt-3 ml-5" bind:value={jmod_routeid} id="jmod_routeid" placeholder={jeep.routeid}>
+                                        <input class="mt-3 ml-5" bind:value={jmod_route} id="jmod_routeid" placeholder={jeep.routeid}>
                                         <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                                     {/await}
                                 {/await}
