@@ -14,7 +14,7 @@
   onMount(async () => {
     if (browser) {
       console.log("Jeep has been mounted");
-      await import('leaflet-polylinedecorator');
+       import('leaflet-polylinedecorator');
       const L = await import('leaflet');
 
       // Leaflet Map initialization
@@ -179,10 +179,7 @@
               this.decorator = new L.layerGroup()
                   .addLayer(this.polyline)
                   .addLayer(new L.polylineDecorator(this.path, {
-                      patterns: [
-                          // defines a pattern of 10px-wide dashes, repeated every 20px on the line
-                          {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: convertHex(this.color, 0.9), weight: 0}})}
-                      ]
+
                   }));
               // if (this.name === 'Ikot') this.layerGroup.addTo(map);
               this.popup();
