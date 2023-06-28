@@ -4,7 +4,6 @@
 </script>
 
 <div class = "pt-14">
-	
 	<LeafletMap />
 </div>
 

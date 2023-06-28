@@ -136,9 +136,9 @@
     let radd_routename, radd_color;
 
     // MODIFY
-    let jmod_id, jmod_platenum, jmod_capacity, jmod_routeid, jmod_driverid;
-    let dmod_id, dmod_firstname, dmod_lastname;
-    let rmod_id, rmod_name, rmod_color;
+    let jmod_id=1, jmod_platenum, jmod_capacity, jmod_routeid, jmod_driverid;
+    let dmod_id=1, dmod_firstname, dmod_lastname;
+    let rmod_id=1, rmod_name, rmod_color;
 
     // DELETE
     let jdel_id, ddel_id, rdel_id; // These are all IDs
@@ -298,6 +298,12 @@
             }
         }).then((res) => {
             res.json().then(msg => alert(msg.message))
+            if (res.status === 201) {
+                jmod_platenum ? document.getElementById("jmod_platenum").placeholder=jmod_platenum : null;
+                jmod_capacity ? document.getElementById("jmod_capacity").placeholder=jmod_capacity : null;
+                jmod_driverid ? document.getElementById("jmod_driverid").placeholder=jmod_driverid : null;
+                jmod_routeid ? document.getElementById("jmod_routeid").placeholder=jmod_routeid : null;
+            }
         })
     }
 
@@ -614,18 +620,26 @@
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={MODIFYJEEPNEY}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
                                 <!--<input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>-->
-                                <input class="mt-3 ml-5" bind:value={jmod_id}> <!--TODO: Fix variable names-->
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
-                                <input  class="mt-3 ml-5" bind:value={jmod_platenum}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
-                                <input  class="mt-3 ml-5" bind:value={jmod_capacity}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jmod_driverid}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jmod_routeid}>
-                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                {#await FETCHJEEPNEY() then jeepneys}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
+                                    <select class="mt-3 ml-5" bind:value={jmod_id} on:change={() => console.log(jmod_id)}>
+                                        {#each jeepneys as jeepney}
+                                            <option value="{jeepney.id}">{jeepney.id}</option>
+                                        {/each}
+                                    </select>
+                                    {#await jeepneys.find(jeep => jeep.id === jmod_id) then jeep}
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Plate Number</h1>
+                                        <input  class="mt-3 ml-5" bind:value={jmod_platenum} id="jmod_platenum" placeholder={jeep.platenumber}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
+                                        <input  class="mt-3 ml-5" bind:value={jmod_capacity} id="jmod_capacity" placeholder={jeep.capacity}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
+                                        <input class="mt-3 ml-5" bind:value={jmod_driverid} id="jmod_driverid" placeholder={jeep.driverid}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
+                                        <input class="mt-3 ml-5" bind:value={jmod_routeid} id="jmod_routeid" placeholder={jeep.routeid}>
+                                        <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                    {/await}
+                                {/await}
                             </form>
 
                         </div>
