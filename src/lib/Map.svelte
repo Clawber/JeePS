@@ -148,6 +148,25 @@
         })
       })
         // TODO: Fix layer control name (name - Day/Night)
+
+        function convertHex(hexCode, opacity = 1){
+            var hex = hexCode.replace('#', '');
+
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+
+            var r = parseInt(hex.substring(0,2), 16)-75,
+                g = parseInt(hex.substring(2,4), 16)-50,
+                b = parseInt(hex.substring(4,6), 16)-75;
+
+            /* Backward compatibility for whole number based opacity values. */
+            if (opacity > 1 && opacity <= 100) {
+                opacity = opacity / 100;
+            }
+
+            return 'rgba('+r+','+g+','+b+','+opacity+')';
+        }
         class Route {
           constructor(map, details) {
               this.map = map;
@@ -157,10 +176,17 @@
               this.path = details.path ? details.path : defaultPolyline;
 
               // Map this Route to a Polyline of its own
-              this.polyline = new L.Polyline(this.path, {name: "test", color: this.color, weight: 5, smoothFactor: 3}).addTo(map);
-              mapControls.addOverlay(this.polyline, this.name);
-              if (this.name !== "Ikot") map.removeLayer(this.polyline);
-
+              this.polyline = new L.Polyline(this.path, {name: this.name, color: this.color, weight: 5, smoothFactor: 3});
+              this.layerGroup = new L.layerGroup()
+                  .addLayer(this.polyline)
+                  .addLayer(new L.polylineDecorator(this.path, {
+                      patterns: [
+                          // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+                          {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: convertHex(this.color, 0.9), weight: 0}})}
+                      ]
+                  }));
+              if (this.name === 'Ikot') this.layerGroup.addTo(map);
+              mapControls.addOverlay(this.layerGroup, this.name);
               this.popup();
           }
 
@@ -168,7 +194,6 @@
               this.name = details.name;
               this.color = details.color;
               this.path = details.path ? details.path : defaultPolyline;
-
               this.polyline.setLatLngs(this.path);
               this.popup();
           }
@@ -181,6 +206,17 @@
                  Color: ${this.color}<br>
                  Jeepneys: ${jeepneys.filter(jeep => jeep.routeid === this.id).length}<br>`
               );
+          }
+      }
+
+      class jeepRoute {
+          constructor(map, route) {
+              this.map = map;
+              let jeeps = jeepneys.filter((elem) => elem.routeid === route.id);
+              jeeps.forEach((elem) => {elem.marker});
+              this.group = new L.layerGroup(jeeps)
+                  .addLayer(route.layerGroup);
+              this.group.addTo(map)
           }
       }
 
@@ -213,11 +249,12 @@
             })
         }).then(() => {
             console.log(routes);
+            // routes.forEach((route) => {
+            //     new jeepRoute(map, route)
+            // })
             setInterval(updateRoutes, 1000 * 10)
         })
         })
-
-
 
       function updateIconMode() {
           if (map.hasLayer(tileLight)) {
