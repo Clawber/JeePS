@@ -115,7 +115,7 @@ class jeepsController {
         .then((route) => {
             return res.status(201).json({
                 success: true,
-                message: `Jeepney with ID ${route.id} successfully created.`,
+                message: `Route with ID ${route.id} successfully created.`,
                 ret: route
             })
         })
@@ -166,6 +166,11 @@ class jeepsController {
         const route = await Route.findAll({
             order: [['id', 'ASC']]
         });
+        route.forEach(elem => {
+            if (elem.dataValues.path) {
+                elem.dataValues.path = (JSON.parse(elem.dataValues.path.replaceAll('(', '[').replaceAll(')', ']')))
+            }
+        })
         return res.status(200).json({
             success: true,
             message: "Routes successfully returned.",
@@ -234,6 +239,7 @@ class jeepsController {
                 message: `Didn't find driver corresponding to ID ${id}`
             })
         } else {
+            route.dataValues.path = (JSON.parse(route.dataValues.path.replaceAll('(', '[').replaceAll(')', ']')))
             return res.status(200).json({
                 success: true,
                 message: "Found matching route.",
