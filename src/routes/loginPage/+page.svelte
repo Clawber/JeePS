@@ -585,26 +585,43 @@
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jdel_id}>
-                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                                {#await FETCHJEEPNEY() then jeepneys}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID </h1>
+                                    <select class="mt-3 ml-5" bind:value={jdel_id} on:change={() => console.log(jdel_id)}>
+                                        {#each jeepneys as jeepney}
+                                            <option value="{jeepney.id}">{jeepney.id} - {jeepney.platenumber}</option>
+                                        {/each}
+                                    </select>
+                                    <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button> -->
+                                {/await}
                             </form>
-
                         </div>
                     {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEDRIVER}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                            <input class="mt-3 ml-5" bind:value={ddel_id}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {#await FETCHDRIVER() then drivers}
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID </h1>
+                                <select class="mt-3 ml-5" bind:value={ddel_id} on:change={() => console.log(ddel_id)}>
+                                    {#each drivers as driver}
+                                        <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
+                                    {/each}
+                                </select>
+                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {/await}
                         </form>
                         </div>
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEROUTE}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                            <input class="mt-3 ml-5" bind:value={rdel_id}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {#await FETCHROUTE() then routes}
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
+                                <select class="mt-3 ml-5" bind:value={rdel_id} on:change={() => console.log(rdel_id)}>
+                                    {#each routes as route}
+                                        <option value="{route.id}">{route.id} - {route.name}</option>
+                                    {/each}
+                                </select>
+                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {/await}
                         </form>
                         </div>
                     {/if}
