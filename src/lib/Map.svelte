@@ -61,9 +61,11 @@
         options: {
           iconSize:     [80, 96], // size of the icon
           iconAnchor:   [40, 88], // point of the icon which will correspond to marker's location
-          popupAnchor:  [0, -68] // point from which the popup should open relative to the iconAnchor
+          popupAnchor:  [0, -66] // point from which the popup should open relative to the iconAnchor
         }
       });
+
+      var defaultCoords = L.latLng(14.65491, 121.06862);
 
       class Jeep {
         constructor(map, details) {
@@ -71,39 +73,41 @@
           this.id = details.id;
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
-          this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
-          this.drivername = details.Driver ? (details.Driver.firstname + ' ' + details.Driver.lastname) : 'Undefined';
-          this.routeid = details.routeid ? details.routeid : 'Undefined';
-          this.routename = details.Route ? details.Route.name : 'Undefined';
+          this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : defaultCoords;
+          this.driverid = details.driverid;
+          this.drivername = details.Driver.firstname + ' ' + details.Driver.lastname;
+          this.routeid = details.routeid;
+          this.routename = details.Route.name;
 
           // Map this Jeep to a marker of its own
-          this.marker = new L.Marker(details.coords ? this.coords : L.latLng(14.65491, 121.06862),
-                        {icon: new jeepTag({iconUrl: `../tags/dark/${this.routename}.png`})});
+          this.marker = new L.Marker(this.coords, {icon: new jeepTag({
+                  iconUrl: this.routename ? `../tags/dark/${this.routename}.png` : `../tags/dark/Ikot.png`})});
           this.marker.addTo(this.map);
-          this.popup();
+          this.popup(details);
         }
 
         set(details) {
-          this.platenumber = details.platenumber;
-          this.capacity = details.capacity;
-          this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : 'Undefined';
-          this.drivername = details.Driver ? (details.Driver.firstname + ' ' + details.Driver.lastname) : 'Undefined';
-          this.routeid = details.routeid ? details.routeid : 'Undefined';
-          this.routename = details.Route ? details.Route.name : 'Undefined';
+            this.platenumber = details.platenumber;
+            this.capacity = details.capacity;
+            this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : defaultCoords;
+            this.driverid = details.driverid;
+            this.drivername = details.Driver.firstname + ' ' + details.Driver.lastname;
+            this.routeid = details.routeid;
+            this.routename = details.Route.name;
 
-          this.marker.setLatLng(details.coords ? this.coords : L.latLng(14.65491, 121.06862));
-          this.popup();
+            this.marker.setLatLng(details.coords ? this.coords : defaultCoords);
+            this.popup();
         }
 
-        popup() {
+        popup(details) {
           this.marker.bindPopup(
             `Jeepney ID: ${this.id} <br>
              Plate Number: ${this.platenumber}<br>
-             Capacity: ${this.capacity}<br>
-             Driver Name: ${this.drivername}<br>
-             Route Name: ${this.routename}<br>
-             Coords: (${this.coords.lat},${this.coords.lng})<br>`
-            );
+             Capacity: ${this.capacity ? this.capacity : 'Undefined'}<br>
+             Driver Name: ${this.drivername? this.drivername : 'Undefined' }<br>
+             Route Name: ${this.routename ? this.routename : 'Undefined'}<br>
+             Coords: ${details.coords ? `(${this.coords.lat},${this.coords.lng})` : 'Undefined'}<br>`
+          );
         }
       }
 
@@ -141,19 +145,47 @@
 
       // TODO: Add orientation (arrows) to route
       class Route {
+          constructor(map, details) {
+              this.map = map;
+              this.id = details.id;
+              this.name = details.name;
+              this.color = details.color;
+              this.path = details.path;
 
+              // Map this Jeep to a marker of its own
+              this.marker = new L.Marker(this.coords, {icon: new jeepTag({
+                      iconUrl: this.routename ? `../tags/dark/${this.routename}.png` : `../tags/dark/Ikot.png`})});
+              this.marker.addTo(this.map);
+              this.popup(details);
+          }
+
+          set(details) {
+              this.platenumber = details.platenumber;
+              this.capacity = details.capacity;
+              this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : L.latLng(14.65491, 121.06862);
+              this.driverid = details.driverid;
+              this.drivername = details.Driver.firstname + ' ' + details.Driver.lastname;
+              this.routeid = details.routeid;
+              this.routename = details.Route.name;
+
+              this.marker.setLatLng(details.coords ? this.coords : L.latLng(14.65491, 121.06862));
+              this.popup();
+          }
+
+          popup(details) {
+              this.marker.bindPopup(
+                  `Jeepney ID: ${this.id} <br>
+             Plate Number: ${this.platenumber}<br>
+             Capacity: ${this.capacity ? this.capacity : 'Undefined'}<br>
+             Driver Name: ${this.drivername? this.drivername : 'Undefined' }<br>
+             Route Name: ${this.routename ? this.routename : 'Undefined'}<br>
+             Coords: ${details.coords ? `(${this.coords.lat},${this.coords.lng})` : 'Undefined'}<br>`
+              );
+          }
       }
       // Function addRoutes
       function addRoutes(map) {
         var IKOTRoute = L.polyline(IKOTRoutePoints, {color: '#ffcd32', weight: 5, smoothFactor: 3}).addTo(map);
-        console.log(L);
-        console.log(L.polylineDecorator)
-          var decorator = L.polylineDecorator(IKOTRoute, {
-              patterns: [
-                  // defines a pattern of 10px-wide dashes, repeated every 20px on the line
-                  {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: '#d5a600', weight: 0}})}
-              ]
-          }).addTo(map);
         var SMPANTRANCORoute = L.polyline(SMPANTRANCORoutePoints, {color: '#329a9a', weight: 5, smoothFactor: 3})
         var TOKIDAYRoute = L.polyline(TOKIDAYRoutePoints, {color: '#f68c34', weight: 5, smoothFactor: 3})
         var TOKINIGHTRoute = L.polyline(TOKINIGHTRoutePoints, {color: '#88202c', weight: 5, smoothFactor: 3})
