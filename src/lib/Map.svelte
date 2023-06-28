@@ -159,6 +159,7 @@
               // Map this Route to a Polyline of its own
               this.polyline = new L.Polyline(this.path, {name: "test", color: this.color, weight: 5, smoothFactor: 3}).addTo(map);
               mapControls.addOverlay(this.polyline, this.name);
+              if (this.name !== "Ikot") map.removeLayer(this.polyline);
 
               this.popup();
           }
