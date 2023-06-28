@@ -665,7 +665,7 @@
                                     <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
                                     <select class="mt-3 ml-5" bind:value={dmod_id} on:change={() => console.log(dmod_id)}>
                                         {#each drivers as driver}
-                                            <option value="{driver.id}">{driver.id} </option>
+                                            <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
                                         {/each}
                                     </select>
                                     {#await drivers.find(driver => driver.id === dmod_id) then driver}
@@ -687,7 +687,7 @@
                                     <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (required)</h1>
                                     <select class="mt-3 ml-5" bind:value={rmod_id} on:change={() => console.log(rmod_id)}>
                                         {#each routes as route}
-                                            <option value="{route.id}">{route.id} </option>
+                                            <option value="{route.id}">{route.id} - {route.name}</option>
                                         {/each}
                                     </select>
                                     {#await routes.find(route => route.id === rmod_id) then route}
