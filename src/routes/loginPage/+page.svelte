@@ -200,7 +200,7 @@
     function PATHPARSER() {
         return new Promise(resolve => {
             let path = '';
-            if (files.length > 0) {
+            if (files) {
                 let file = files[0]
                 let reader = new FileReader()
                 reader.readAsText(file)
@@ -225,7 +225,8 @@
                     }
                 }
             } else {
-                alert("No file added");
+                alert("No file added. Make sure to modify later with a proper path.");
+                resolve(null);
             }
         })
     }
@@ -237,7 +238,7 @@
             body: JSON.stringify({
                 name: radd_routename,
                 color: radd_color,
-                path: files ? path : null
+                path: path
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -566,7 +567,7 @@
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
                             <input class="mt-3 ml-20" bind:value={radd_color}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Upload a Path file (.csv)</h1>
-                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
                             <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
                             <button type="submit" class="bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                         </form>
@@ -678,7 +679,7 @@
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
                             <input class="mt-3 ml-20" bind:value={rmod_color}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
-                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
                             <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
                             <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                         </form>
