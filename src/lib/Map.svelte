@@ -18,6 +18,32 @@
         // Issue is because of Vite dev roll-up tree-shaking
       await import('leaflet-polylinedecorator');
       const L = await import('leaflet');
+
+        // TODO: @carl preserve active overlays
+        // https://stackoverflow.com/questions/44322326/how-to-get-selected-layers-in-control-layers/51484131#51484131
+        L.Control.Layers.include({
+            getOverlays: function() {
+                // create hash to hold all layers
+                var control, layers;
+                layers = {};
+                control = this;
+
+                // loop thru all layers in control
+                control._layers.forEach(function(obj) {
+                    var layerName;
+
+                    // check if layer is an overlay
+                    if (obj.overlay) {
+                        // get name of overlay
+                        layerName = obj.name;
+                        // store whether it's present on the map or not
+                        return layers[layerName] = control._map.hasLayer(obj.layer);
+                    }
+                });
+
+                return layers;
+            }
+        });
       console.log(L);
 
       // Leaflet Map initialization
@@ -76,19 +102,20 @@
 
       class Jeep {
         constructor(map, details) {
+            console.log(details)
           this.map = map;
           this.id = details.id;
           this.platenumber = details.platenumber;
           this.capacity = details.capacity;
           this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : defaultCoords;
           this.driverid = details.driverid;
-          this.drivername = details.Driver.firstname + ' ' + details.Driver.lastname;
+          this.drivername = details.Driver ? details.Driver.firstname + ' ' + details.Driver.lastname : undefined;
           this.routeid = details.routeid;
-          this.routename = details.Route.name;
+          this.routename = details.Route ? details.Route.name : undefined;
 
           // Map this Jeep to a marker of its own
           this.marker = new L.Marker(this.coords, {icon: new jeepTag({
-                  iconUrl: this.routename ? `../tags/dark/${this.routename}.png` : `../tags/dark/Ikot.png`})});
+                  iconUrl: this.routename ? `../tags/dark/${this.routename}.png` : `../tags/dark/Unknown.png`})});
           // this.marker.addTo(this.map);
           this.popup(details);
         }
@@ -98,9 +125,9 @@
             this.capacity = details.capacity;
             this.coords = details.coords ? L.latLng(details.coords.x, details.coords.y) : defaultCoords;
             this.driverid = details.driverid;
-            this.drivername = details.Driver.firstname + ' ' + details.Driver.lastname;
+            this.drivername = details.Driver ? details.Driver.firstname + ' ' + details.Driver.lastname : undefined;
             this.routeid = details.routeid;
-            this.routename = details.Route.name;
+            this.routename = details.Route ? details.Route.name : undefined;
 
             this.marker.setLatLng(details.coords ? this.coords : defaultCoords);
             this.popup(details);
@@ -262,6 +289,8 @@
         })
         })
 
+        // If marker has no route and no coords, it won't appear
+        // If marker has no route and has coords,
       function updateIconMode() {
           if (map.hasLayer(tileLight)) {
               console.log("LIGHT");

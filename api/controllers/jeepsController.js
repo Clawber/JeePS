@@ -275,20 +275,23 @@ class jeepsController {
                 return res.status(400).send(err.message)
             })
         } else {
+            console.log(req.body);
             Jeepney.update(req.body, {
                 where: { id: id }
             })
                 .then(async (check) => {
-                    if (check[0]) {
+                    if (check[0] === 1) {
+                        console.log(check)
                         return res.status(201).json({
                             success: true,
                             message: `Jeepney with ID ${id} successfully updated.`,
                             ret: await Jeepney.findByPk(id)
                         })
                     } else {
-                        return res.status(404).json({
-                            success: false,
-                            message: `Didn't find jeepney corresponding to ID ${id} or missing arguments.`
+                        console.log(check)
+                        return res.status(202).json({
+                            success: true,
+                            message: `Didn't update any jeepney.`
                         })
                     }
                 })

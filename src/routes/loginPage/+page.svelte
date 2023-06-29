@@ -32,7 +32,7 @@
     global_isloggedin.subscribe(value => {
         isloggedin = value;
     });
-    console.log(isloggedin);
+    console.log("Is logged in?", isloggedin);
 
     //get screen size
     $: innerWidth = 0;
@@ -281,15 +281,18 @@
         })
     }
 
+    function checkUndef(s) {
+        return (s === 'null') ? null : s;
+    }
+
     function MODIFYJEEPNEY(){
         // Remember that jeepney coords is nullable
         // Form validation done at the backend
         let data = JSON.stringify({
             platenumber: jmod_platenum ? jmod_platenum : undefined,
             capacity: jmod_capacity ? jmod_capacity : undefined,
-            driverid: jmod_driverid ? jmod_driverid : undefined,
-            routeid: jmod_routeid ? jmod_routeid : undefined,
-            routename: jmod_routeid ? jmod_routeid : undefined,
+            driverid: jmod_driverid ? checkUndef(jmod_driverid) : undefined,
+            routeid: jmod_routeid ? checkUndef(jmod_routeid) : undefined
         })
 
         fetch(JEEPNEY_URL + `/${jmod_id}`, {
@@ -636,19 +639,37 @@
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                         <input  class="mt-3 ml-5" bind:value={jmod_capacity} id="jmod_capacity" placeholder={jeep.capacity}>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (current: <span id="jmod_driverid">{jeep.driverid}</span>)</h1>
-                                        <select class="mt-3 ml-5" bind:value={jmod_driverid} on:change={() => console.log(jmod_driverid)}>
+                                        <select class="mt-3 ml-5" bind:value={jmod_driverid} on:change={() => {console.log(jmod_driverid)}}>
                                             {#await FETCHDRIVER() then drivers}
                                                 {#each drivers as driver}
-                                                    <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {#if driver.id === jeep.driverid}
+                                                        <option value="{driver.id}" selected>{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {:else}
+                                                        <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {/if}
                                                 {/each}
+                                                {#if jeep.driverid === null}
+                                                    <option value=null selected>None</option>
+                                                {:else}
+                                                    <option value=null>None</option>
+                                                {/if}
                                             {/await}
                                         </select>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (current: <span id="jmod_routeid">{jeep.routeid}</span>)</h1>
                                         <select class="mt-3 ml-5" bind:value={jmod_routeid} on:change={() => console.log(jmod_driverid)}>
                                             {#await FETCHROUTE() then routes}
                                                 {#each routes as route}
-                                                    <option value="{route.id}">{route.id} - {route.name}</option>
+                                                    {#if route.id === jeep.routeid}
+                                                        <option value="{route.id}" selected>{route.id} - {route.name}</option>
+                                                    {:else}
+                                                        <option value="{route.id}">{route.id} - {route.name}</option>
+                                                    {/if}
                                                 {/each}
+                                                {#if jeep.driverid === null}
+                                                    <option value=null selected>None</option>
+                                                {:else}
+                                                    <option value=null>None</option>
+                                                {/if}
                                             {/await}
                                         </select>
                                         <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
