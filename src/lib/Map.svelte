@@ -14,9 +14,11 @@
   onMount(async () => {
     if (browser) {
       console.log("Jeep has been mounted");
-      await import('leaflet-polylinedecorator');    // TODO: Fix polylinedecorator bug for build
+      // TODO: Bug fixed by using L.default, but more elegant approach required
+        // Issue is because of Vite dev roll-up tree-shaking
+      await import('leaflet-polylinedecorator');
       const L = await import('leaflet');
-      console.log(L)
+      console.log(L);
 
       // Leaflet Map initialization
       // Set up Map Options
@@ -177,15 +179,14 @@
 
               // Map this Route to a Polyline of its own
               this.polyline = new L.Polyline(this.path, {name: this.name, color: this.color, weight: 5, smoothFactor: 3});
-              // this.decorator = new L.layerGroup()
-              //     .addLayer(this.polyline)
-              //     .addLayer(new L.polylineDecorator(this.path, {
-              //         patterns: [
-              //             // defines a pattern of 10px-wide dashes, repeated every 20px on the line
-              //             {offset: 0, repeat: 30, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: convertHex(this.color, 0.9), weight: 0}})}
-              //         ]
-              //     }));
-              // if (this.name === 'Ikot') this.layerGroup.addTo(map);
+              this.decorator = new L.layerGroup()
+                  .addLayer(this.polyline)
+                  .addLayer(new L.default.polylineDecorator(this.path, {
+                      patterns: [
+                          // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+                          {offset: 0, repeat: 30, symbol: L.default.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 0.7, color: convertHex(this.color, 0.9), weight: 0}})}
+                      ]
+                  }));
               this.popup();
           }
 
@@ -217,8 +218,8 @@
               jeeps.forEach((elem) => {markers.push(elem.marker)});
               console.log(markers)
               this.group = new L.layerGroup(markers)
-                  .addLayer(route.polyline);
-                  // .addLayer(route.decorator);
+                  .addLayer(route.polyline)
+                  .addLayer(route.decorator);
               mapControls.addOverlay(this.group, route.name);
 
               if (route.name === "Ikot") this.group.addTo(map);
