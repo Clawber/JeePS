@@ -332,8 +332,5 @@ onDestroy(async () => {
     width: 100%;
     
     position: absolute;
-    left: 50%;
-    top: 63%;
-    transform: translate(-50%, -50%);
   }
 </style>
