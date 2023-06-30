@@ -165,7 +165,7 @@
             driverid: jadd_driverid,
             routeid: jadd_route,
             routename: jadd_route,
-            routeoption: jadd_route_radio
+            routeoption: jadd_route_radio // always 1, sends routeID by default
         })
 
         fetch(JEEPNEY_URL, {
@@ -510,40 +510,27 @@
                                 <input class="mt-3 ml-5" bind:value={jadd_platenum}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                 <input  class="mt-3 ml-5" bind:value={jadd_capacity}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jadd_driverid}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
-                                <div class="flex gap-10">
-                                    <div class="inline-flex items-center">
-                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_id" data-ripple-dark="true">
-                                            <input id="jadd_route_id" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={1}
-                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
-                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_id">
-                                            Route ID
-                                        </label>
-                                    </div>
-                                    <div class="inline-flex items-center">
-                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_name" data-ripple-dark="true">
-                                            <input id="jadd_route_name" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={2}
-                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
-                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_name">
-                                            Route Name
-                                        </label>
-                                    </div>
-                                </div>
-                                <input class="mt-3 ml-5" bind:value={jadd_route}>
+
+                                <!-- Driver Dropdown -->
+                                {#await FETCHDRIVER() then drivers}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Driver </h1>
+                                    <select class="mt-3 ml-5" bind:value={jadd_driverid} on:change={() => console.log(jadd_driverid)}>
+                                        {#each drivers as driver}
+                                            <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
+                                        {/each}
+                                    </select>
+                                {/await}
+
+                                <!-- Route Dropdown -->
+                                {#await FETCHROUTE() then routes}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
+                                    <select class="mt-3 ml-5" bind:value={jadd_route} on:change={() => console.log(jadd_route)}>
+                                        {#each routes as route}
+                                            <option value="{route.id}">{route.id} - {route.name}</option>
+                                        {/each}
+                                    </select>
+                                {/await}
+
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                             </form>
 
@@ -640,7 +627,7 @@
                             <form on:submit|preventDefault={MODIFYJEEPNEY}>
                                 <!--<input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>-->
                                 {#await FETCHJEEPNEY() then jeepneys}
-                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
                                     <select class="mt-3 ml-5" bind:value={jmod_id} on:change={() => console.log(jmod_id)}>
                                         {#each jeepneys as jeepney}
                                             <option value="{jeepney.id}">{jeepney.id}</option>
