@@ -115,7 +115,7 @@ class jeepsController {
         .then((route) => {
             return res.status(201).json({
                 success: true,
-                message: `Jeepney with ID ${route.id} successfully created.`,
+                message: `Route with ID ${route.id} successfully created.`,
                 ret: route
             })
         })
@@ -166,6 +166,11 @@ class jeepsController {
         const route = await Route.findAll({
             order: [['id', 'ASC']]
         });
+        route.forEach(elem => {
+            if (elem.dataValues.path) {
+                elem.dataValues.path = (JSON.parse(elem.dataValues.path.replaceAll('(', '[').replaceAll(')', ']')))
+            }
+        })
         return res.status(200).json({
             success: true,
             message: "Routes successfully returned.",
@@ -234,6 +239,7 @@ class jeepsController {
                 message: `Didn't find driver corresponding to ID ${id}`
             })
         } else {
+            route.dataValues.path = (JSON.parse(route.dataValues.path.replaceAll('(', '[').replaceAll(')', ']')))
             return res.status(200).json({
                 success: true,
                 message: "Found matching route.",
@@ -269,20 +275,23 @@ class jeepsController {
                 return res.status(400).send(err.message)
             })
         } else {
+            console.log(req.body);
             Jeepney.update(req.body, {
                 where: { id: id }
             })
                 .then(async (check) => {
-                    if (check[0]) {
+                    if (check[0] === 1) {
+                        console.log(check)
                         return res.status(201).json({
                             success: true,
                             message: `Jeepney with ID ${id} successfully updated.`,
                             ret: await Jeepney.findByPk(id)
                         })
                     } else {
-                        return res.status(404).json({
-                            success: false,
-                            message: `Didn't find jeepney corresponding to ID ${id} or missing arguments.`
+                        console.log(check)
+                        return res.status(202).json({
+                            success: true,
+                            message: `Didn't update any jeepney.`
                         })
                     }
                 })
@@ -291,7 +300,7 @@ class jeepsController {
                     if (err.name === "SequelizeUniqueConstraintError") {
                         return res.status(400).json({
                             success: false,
-                            message: `Jeepney with platenumber ${platenumber} already exists.`,
+                            message: `Jeepney with platenumber ${req.body.platenumber} already exists.`,
                         })
                     } else {
                         return res.status(422).json({

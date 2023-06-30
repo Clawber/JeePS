@@ -32,7 +32,7 @@
     global_isloggedin.subscribe(value => {
         isloggedin = value;
     });
-    console.log(isloggedin);
+    console.log("Is logged in?", isloggedin);
 
     //get screen size
     $: innerWidth = 0;
@@ -200,7 +200,7 @@
     function PATHPARSER() {
         return new Promise(resolve => {
             let path = '';
-            if (files.length > 0) {
+            if (files) {
                 let file = files[0]
                 let reader = new FileReader()
                 reader.readAsText(file)
@@ -225,7 +225,8 @@
                     }
                 }
             } else {
-                alert("No file added");
+                alert("No file added. Make sure to modify later with a proper path.");
+                resolve(null);
             }
         })
     }
@@ -237,7 +238,7 @@
             body: JSON.stringify({
                 name: radd_routename,
                 color: radd_color,
-                path: files ? path : null
+                path: path
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -280,15 +281,18 @@
         })
     }
 
+    function checkUndef(s) {
+        return (s === 'null') ? null : s;
+    }
+
     function MODIFYJEEPNEY(){
         // Remember that jeepney coords is nullable
         // Form validation done at the backend
         let data = JSON.stringify({
             platenumber: jmod_platenum ? jmod_platenum : undefined,
             capacity: jmod_capacity ? jmod_capacity : undefined,
-            driverid: jmod_driverid ? jmod_driverid : undefined,
-            routeid: jmod_routeid ? jmod_routeid : undefined,
-            routename: jmod_routeid ? jmod_routeid : undefined,
+            driverid: jmod_driverid ? checkUndef(jmod_driverid) : undefined,
+            routeid: jmod_routeid ? checkUndef(jmod_routeid) : undefined
         })
 
         fetch(JEEPNEY_URL + `/${jmod_id}`, {
@@ -553,7 +557,7 @@
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
                             <input class="mt-3 ml-20" bind:value={radd_color}>
                             <h1 class="text-s text-gray-300 mt-5 ml-20">Upload a Path file (.csv)</h1>
-                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
                             <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
                             <button type="submit" class="bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                         </form>
@@ -639,19 +643,37 @@
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                         <input  class="mt-3 ml-5" bind:value={jmod_capacity} id="jmod_capacity" placeholder={jeep.capacity}>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (current: <span id="jmod_driverid">{jeep.driverid}</span>)</h1>
-                                        <select class="mt-3 ml-5" bind:value={jmod_driverid} on:change={() => console.log(jmod_driverid)}>
+                                        <select class="mt-3 ml-5" bind:value={jmod_driverid} on:change={() => {console.log(jmod_driverid)}}>
                                             {#await FETCHDRIVER() then drivers}
                                                 {#each drivers as driver}
-                                                    <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {#if driver.id === jeep.driverid}
+                                                        <option value="{driver.id}" selected>{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {:else}
+                                                        <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname}</option>
+                                                    {/if}
                                                 {/each}
+                                                {#if jeep.driverid === null}
+                                                    <option value=null selected>None</option>
+                                                {:else}
+                                                    <option value=null>None</option>
+                                                {/if}
                                             {/await}
                                         </select>
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (current: <span id="jmod_routeid">{jeep.routeid}</span>)</h1>
                                         <select class="mt-3 ml-5" bind:value={jmod_routeid} on:change={() => console.log(jmod_driverid)}>
                                             {#await FETCHROUTE() then routes}
                                                 {#each routes as route}
-                                                    <option value="{route.id}">{route.id} - {route.name}</option>
+                                                    {#if route.id === jeep.routeid}
+                                                        <option value="{route.id}" selected>{route.id} - {route.name}</option>
+                                                    {:else}
+                                                        <option value="{route.id}">{route.id} - {route.name}</option>
+                                                    {/if}
                                                 {/each}
+                                                {#if jeep.driverid === null}
+                                                    <option value=null selected>None</option>
+                                                {:else}
+                                                    <option value=null>None</option>
+                                                {/if}
                                             {/await}
                                         </select>
                                         <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
@@ -697,10 +719,10 @@
                                     {#await routes.find(route => route.id === rmod_id) then route}
                                         <h1 class="text-s text-gray-300 mt-5 ml-5">Name</h1>
                                         <input  class="mt-3 ml-5" bind:value={rmod_name} id="rmod_name" placeholder={route.name}>
-                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Hex Color (example: #ffcd32)</h1>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Color (example: #ffcd32)</h1>
                                         <input  class="mt-3 ml-5" bind:value={rmod_color} id="rmod_color" placeholder={route.color}>
                                         <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
-                                        <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                                        <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
                                         <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
                                         <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
                                     {/await}
