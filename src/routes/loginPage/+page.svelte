@@ -165,7 +165,7 @@
             driverid: jadd_driverid,
             routeid: jadd_route,
             routename: jadd_route,
-            routeoption: jadd_route_radio
+            routeoption: jadd_route_radio // always 1, sends routeID by default
         })
 
         fetch(JEEPNEY_URL, {
@@ -514,40 +514,27 @@
                                 <input class="mt-3 ml-5" bind:value={jadd_platenum}>
                                 <h1 class="text-s text-gray-300 mt-5 ml-5">Capacity</h1>
                                 <input  class="mt-3 ml-5" bind:value={jadd_capacity}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jadd_driverid}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
-                                <div class="flex gap-10">
-                                    <div class="inline-flex items-center">
-                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_id" data-ripple-dark="true">
-                                            <input id="jadd_route_id" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={1}
-                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
-                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_id">
-                                            Route ID
-                                        </label>
-                                    </div>
-                                    <div class="inline-flex items-center">
-                                        <label class="relative flex cursor-pointer items-center rounded-full p-3" for="jadd_route_name" data-ripple-dark="true">
-                                            <input id="jadd_route_name" name="jadd_route" type="radio" bind:group={jadd_route_radio} value={2}
-                                                   class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-pink-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"/>
-                                            <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-pink-500 opacity-0 transition-opacity peer-checked:opacity-100">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                                                    <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                        <label class="mt-px cursor-pointer select-none font-light text-white" for="jadd_route_name">
-                                            Route Name
-                                        </label>
-                                    </div>
-                                </div>
-                                <input class="mt-3 ml-5" bind:value={jadd_route}>
+
+                                <!-- Driver Dropdown -->
+                                {#await FETCHDRIVER() then drivers}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Driver </h1>
+                                    <select class="mt-3 ml-5" bind:value={jadd_driverid} on:change={() => console.log(jadd_driverid)}>
+                                        {#each drivers as driver}
+                                            <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
+                                        {/each}
+                                    </select>
+                                {/await}
+
+                                <!-- Route Dropdown -->
+                                {#await FETCHROUTE() then routes}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Route</h1>
+                                    <select class="mt-3 ml-5" bind:value={jadd_route} on:change={() => console.log(jadd_route)}>
+                                        {#each routes as route}
+                                            <option value="{route.id}">{route.id} - {route.name}</option>
+                                        {/each}
+                                    </select>
+                                {/await}
+
                                 <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">ADD</h1></button>
                             </form>
 
@@ -589,26 +576,43 @@
                     {#if ($activeTable === "jeepneys")}
                         <div class="flex flex-wrap justify-center my-5">
                             <form on:submit|preventDefault={DELETEJEEPNEY}>
-                                <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
-                                <input class="mt-3 ml-5" bind:value={jdel_id}>
-                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                                {#await FETCHJEEPNEY() then jeepneys}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID </h1>
+                                    <select class="mt-3 ml-5" bind:value={jdel_id} on:change={() => console.log(jdel_id)}>
+                                        {#each jeepneys as jeepney}
+                                            <option value="{jeepney.id}">{jeepney.id} - {jeepney.platenumber}</option>
+                                        {/each}
+                                    </select>
+                                    <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button> -->
+                                {/await}
                             </form>
-
                         </div>
                     {:else if ($activeTable === "drivers")}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEDRIVER}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID</h1>
-                            <input class="mt-3 ml-5" bind:value={ddel_id}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {#await FETCHDRIVER() then drivers}
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID </h1>
+                                <select class="mt-3 ml-5" bind:value={ddel_id} on:change={() => console.log(ddel_id)}>
+                                    {#each drivers as driver}
+                                        <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
+                                    {/each}
+                                </select>
+                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {/await}
                         </form>
                         </div>
                     {:else}
                     <div class="flex flex-wrap justify-center my-5">
                         <form on:submit|preventDefault={DELETEROUTE}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
-                            <input class="mt-3 ml-5" bind:value={rdel_id}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {#await FETCHROUTE() then routes}
+                                <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID</h1>
+                                <select class="mt-3 ml-5" bind:value={rdel_id} on:change={() => console.log(rdel_id)}>
+                                    {#each routes as route}
+                                        <option value="{route.id}">{route.id} - {route.name}</option>
+                                    {/each}
+                                </select>
+                                <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">DELETE</h1></button>
+                            {/await}
                         </form>
                         </div>
                     {/if}
@@ -627,7 +631,7 @@
                             <form on:submit|preventDefault={MODIFYJEEPNEY}>
                                 <!--<input on:keydown={FETCHJEEPNEY(mplatenum)} class="mt-3 ml-5" bind:value={mplatenum}>-->
                                 {#await FETCHJEEPNEY() then jeepneys}
-                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID (required)</h1>
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Jeepney ID</h1>
                                     <select class="mt-3 ml-5" bind:value={jmod_id} on:change={() => console.log(jmod_id)}>
                                         {#each jeepneys as jeepney}
                                             <option value="{jeepney.id}">{jeepney.id}</option>
@@ -679,32 +683,52 @@
 
                         </div>
                     {:else if ($activeTable === "drivers")}
-                    <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYDRIVER}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
-                            <input class="mt-3 ml-5" bind:value={dmod_id}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
-                            <input class="mt-3 ml-5" bind:value={dmod_firstname}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
-                            <input  class="mt-3 ml-5" bind:value={dmod_lastname}>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
-                        </form>
+                        <div class="flex flex-wrap justify-center my-5">
+                            <!-- Forms -->
+                            <form on:submit|preventDefault={MODIFYDRIVER}>
+                                <!-- initial data fetch, to fill out forms  -->
+                                {#await FETCHDRIVER() then drivers}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Driver ID (required)</h1>
+                                    <select class="mt-3 ml-5" bind:value={dmod_id} on:change={() => console.log(dmod_id)}>
+                                        {#each drivers as driver}
+                                            <option value="{driver.id}">{driver.id} - {driver.firstname} {driver.lastname} </option>
+                                        {/each}
+                                    </select>
+                                    {#await drivers.find(driver => driver.id === dmod_id) then driver}
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">First Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={dmod_firstname} id="dmod_firstname" placeholder={driver.firstname}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Last Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={dmod_lastname} id="dmod_lastname" placeholder={driver.lastname}>
+                                        <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                    {/await}
+                                {/await}
+
+
+                            </form>
                         </div>
                     {:else}
-                    <div class="flex flex-wrap justify-center my-5">
-                        <form on:submit|preventDefault={MODIFYROUTE}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Route ID (required)</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_id}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Name</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_name}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Color (example: #ffcd32)</h1>
-                            <input class="mt-3 ml-20" bind:value={rmod_color}>
-                            <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
-                            <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
-                            <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
-                            <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
-                        </form>
-                        </div>
+                        <div class="flex flex-wrap justify-center my-5">
+                            <form on:submit|preventDefault={MODIFYROUTE}>
+                                {#await FETCHROUTE() then routes}
+                                    <h1 class="text-s text-gray-300 mt-5 ml-5">Route ID (required)</h1>
+                                    <select class="mt-3 ml-5" bind:value={rmod_id} on:change={() => console.log(rmod_id)}>
+                                        {#each routes as route}
+                                            <option value="{route.id}">{route.id} - {route.name}</option>
+                                        {/each}
+                                    </select>
+                                    {#await routes.find(route => route.id === rmod_id) then route}
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Name</h1>
+                                        <input  class="mt-3 ml-5" bind:value={rmod_name} id="rmod_name" placeholder={route.name}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-5">Color (example: #ffcd32)</h1>
+                                        <input  class="mt-3 ml-5" bind:value={rmod_color} id="rmod_color" placeholder={route.color}>
+                                        <h1 class="text-s text-gray-300 mt-5 ml-20">Upload an updated Path file (.csv)</h1>
+                                        <label class="text-s text-gray-300 mt-5 ml-20">Use exports from <a href="https://google.com/maps/d/u/0/">google.com/maps/d/u/0/</a></label>
+                                        <input type="file" accept="text/csv" class="mt-3 ml-20 align-evenly text-gray-300" bind:files>
+                                        <button type="submit" class="mt-3 ml-5 bg-white rounded"><h1 class="m-0.5">MODIFY</h1></button>
+                                    {/await}
+                                {/await}
+                            </form>
+                        </div> 
                     {/if}
                     </div>
                 </div>
