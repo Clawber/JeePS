@@ -13,23 +13,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// set to true if you wish to reset database using .csv seeds, User table is never reset
+const RESET = false;
+
 const csvSync = require('./controllers/dbController')
 const [Driver, Jeepney, Route] = [db.Driver, db.Jeepney, db.Route];
 // const filepaths = ['db/driver.csv', 'db/route.csv', 'db/tracker.csv', 'db/jeepney.csv']
 
-Driver.sync().then(() => {
+Driver.sync({force: RESET}).then(() => {
     console.log('Driver has been synced.');
-    //csvSync(Driver, 'db/driver.csv')
+    RESET ? csvSync(Driver, 'db/driver.csv') : null;
 }).then(() => {
-    Route.sync().then(() => {
+    Route.sync({force: RESET}).then(() => {
         console.log('Route has been synced.');
-        //csvSync(Route, 'db/route.csv');
+        RESET ? csvSync(Route, 'db/route.csv') : null;
     }).then(() => {
-        Jeepney.sync().then(() => {
+        Jeepney.sync({force: RESET}).then(() => {
             console.log('Jeepney has been synced.');
-            //csvSync(Jeepney, 'db/jeepney.csv');
+            RESET ? csvSync(Jeepney, 'db/jeepney.csv') : null;
         }).then(() => {
-            app.get('/', (req, res) => {res.status(200).send("This is the JeePS endpoint.")})
+            app.get('/', (req, res) => {
+                res.status(200).send("This is the JeePS endpoint.")})
             app.use('/api/users', userRoutes)
             app.use('/api/jeeps', jeepsRoutes)
 
