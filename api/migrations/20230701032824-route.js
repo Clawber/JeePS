@@ -11,12 +11,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: DataTypes.STRING(50),
+        type: Sequelize.STRING(50),
         unique: true,
         allowNull: false
       },
       color: {
-        type: DataTypes.STRING(50),
+        type: Sequelize.STRING(50),
         allowNull: false
       },
       path: {

@@ -11,12 +11,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       platenumber: {
-        type: DataTypes.STRING(8),
+        type: Sequelize.STRING(8),
         allowNull: false,
         unique: true
       },
       capacity: {
-        type: DataTypes.SMALLINT,
+        type: Sequelize.SMALLINT,
         allowNull: false
       },
       coords: {
