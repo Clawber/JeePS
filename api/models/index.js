@@ -18,6 +18,8 @@ if (config.use_env_variable) {
 
 const db = {} // TODO: Convert serial to identity in schema.
 
+// TODO: Refactor class extends in models to simply .define, and then require each model here.
+// See commit: 9e4819a42e7e24836b26bccf7926f20eb0ed8593
 fs.readdirSync(__dirname)
   .filter(file => {
     console.log(file)
