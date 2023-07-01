@@ -4,6 +4,7 @@ const { db } = require('./models');
 const userRoutes = require('./routes/userRoutes');
 const jeepsRoutes = require('./routes/jeepsRoutes');
 const cors = require('cors');
+const { Umzug } = require('umzug');
 
 const PORT = process.env.PORT || 8080
 
@@ -47,3 +48,26 @@ db.User.sync();
 
 // db.sequelize.sync();
 
+// const umzug = new Umzug({
+//     migrations: { glob: 'api/migrations/*.js' },
+//     context: db.sequelize.getQueryInterface(),
+//     logger: console,
+// });
+//
+// umzug.pending().then(function(migrations) {
+//     // "migrations" will be an Array with the names of
+//     // pending migrations.
+//     console.log(migrations)
+//     umzug.up().then(function(migrations) {
+//         console.log(migrations);
+//
+//         app.get('/', (req, res) => {
+//             res.status(200).send("This is the JeePS endpoint.")})
+//         app.get('/api', (req, res) => {
+//             res.status(200).send("This is the JeePS endpoint.")})
+//         app.use('/api/users', userRoutes)
+//         app.use('/api/jeeps', jeepsRoutes)
+//
+//         app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))
+//     });
+// });

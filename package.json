@@ -45,7 +45,8 @@
 		"leaflet-polylinedecorator": "^1.6.0",
 		"pg": "^8.11.0",
 		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.32.0"
+		"sequelize": "^6.32.0",
+		"umzug": "^3.2.1"
 	},
 	"engines": {
 		"node": ">=16.14"
