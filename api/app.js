@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // set to true if you wish to reset database using .csv seeds, User table is never reset
+// WARNING: THIS CAN DESTROY THE DATABASE, do not use on PRODUCTION!
 const RESET = false;
 
 const csvSync = require('./controllers/dbController')
