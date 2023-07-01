@@ -60,13 +60,13 @@ You can preview the production build with `npm run preview`.
 
 ---
 **Client and Supervisor</br>**
-Dr. Ligaya Leah Figueroa <llfigueroa@up.edu.ph>
+Dr. Ligaya Leah Figueroa \<llfigueroa@up.edu.ph\>
 
 **Developers**
-- Carl David B. Ragunton <cbragunton@up.edu.ph>
-- John Erick S. Sarenas <jssarenas@up.edu.ph>
-- Prinz Romeo O. Gan <pogan3@up.edu.ph>
-- Yenzy Urson S. Hebron <yshebron@up.edu.ph>
+- Carl David B. Ragunton \<cbragunton@up.edu.ph\>
+- John Erick S. Sarenas \<jssarenas@up.edu.ph\>
+- Prinz Romeo O. Gan \<pogan3@up.edu.ph\>
+- Yenzy Urson S. Hebron \<yshebron@up.edu.ph\>
 
 **CS 192: Software Engineering II</br>**
 2nd Semester A.Y. 2022-2023
