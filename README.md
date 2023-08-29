@@ -1,8 +1,11 @@
 # JeePS
+
 A highly scaleable vehicle fleet monitoring and management system.
 Pilot testing ongoing in UP Diliman.
 
-Try the JeePS web app: https://jeeps-view.onrender.com/
+![JeePS Logo](static/jeeps-logo.png)
+
+Try the JeePS web app now! **https://jeeps-view.onrender.com/**
 
 Visit our blog: https://www.notion.so/clawber/Project-JeePS-Blog-25d7e6bc7d5e4cee8deb14a305e648f5
 
