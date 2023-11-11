@@ -19,8 +19,9 @@ const signup = async (req, res) => {
    };
    //saving the user
    const user = await User.create(data).catch((err) => {
-      console.log(err)
-      return res.status(409).send("Email is invalid.")
+      console.log(err);
+      res.status(409).send("Email is invalid. Please try again.");
+      return 0;
     });
 
    //if user details is captured
@@ -36,9 +37,8 @@ const signup = async (req, res) => {
      console.log(token);
      //send users details
      return res.status(201).send("Signup successful");
-   } else {
-     return res.status(409).send("Details are incorrect");
    }
+
  } catch (error) {
    console.log(error);
  }
