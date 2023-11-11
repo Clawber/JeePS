@@ -1,6 +1,8 @@
 //importing modules
 const express = require("express");
 const { db, pool } = require("../models");
+const Joi = require('joi');
+
 //Assigning db.users to User variable
 const User = db.User;
 
@@ -22,6 +24,15 @@ const saveUser = async (req, res, next) => {
     if (username) {
       return res.status(409).send("Username already taken");
     }
+
+    const emailschema = Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'ph'] } });
+
+    // checking if email is valid
+    await emailschema.validate(req.body.email).catch((err) => {
+      console.log(err)
+      return res.status(409).send("Email is invalid.")
+    })
 
     //checking if email already exist
     const emailcheck = await User.findOne({
