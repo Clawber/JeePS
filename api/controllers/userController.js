@@ -18,7 +18,10 @@ const signup = async (req, res) => {
      password: await bcrypt.hash(password, 10),
    };
    //saving the user
-   const user = await User.create(data);
+   const user = await User.create(data).catch((err) => {
+      console.log(err)
+      return res.status(409).send("Email is invalid.")
+    });
 
    //if user details is captured
    //generate token with the user's id and the SECRET_KEY in the env file
