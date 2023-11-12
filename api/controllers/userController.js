@@ -20,7 +20,7 @@ const signup = async (req, res) => {
    //saving the user
    const user = await User.create(data).catch((err) => {
       console.log(err);
-      res.status(409).send("Email is invalid. Please try again.");
+      res.status(409).send("There was a problem creating your account.");
       return 0;
     });
 

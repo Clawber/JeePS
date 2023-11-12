@@ -31,7 +31,7 @@ const saveUser = async (req, res, next) => {
     // checking if email is valid
     await emailschema.validate(req.body.email).catch((err) => {
       console.log(err)
-      return res.status(409).send("Email is invalid.")
+      return res.status(409).send("Email is invalid. Please try again.")
     })
 
     //checking if email already exist
